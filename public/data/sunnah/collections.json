@@ -1,0 +1,128 @@
+[
+  {
+    "id": "bukhari",
+    "slug": "bukhari",
+    "sourceSlug": "bukhari",
+    "title": "Sahih al-Bukhari",
+    "arabicTitle": "صحيح البخاري",
+    "compiler": "Imam al-Bukhari",
+    "summary": "One of the most authentic collections of prophetic traditions.",
+    "tags": [
+      "popular"
+    ],
+    "chapterCount": 97,
+    "count": 7252
+  },
+  {
+    "id": "muslim",
+    "slug": "muslim",
+    "sourceSlug": "muslim",
+    "title": "Sahih Muslim",
+    "arabicTitle": "صحيح مسلم",
+    "compiler": "Imam Muslim",
+    "summary": "A comprehensive collection focused on authenticity and rigor.",
+    "tags": [
+      "popular"
+    ],
+    "chapterCount": 56,
+    "count": 3010
+  },
+  {
+    "id": "abu-daud",
+    "slug": "abu-daud",
+    "sourceSlug": "abudawud",
+    "title": "Sunan Abu Dawud",
+    "arabicTitle": "سنن أبي داود",
+    "compiler": "Imam Abu Dawud",
+    "summary": "A juristic collection covering worship and daily conduct.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 43,
+    "count": 5274
+  },
+  {
+    "id": "tirmidzi",
+    "slug": "tirmidzi",
+    "sourceSlug": "tirmidhi",
+    "title": "Jami at-Tirmidhi",
+    "arabicTitle": "جامع الترمذي",
+    "compiler": "Imam al-Tirmidhi",
+    "summary": "Hadith covering belief, worship, and character.",
+    "tags": [
+      "ethics"
+    ],
+    "chapterCount": 49,
+    "count": 3950
+  },
+  {
+    "id": "ibnu-majah",
+    "slug": "ibnu-majah",
+    "sourceSlug": "ibnmajah",
+    "title": "Sunan Ibn Majah",
+    "arabicTitle": "سنن ابن ماجه",
+    "compiler": "Imam Ibn Majah",
+    "summary": "Well known collection covering worship and conduct.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 37,
+    "count": 4069
+  },
+  {
+    "id": "malik",
+    "slug": "malik",
+    "sourceSlug": "malik",
+    "title": "Muwatta Malik",
+    "arabicTitle": "موطأ مالك",
+    "compiler": "Imam Malik",
+    "summary": "Early collection blending hadith with legal rulings.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 61,
+    "count": 0
+  },
+  {
+    "id": "ahmad",
+    "slug": "ahmad",
+    "sourceSlug": "ahmad",
+    "title": "Musnad Ahmad",
+    "arabicTitle": "مسند أحمد",
+    "compiler": "Imam Ahmad ibn Hanbal",
+    "summary": "An expansive collection organized by companion.",
+    "tags": [
+      "ethics"
+    ],
+    "chapterCount": 8,
+    "count": 1359
+  },
+  {
+    "id": "darimi",
+    "slug": "darimi",
+    "sourceSlug": "darimi",
+    "title": "Sunan al-Darimi",
+    "arabicTitle": "سنن الدارمي",
+    "compiler": "Imam al-Darimi",
+    "summary": "A foundational collection with a focus on law and guidance.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 23,
+    "count": 0
+  },
+  {
+    "id": "nasai",
+    "slug": "nasai",
+    "sourceSlug": "nasai",
+    "title": "Sunan an-Nasa'i",
+    "arabicTitle": "سنن النسائي",
+    "compiler": "Imam an-Nasa'i",
+    "summary": "Detailed narrations with a focus on legal chapters.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 51,
+    "count": 5672
+  }
+]

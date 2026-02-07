@@ -1,0 +1,197 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Ramzan 2026 Calendar (Ramadan Dates) - TaqwaPath"
+  description="Ramzan 2026 calendar with Ramadan dates, Hijri and Gregorian mapping, and monthly view."
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Ramzan 2026</span>
+      <h1 class="section-title">Ramzan (Ramadan) 2026 Calendar</h1>
+      <div class="tag" data-ramzan-title style="margin-top: 10px;">February 2026</div>
+      <p class="section-lead">
+        See Ramadan dates for 2026 with Hijri and Gregorian days. Dates may vary by local moon sighting.
+      </p>
+
+      <div class="calendar-controls">
+        <select class="select" data-ramzan-month></select>
+        <select class="select" data-ramzan-adjustment>
+          <option value="0">0 days</option>
+          <option value="1">+1 day</option>
+          <option value="-1">-1 day</option>
+          <option value="2">+2 days</option>
+          <option value="-2">-2 days</option>
+        </select>
+      </div>
+
+      <div class="calendar-grid" data-ramzan-grid>
+        <div class="card" style="grid-column: 1 / -1;">Loading Ramzan calendar...</div>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <div class="card__title">Ramzan dates list</div>
+        <div class="list" data-ramzan-list></div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const monthSelect = document.querySelector("[data-ramzan-month]");
+  const adjustSelect = document.querySelector("[data-ramzan-adjustment]");
+  const grid = document.querySelector("[data-ramzan-grid]");
+  const list = document.querySelector("[data-ramzan-list]");
+  const title = document.querySelector("[data-ramzan-title]");
+
+  const DATA_YEAR = 2026;
+  const DATA_URL = "/data/islamic-calendar/2026.json";
+  let calendarData = null;
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  const normalizeMonth = (value) => (value || "").toLowerCase().replace(/[^a-z]/g, "");
+  const isRamzanMonth = (value) => normalizeMonth(value).startsWith("ram");
+
+  const setTitle = (month, year) => {
+    if (title) title.textContent = `${monthNames[month - 1]} ${year}`;
+  };
+
+  const renderCalendar = (data, month, year, adjustment = 0) => {
+    if (!grid) return;
+    const firstDate = new Date(year, month - 1, 1);
+    const startOffset = (firstDate.getDay() + 6) % 7;
+    const blanks = Array.from({ length: startOffset });
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() + 1 === month && today.getFullYear() === year;
+
+    const cells = [
+      ...weekDays.map((day) => `<div class="calendar-cell calendar-cell--muted"><span class="calendar-cell__day">${day}</span></div>`),
+      ...blanks.map(() => `<div class="calendar-cell calendar-cell--muted"></div>`),
+      ...data.map((day) => {
+        const isRamzan = isRamzanMonth(day.hijri?.month?.en);
+        const isToday = isCurrentMonth && Number(day.gregorian.day) === today.getDate();
+        const adjustedHijriDay = Number(day.hijri.day) + adjustment;
+        const label = isRamzan ? `Ramzan ${adjustedHijriDay}` : "";
+        const classNames = [
+          "calendar-cell",
+          isToday && "calendar-cell--today",
+          isRamzan && "calendar-cell--highlight"
+        ].filter(Boolean).join(" ");
+        return `
+          <div class="${classNames}">
+            <div class="calendar-cell__day">${day.gregorian.day}</div>
+            <div class="calendar-cell__hijri">${adjustedHijriDay} ${day.hijri.month.en} ${day.hijri.year}</div>
+            ${label ? `<div class="tag">${label}</div>` : ""}
+          </div>
+        `;
+      })
+    ];
+
+    grid.innerHTML = cells.join("");
+  };
+
+  const renderList = (data, monthName, adjustment = 0) => {
+    if (!list) return;
+    const ramzanDays = data
+      .filter((day) => isRamzanMonth(day.hijri?.month?.en))
+      .map((day) => ({
+        gregorian: `${day.gregorian.day} ${monthName}`,
+        hijri: `${Number(day.hijri.day) + adjustment} ${day.hijri.month.en} ${day.hijri.year}`,
+        label: `Ramzan Day ${Number(day.hijri.day) + adjustment}`
+      }));
+
+    if (!ramzanDays.length) {
+      list.innerHTML = `<div class="list-row"><div class="pill">Info</div><div><strong>No Ramzan dates found</strong><div class="list-row__meta">This month does not include Ramadan days.</div></div><div class="muted">${monthName}</div></div>`;
+      return;
+    }
+
+    list.innerHTML = ramzanDays
+      .map(
+        (item) => `
+        <div class="list-row">
+          <div class="pill">${item.gregorian.split(" ")[0]}</div>
+          <div>
+            <strong>${item.label}</strong>
+            <div class="list-row__meta">${item.hijri}</div>
+          </div>
+          <div class="muted">${item.gregorian}</div>
+        </div>
+      `
+      )
+      .join("");
+  };
+
+  const loadCalendarData = async () => {
+    if (calendarData) return;
+    try {
+      const response = await fetch(DATA_URL);
+      if (!response.ok) throw new Error("Failed to load calendar.");
+      const payload = await response.json();
+      calendarData = payload?.months || {};
+    } catch {
+      calendarData = null;
+      if (grid) {
+        grid.innerHTML = `<div class="card" style="grid-column: 1 / -1;">Unable to load calendar data.</div>`;
+      }
+    }
+  };
+
+  const getRamzanMonths = () => {
+    if (!calendarData) return [];
+    const months = Object.keys(calendarData)
+      .map((key) => Number(key))
+      .filter((month) => {
+        const days = calendarData[String(month)] || [];
+        return days.some((day) => isRamzanMonth(day.hijri?.month?.en));
+      })
+      .sort((a, b) => a - b);
+    return months;
+  };
+
+  const setMonthOptions = (months) => {
+    if (!monthSelect) return;
+    monthSelect.innerHTML = months
+      .map((month) => `<option value="${month}">${monthNames[month - 1]} ${DATA_YEAR}</option>`)
+      .join("");
+  };
+
+  const handleChange = () => {
+    const month = Number(monthSelect?.value) || 1;
+    const adjustment = Number(adjustSelect?.value) || 0;
+    const data = calendarData?.[String(month)] || [];
+    setTitle(month, DATA_YEAR);
+    renderCalendar(data, month, DATA_YEAR, adjustment);
+    renderList(data, `${monthNames[month - 1]} ${DATA_YEAR}`, adjustment);
+  };
+
+  const init = async () => {
+    await loadCalendarData();
+    if (!calendarData) return;
+    const months = getRamzanMonths();
+    setMonthOptions(months);
+    const currentMonth = new Date().getMonth() + 1;
+    const defaultMonth = months.includes(currentMonth) ? currentMonth : months[0];
+    if (monthSelect && defaultMonth) monthSelect.value = String(defaultMonth);
+    if (adjustSelect) adjustSelect.value = "0";
+    handleChange();
+    monthSelect?.addEventListener("change", handleChange);
+    adjustSelect?.addEventListener("change", handleChange);
+  };
+
+  init();
+</script>

@@ -1,0 +1,564 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "The Book of Faith",
+      "titleArabic": "كتاب الإيمان",
+      "hadithRange": {
+        "start": 8,
+        "end": 222
+      },
+      "hadithCount": 215
+    },
+    {
+      "id": 2,
+      "title": "The Book of Purification",
+      "titleArabic": "كتاب الطهارة",
+      "hadithRange": {
+        "start": 223,
+        "end": 292
+      },
+      "hadithCount": 70
+    },
+    {
+      "id": 3,
+      "title": "The Book of Menstruation",
+      "titleArabic": "كتاب الحيض",
+      "hadithRange": {
+        "start": 293,
+        "end": 376
+      },
+      "hadithCount": 84
+    },
+    {
+      "id": 4,
+      "title": "The Book of Prayers",
+      "titleArabic": "كتاب الصلاة",
+      "hadithRange": {
+        "start": 377,
+        "end": 519
+      },
+      "hadithCount": 143
+    },
+    {
+      "id": 5,
+      "title": "The Book of Mosques and Places of Prayer",
+      "titleArabic": "كتاب الْمَسَاجِدِ وَمَوَاضِعِ الصَّلاَةِ",
+      "hadithRange": {
+        "start": 520,
+        "end": 684
+      },
+      "hadithCount": 165
+    },
+    {
+      "id": 6,
+      "title": "The Book of Prayer - Travellers",
+      "titleArabic": "كتاب صلاة المسافرين وقصرها",
+      "hadithRange": {
+        "start": 685,
+        "end": 843
+      },
+      "hadithCount": 159
+    },
+    {
+      "id": 7,
+      "title": "The Book of Prayer - Friday",
+      "titleArabic": "كتاب الجمعة",
+      "hadithRange": {
+        "start": 844,
+        "end": 883
+      },
+      "hadithCount": 40
+    },
+    {
+      "id": 8,
+      "title": "The Book of Prayer - Two Eids",
+      "titleArabic": "كتاب صلاة العيدين",
+      "hadithRange": {
+        "start": 884,
+        "end": 893
+      },
+      "hadithCount": 10
+    },
+    {
+      "id": 9,
+      "title": "The Book of Prayer - Rain",
+      "titleArabic": "كتاب صلاة الاستسقاء‏",
+      "hadithRange": {
+        "start": 894,
+        "end": 900
+      },
+      "hadithCount": 7
+    },
+    {
+      "id": 10,
+      "title": "The Book of Prayer - Eclipses",
+      "titleArabic": "كتاب الكسوف",
+      "hadithRange": {
+        "start": 901,
+        "end": 915
+      },
+      "hadithCount": 15
+    },
+    {
+      "id": 11,
+      "title": "The Book of Prayer - Funerals",
+      "titleArabic": "كتاب الجنائز",
+      "hadithRange": {
+        "start": 916,
+        "end": 978
+      },
+      "hadithCount": 63
+    },
+    {
+      "id": 12,
+      "title": "The Book of Zakat",
+      "titleArabic": "كتاب الزكاة",
+      "hadithRange": {
+        "start": 979,
+        "end": 1078
+      },
+      "hadithCount": 100
+    },
+    {
+      "id": 13,
+      "title": "The Book of Fasting",
+      "titleArabic": "كتاب الصيام",
+      "hadithRange": {
+        "start": 1079,
+        "end": 1170
+      },
+      "hadithCount": 92
+    },
+    {
+      "id": 14,
+      "title": "The Book of I'tikaf",
+      "titleArabic": "كتاب الاعتكاف",
+      "hadithRange": {
+        "start": 1171,
+        "end": 1176
+      },
+      "hadithCount": 6
+    },
+    {
+      "id": 15,
+      "title": "The Book of Pilgrimage",
+      "titleArabic": "كتاب الحج",
+      "hadithRange": {
+        "start": 1177,
+        "end": 1399
+      },
+      "hadithCount": 223
+    },
+    {
+      "id": 16,
+      "title": "The Book of Marriage",
+      "titleArabic": "كتاب النكاح",
+      "hadithRange": {
+        "start": 1400,
+        "end": 1443
+      },
+      "hadithCount": 44
+    },
+    {
+      "id": 17,
+      "title": "The Book of Suckling",
+      "titleArabic": "كتاب الرضاع",
+      "hadithRange": {
+        "start": 1444,
+        "end": 1470
+      },
+      "hadithCount": 27
+    },
+    {
+      "id": 18,
+      "title": "The Book of Divorce",
+      "titleArabic": "كتاب الطلاق",
+      "hadithRange": {
+        "start": 1471,
+        "end": 1491
+      },
+      "hadithCount": 21
+    },
+    {
+      "id": 19,
+      "title": "The Book of Invoking Curses",
+      "titleArabic": "كتاب اللعان",
+      "hadithRange": {
+        "start": 1492,
+        "end": 1500
+      },
+      "hadithCount": 9
+    },
+    {
+      "id": 20,
+      "title": "The Book of Emancipating Slaves",
+      "titleArabic": "كتاب العتق",
+      "hadithRange": {
+        "start": 1501,
+        "end": 1510
+      },
+      "hadithCount": 10
+    },
+    {
+      "id": 21,
+      "title": "The Book of Transactions",
+      "titleArabic": "كتاب البيوع",
+      "hadithRange": {
+        "start": 1511,
+        "end": 1550
+      },
+      "hadithCount": 40
+    },
+    {
+      "id": 22,
+      "title": "The Book of Musaqah",
+      "titleArabic": "كتاب المساقاة",
+      "hadithRange": {
+        "start": 1551,
+        "end": 1613
+      },
+      "hadithCount": 63
+    },
+    {
+      "id": 23,
+      "title": "The Book of the Rules of Inheritance",
+      "titleArabic": "كتاب الفرائض",
+      "hadithRange": {
+        "start": 1614,
+        "end": 1619
+      },
+      "hadithCount": 6
+    },
+    {
+      "id": 24,
+      "title": "The Book of Gifts",
+      "titleArabic": "كتاب الهبات",
+      "hadithRange": {
+        "start": 1620,
+        "end": 1626
+      },
+      "hadithCount": 7
+    },
+    {
+      "id": 25,
+      "title": "The Book of Wills",
+      "titleArabic": "كتاب الوصية",
+      "hadithRange": {
+        "start": 1627,
+        "end": 1637
+      },
+      "hadithCount": 11
+    },
+    {
+      "id": 26,
+      "title": "The Book of Vows",
+      "titleArabic": "كتاب النذر",
+      "hadithRange": {
+        "start": 1638,
+        "end": 1645
+      },
+      "hadithCount": 8
+    },
+    {
+      "id": 27,
+      "title": "The Book of Oaths",
+      "titleArabic": "كتاب الأيمان",
+      "hadithRange": {
+        "start": 1646,
+        "end": 1668
+      },
+      "hadithCount": 23
+    },
+    {
+      "id": 28,
+      "title": "The Book of Oaths, Muharibin, Qasas (Retaliation), and Diyat (Blood Money)",
+      "titleArabic": "كتاب القسامة والمحاربين والقصاص والديات",
+      "hadithRange": {
+        "start": 1669,
+        "end": 1683
+      },
+      "hadithCount": 15
+    },
+    {
+      "id": 29,
+      "title": "The Book of Legal Punishments",
+      "titleArabic": "كتاب الحدود",
+      "hadithRange": {
+        "start": 1684,
+        "end": 1710
+      },
+      "hadithCount": 27
+    },
+    {
+      "id": 30,
+      "title": "The Book of Judicial Decisions",
+      "titleArabic": "كتاب الأقضية",
+      "hadithRange": {
+        "start": 1711,
+        "end": 1721
+      },
+      "hadithCount": 11
+    },
+    {
+      "id": 31,
+      "title": "The Book of Lost Property",
+      "titleArabic": "كتاب اللقطة",
+      "hadithRange": {
+        "start": 1722,
+        "end": 1729
+      },
+      "hadithCount": 8
+    },
+    {
+      "id": 32,
+      "title": "The Book of Jihad and Expeditions",
+      "titleArabic": "كتاب الجهاد والسير",
+      "hadithRange": {
+        "start": 1730,
+        "end": 1817
+      },
+      "hadithCount": 88
+    },
+    {
+      "id": 33,
+      "title": "The Book on Government",
+      "titleArabic": "كتاب الإمارة",
+      "hadithRange": {
+        "start": 1818,
+        "end": 1928
+      },
+      "hadithCount": 111
+    },
+    {
+      "id": 34,
+      "title": "The Book of Hunting, Slaughter, and what may be Eaten",
+      "titleArabic": "كتاب الصيد والذبائح وما يؤكل من الحيوان",
+      "hadithRange": {
+        "start": 1929,
+        "end": 1959
+      },
+      "hadithCount": 31
+    },
+    {
+      "id": 35,
+      "title": "The Book of Sacrifices",
+      "titleArabic": "كتاب الأضاحى",
+      "hadithRange": {
+        "start": 1960,
+        "end": 1978
+      },
+      "hadithCount": 19
+    },
+    {
+      "id": 36,
+      "title": "The Book of Drinks",
+      "titleArabic": "كتاب الأشربة",
+      "hadithRange": {
+        "start": 1979,
+        "end": 2064
+      },
+      "hadithCount": 86
+    },
+    {
+      "id": 37,
+      "title": "The Book of Clothes and Adornment",
+      "titleArabic": "كتاب اللباس والزينة",
+      "hadithRange": {
+        "start": 2065,
+        "end": 2130
+      },
+      "hadithCount": 66
+    },
+    {
+      "id": 38,
+      "title": "The Book of Manners and Etiquette",
+      "titleArabic": "كتاب الآداب",
+      "hadithRange": {
+        "start": 2131,
+        "end": 2159
+      },
+      "hadithCount": 29
+    },
+    {
+      "id": 39,
+      "title": "The Book of Greetings",
+      "titleArabic": "كتاب السلام",
+      "hadithRange": {
+        "start": 2160,
+        "end": 2245
+      },
+      "hadithCount": 86
+    },
+    {
+      "id": 40,
+      "title": "The Book Concerning the Use of Correct Words",
+      "titleArabic": "كتاب الألفاظ من الأدب وغيرها",
+      "hadithRange": {
+        "start": 2246,
+        "end": 2254
+      },
+      "hadithCount": 9
+    },
+    {
+      "id": 41,
+      "title": "The Book of Poetry",
+      "titleArabic": "كتاب الشعر",
+      "hadithRange": {
+        "start": 2255,
+        "end": 2260
+      },
+      "hadithCount": 6
+    },
+    {
+      "id": 42,
+      "title": "The Book of Dreams",
+      "titleArabic": "كتاب الرؤيا",
+      "hadithRange": {
+        "start": 2261,
+        "end": 2275
+      },
+      "hadithCount": 15
+    },
+    {
+      "id": 43,
+      "title": "The Book of Virtues",
+      "titleArabic": "كتاب الفضائل",
+      "hadithRange": {
+        "start": 2276,
+        "end": 2380
+      },
+      "hadithCount": 105
+    },
+    {
+      "id": 44,
+      "title": "The Book of the Merits of the Companions",
+      "titleArabic": "كتاب فضائل الصحابة رضى الله تعالى عنهم",
+      "hadithRange": {
+        "start": 2381,
+        "end": 2547
+      },
+      "hadithCount": 167
+    },
+    {
+      "id": 45,
+      "title": "The Book of Virtue, Enjoining Good Manners, and Joining of the Ties of Kinship",
+      "titleArabic": "كتاب البر والصلة والآداب",
+      "hadithRange": {
+        "start": 2548,
+        "end": 2642
+      },
+      "hadithCount": 95
+    },
+    {
+      "id": 46,
+      "title": "The Book of Destiny",
+      "titleArabic": "كتاب القدر",
+      "hadithRange": {
+        "start": 2643,
+        "end": 2664
+      },
+      "hadithCount": 22
+    },
+    {
+      "id": 47,
+      "title": "The Book of Knowledge",
+      "titleArabic": "كتاب العلم",
+      "hadithRange": {
+        "start": 2665,
+        "end": 2674
+      },
+      "hadithCount": 10
+    },
+    {
+      "id": 48,
+      "title": "The Book Pertaining to the Remembrance of Allah, Supplication, Repentance and Seeking Forgiveness",
+      "titleArabic": "كتاب الذكر والدعاء والتوبة والاستغفار",
+      "hadithRange": {
+        "start": 2675,
+        "end": 2735
+      },
+      "hadithCount": 61
+    },
+    {
+      "id": 49,
+      "title": "The Book of Heart-Melting Traditions",
+      "titleArabic": "كتاب الرقاق",
+      "hadithRange": {
+        "start": 2736,
+        "end": 2743
+      },
+      "hadithCount": 8
+    },
+    {
+      "id": 50,
+      "title": "The Book of Repentance",
+      "titleArabic": "كتاب التوبة",
+      "hadithRange": {
+        "start": 2744,
+        "end": 2771
+      },
+      "hadithCount": 28
+    },
+    {
+      "id": 51,
+      "title": "Characteristics of The Hypocrites And Rulings Concerning Them",
+      "titleArabic": "كتاب صفات المنافقين وأحكامهم",
+      "hadithRange": {
+        "start": 2772,
+        "end": 2784
+      },
+      "hadithCount": 13
+    },
+    {
+      "id": 52,
+      "title": "Characteristics of the Day of Judgment, Paradise, and Hell",
+      "titleArabic": "كتاب صفة القيامة والجنة والنار",
+      "hadithRange": {
+        "start": 2785,
+        "end": 2821
+      },
+      "hadithCount": 37
+    },
+    {
+      "id": 53,
+      "title": "The Book of Paradise, its Description, its Bounties and its Inhabitants",
+      "titleArabic": "كتاب الجنة وصفة نعيمها وأهلها",
+      "hadithRange": {
+        "start": 2822,
+        "end": 2879
+      },
+      "hadithCount": 58
+    },
+    {
+      "id": 54,
+      "title": "The Book of Tribulations and Portents of the Last Hour",
+      "titleArabic": "كتاب الفتن وأشراط الساعة",
+      "hadithRange": {
+        "start": 2880,
+        "end": 2955
+      },
+      "hadithCount": 76
+    },
+    {
+      "id": 55,
+      "title": "The Book of Zuhd and Softening of Hearts",
+      "titleArabic": "كتاب الزهد والرقائق",
+      "hadithRange": {
+        "start": 2956,
+        "end": 3014
+      },
+      "hadithCount": 59
+    },
+    {
+      "id": 56,
+      "title": "The Book of Commentary on the Qur'an",
+      "titleArabic": "كتاب التفسير",
+      "hadithRange": {
+        "start": 3015,
+        "end": 3033
+      },
+      "hadithCount": 19
+    }
+  ]
+}

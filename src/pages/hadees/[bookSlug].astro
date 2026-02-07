@@ -1,0 +1,524 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HadithShareDialog from "../../components/HadithShareDialog.astro";
+import { fetchHadithBooks, fetchHadiths } from "../../lib/hadithApi.js";
+
+export async function getStaticPaths() {
+  const books = await fetchHadithBooks();
+  const paths = [];
+  const HADITHS_PER_PAGE = 200;
+
+  for (const book of books) {
+    const allHadiths = await fetchHadiths(book.slug, `1-${book.count || 10000}`, book.title);
+    const totalPages = Math.max(1, Math.ceil(allHadiths.length / HADITHS_PER_PAGE));
+    const hadiths = allHadiths.slice(0, HADITHS_PER_PAGE);
+
+    paths.push({
+      params: { bookSlug: book.slug },
+      props: {
+        mode: "book",
+        book,
+        hadiths,
+        currentPage: 1,
+        totalPages,
+        totalHadiths: allHadiths.length
+      }
+    });
+
+    allHadiths.forEach((entry, index) => {
+      if (!entry || entry.number === undefined || entry.number === null) return;
+      const permalink = `${book.slug}-${entry.number}`;
+      const prevNumber = allHadiths[index - 1]?.number ?? null;
+      const nextNumber = allHadiths[index + 1]?.number ?? null;
+
+      paths.push({
+        params: { bookSlug: permalink },
+        props: {
+          mode: "hadith",
+          book,
+          hadith: entry,
+          permalink,
+          prevNumber,
+          nextNumber
+        }
+      });
+    });
+  }
+
+  return paths;
+}
+
+const {
+  mode = "book",
+  book,
+  hadiths,
+  hadith,
+  permalink,
+  prevNumber,
+  nextNumber,
+  currentPage = 1,
+  totalPages = 1,
+  totalHadiths = 0
+} = Astro.props;
+
+const isHadithPage = mode === "hadith";
+const safeBookTitle = book?.title || "Hadith";
+const safeBookSlug = book?.slug || "";
+const buildPermalink = (slug, number) => `${slug}-${number}`;
+
+const normalizeReference = (reference) => {
+  if (!reference) return null;
+  if (typeof reference === "string") return { primary: reference };
+  return {
+    ...reference,
+    primary: reference.primary || reference.reference || reference.main
+  };
+};
+
+const buildChapterMeta = (entry) => {
+  if (!entry) return null;
+  const title = entry.subChapterTitle || entry.chapterTitle || "";
+  const arabic = entry.subChapterTitleArabic || entry.chapterTitleArabic || "";
+  const number = entry.subChapter ?? entry.chapter;
+  if (!title && !arabic) return null;
+  return { number, title, arabic };
+};
+
+const formatChapterMeta = (meta) => {
+  if (!meta) return "";
+  const prefix = meta.number ? `Chapter ${meta.number}: ` : "Chapter: ";
+  const main = meta.title || meta.arabic || "";
+  const suffix = meta.title && meta.arabic ? ` - ${meta.arabic}` : "";
+  return `${prefix}${main}${suffix}`;
+};
+
+const buildLocalReferenceLink = (number) => {
+  if (!safeBookSlug || number === undefined || number === null) return "";
+  return `/hadees/${safeBookSlug}-${number}`;
+};
+
+const buildReferenceItems = (reference, number) => {
+  const items = [];
+  if (reference?.primary) {
+    const localLink = buildLocalReferenceLink(number);
+    items.push({ label: "Reference", value: reference.primary, link: localLink || undefined });
+  }
+  if (reference?.inBook) items.push({ label: "In-book reference", value: reference.inBook });
+  if (reference?.uscMsa) items.push({ label: "USC-MSA web (English) reference", value: reference.uscMsa });
+  return items;
+};
+
+const normalizeTranslation = (entry) => {
+  if (!entry) return null;
+  if (typeof entry === "string") return { text: entry };
+  return {
+    sanad: entry.sanad || "",
+    text: entry.text || ""
+  };
+};
+
+const normalizeHadithEntry = (entry) => {
+  if (!entry) return null;
+  const reference = normalizeReference(entry.reference);
+  const englishText = typeof entry.text === "object"
+    ? (entry.text.text || entry.text)
+    : (entry.text || "");
+  const narrator = entry.narrator || (typeof entry.text === "object"
+    ? (entry.text.narrator || "")
+    : "");
+  const translations = entry.translations || {};
+
+  return {
+    ...entry,
+    arab: entry.arab || "",
+    text: englishText,
+    narrator,
+    reference,
+    referenceItems: buildReferenceItems(reference, entry.number),
+    chapterMeta: buildChapterMeta(entry),
+    translations: {
+      urdu: normalizeTranslation(translations.urdu),
+      bangla: normalizeTranslation(translations.bangla)
+    }
+  };
+};
+
+const normalizedHadiths = (Array.isArray(hadiths) ? hadiths : []).map(normalizeHadithEntry).filter(Boolean);
+const normalizedHadith = normalizeHadithEntry(hadith);
+
+const hasUrdu = Boolean(normalizedHadith?.translations?.urdu?.text);
+const hasBangla = Boolean(normalizedHadith?.translations?.bangla?.text);
+
+const getDescription = (text, fallback) => {
+  const cleaned = String(text || "").replace(/\s+/g, " ").trim();
+  if (!cleaned) return fallback;
+  if (cleaned.length <= 160) return cleaned;
+  return `${cleaned.slice(0, 157)}...`;
+};
+
+const pageTitle = isHadithPage && normalizedHadith
+  ? `${safeBookTitle} Hadith ${normalizedHadith.number} - TaqwaPath`
+  : `${safeBookTitle} Hadith Collection - TaqwaPath`;
+
+const pageDescription = isHadithPage && normalizedHadith
+  ? getDescription(
+    normalizedHadith.text,
+    `Read ${safeBookTitle} hadith with Arabic and English text, references, and sharing tools.`
+  )
+  : `Read ${safeBookTitle} hadith with Arabic and English text, references, and sharing tools.`;
+
+const hadithPermalink = normalizedHadith && safeBookSlug
+  ? `/hadees/${buildPermalink(safeBookSlug, normalizedHadith.number)}`
+  : "";
+const prevPermalink = prevNumber !== null && prevNumber !== undefined && safeBookSlug
+  ? `/hadees/${buildPermalink(safeBookSlug, prevNumber)}`
+  : "";
+const nextPermalink = nextNumber !== null && nextNumber !== undefined && safeBookSlug
+  ? `/hadees/${buildPermalink(safeBookSlug, nextNumber)}`
+  : "";
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+>
+  {isHadithPage ? (
+    <section class="section">
+      <div class="container">
+        {normalizedHadith ? (
+          <div class="chapter-layout" data-language-root data-active-lang="english">
+            <aside class="language-panel" data-language-switcher>
+              <div class="language-panel__title">Language</div>
+              <label class="language-option">
+                <input type="radio" name="hadith-language" value="english" checked />
+                <span>English</span>
+              </label>
+              {hasUrdu ? (
+                <label class="language-option">
+                  <input type="radio" name="hadith-language" value="urdu" />
+                  <span>Urdu</span>
+                </label>
+              ) : null}
+              {hasBangla ? (
+                <label class="language-option">
+                  <input type="radio" name="hadith-language" value="bangla" />
+                  <span>Bangla</span>
+                </label>
+              ) : null}
+            </aside>
+
+            <div class="chapter-content">
+              <div class="heading-row">
+                <div>
+                  <span class="pill">Hadith {normalizedHadith.number}</span>
+                  <h1 class="section-title">{safeBookTitle}</h1>
+                </div>
+                {book?.arabicTitle ? (
+                  <p class="heading-row__arabic arabic-text">{book.arabicTitle}</p>
+                ) : null}
+              </div>
+              <p class="section-lead">
+                {book?.summary || "Read a trusted hadith reference with Arabic and translations."}
+              </p>
+
+              <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+                {safeBookSlug ? (
+                  <a class="btn btn--secondary" href={`/hadees/${safeBookSlug}`}>Back to Book</a>
+                ) : null}
+                {normalizedHadith.chapter ? (
+                  <a class="btn btn--ghost" href={`/hadees/${safeBookSlug}/chapter/${normalizedHadith.chapter}`}>View Chapter</a>
+                ) : null}
+                {safeBookSlug ? (
+                  <a class="btn btn--ghost" href={`/hadees/${safeBookSlug}/chapters`}>All Chapters</a>
+                ) : null}
+              </div>
+
+              <article
+                class="card"
+                data-hadith-number={normalizedHadith.number}
+                data-share-url={hadithPermalink || ""}
+              >
+                <div class="card__title">Hadith {normalizedHadith.number}</div>
+                {normalizedHadith.chapterMeta ? (
+                  <p class="hadith-question">
+                    {formatChapterMeta(normalizedHadith.chapterMeta)}
+                  </p>
+                ) : null}
+                {normalizedHadith.arab ? (
+                  <p class="hadith-arabic arabic-text" style="font-size: 1.25rem; line-height: 2; margin-bottom: 16px; direction: rtl; text-align: right;">
+                    {normalizedHadith.arab}
+                  </p>
+                ) : null}
+                <div class="translation-block" data-lang="english">
+                  {normalizedHadith.narrator ? (
+                    <p class="hadith-narrator" style="margin-bottom: 8px;"><strong>{normalizedHadith.narrator}</strong></p>
+                  ) : null}
+                  <p class="hadith-english muted" style="margin-bottom: 16px;">
+                    {normalizedHadith.text || "Translation unavailable."}
+                  </p>
+                </div>
+                {hasUrdu ? (
+                  <div class="translation-block translation-block--urdu" data-lang="urdu">
+                    {normalizedHadith.translations.urdu?.sanad ? (
+                      <p class="translation-sanad translation-sanad--urdu">{normalizedHadith.translations.urdu.sanad}</p>
+                    ) : null}
+                    <p class="translation-text translation-text--urdu">{normalizedHadith.translations.urdu.text}</p>
+                  </div>
+                ) : null}
+                {hasBangla ? (
+                  <div class="translation-block translation-block--bangla" data-lang="bangla">
+                    {normalizedHadith.translations.bangla?.sanad ? (
+                      <p class="translation-sanad">{normalizedHadith.translations.bangla.sanad}</p>
+                    ) : null}
+                    <p class="translation-text">{normalizedHadith.translations.bangla.text}</p>
+                  </div>
+                ) : null}
+                {normalizedHadith.referenceItems.length ? (
+                  <div class="hadith-reference reference-block">
+                    {normalizedHadith.referenceItems.map((item) => (
+                      <div class="reference-row">
+                        <span class="reference-label">{item.label}</span>
+                        <span class="reference-value">
+                          {item.link ? (
+                            <a href={item.link} target="_blank" rel="noreferrer">
+                              {item.value}
+                            </a>
+                          ) : (
+                            item.value
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div class="hadith-reference card__meta">Reference unavailable.</div>
+                )}
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+                  <button class="btn btn--secondary copy-hadith-btn">Copy</button>
+                  <button class="btn btn--ghost" type="button" data-share-trigger>Share</button>
+                </div>
+              </article>
+
+              <div class="card" style="margin-top: 24px;">
+                <strong>More from {safeBookTitle}</strong>
+                <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+                  {prevPermalink ? (
+                    <a class="btn btn--secondary" href={prevPermalink}>Previous Hadith</a>
+                  ) : null}
+                  {nextPermalink ? (
+                    <a class="btn btn--secondary" href={nextPermalink}>Next Hadith</a>
+                  ) : null}
+                  {safeBookSlug ? (
+                    <a class="btn btn--ghost" href={`/hadees/${safeBookSlug}`}>View All Hadiths</a>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="card">
+            <strong>Hadith unavailable.</strong>
+            <p class="muted">This reference could not be loaded.</p>
+          </div>
+        )}
+      </div>
+    </section>
+  ) : (
+    <section class="section">
+      <div class="container">
+        <div class="heading-row">
+          <div>
+            <span class="pill">Hadith book</span>
+            <h1 class="section-title">{safeBookTitle}</h1>
+          </div>
+          {book?.arabicTitle ? (
+            <p class="heading-row__arabic arabic-text">{book.arabicTitle}</p>
+          ) : null}
+        </div>
+        <p class="section-lead">
+          {book?.summary} Use the tools below to search, filter, and share reference-ready snippets.
+        </p>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+          <a class="btn btn--primary" href={`/hadees/${safeBookSlug}/chapters`}>Browse by Chapter</a>
+        </div>
+
+        <div class="grid grid--3" style="margin-bottom: 24px;">
+          <div class="card">
+            <div class="card__title">Search within book</div>
+            <input class="input" placeholder="Search by keyword or hadith number" />
+          </div>
+          <div class="card">
+            <div class="card__title">Sort</div>
+            <select class="select">
+              <option>Default order</option>
+              <option>Shortest</option>
+              <option>Longest</option>
+              <option>By chapter</option>
+            </select>
+          </div>
+          <div class="card">
+            <div class="card__title">Filter</div>
+            <select class="select">
+              <option>All chapters</option>
+              <option>Faith and worship</option>
+              <option>Character</option>
+              <option>Community</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="list">
+          {normalizedHadiths.length ? (
+            normalizedHadiths.map((item, index) => (
+              <article
+                class={`card anim-fade-up anim-delay-${(index % 3) + 1}`}
+                data-hadith-number={item.number}
+                data-share-url={`/hadees/${buildPermalink(safeBookSlug, item.number)}`}
+              >
+                <div class="card__title">Hadith {item.number}</div>
+                {item.chapterMeta ? (
+                  <div class="card__meta" style="margin-bottom: 12px;">
+                    {formatChapterMeta(item.chapterMeta)}
+                  </div>
+                ) : null}
+                {item.narrator ? (
+                  <p class="hadith-narrator" style="margin-bottom: 8px;"><strong>{item.narrator}</strong></p>
+                ) : null}
+                {item.arab ? (
+                  <p class="hadith-arabic arabic-text" style="font-size: 1.25rem; line-height: 2; margin-bottom: 16px; direction: rtl; text-align: right;">
+                    {item.arab}
+                  </p>
+                ) : null}
+                <p class="hadith-english muted" style="margin-bottom: 16px;">{item.text || "Translation unavailable."}</p>
+                {item.referenceItems.length ? (
+                  <div class="hadith-reference reference-block">
+                    {item.referenceItems.map((refItem) => (
+                      <div class="reference-row">
+                        <span class="reference-label">{refItem.label}</span>
+                        <span class="reference-value">
+                          {refItem.link ? (
+                            <a href={refItem.link} target="_blank" rel="noreferrer">
+                              {refItem.value}
+                            </a>
+                          ) : (
+                            refItem.value
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div class="hadith-reference card__meta">Reference unavailable.</div>
+                )}
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+                  <button class="btn btn--secondary copy-hadith-btn">Copy</button>
+                  <button class="btn btn--ghost" type="button" data-share-trigger>Share</button>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div class="card">
+              <strong>No hadiths available.</strong>
+              <p class="muted">Try refreshing or selecting another collection.</p>
+            </div>
+          )}
+        </div>
+
+        <div class="card" style="margin-top: 24px;">
+          <strong>Page {currentPage} of {totalPages}</strong>
+          <p class="muted">
+            Showing {normalizedHadiths.length} hadiths on this page (Total: {totalHadiths} hadiths in {safeBookTitle})
+          </p>
+          <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; align-items: center;">
+            {currentPage > 1 ? (
+              <>
+                <a class="btn btn--secondary" href={`/hadees/${safeBookSlug}`}>First</a>
+                <a class="btn btn--secondary" href={`/hadees/${safeBookSlug}${currentPage - 1 === 1 ? "" : `/${currentPage - 1}`}`}>Previous</a>
+              </>
+            ) : null}
+
+            <span class="muted" style="padding: 0 12px;">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            {currentPage < totalPages ? (
+              <>
+                <a class="btn btn--secondary" href={`/hadees/${safeBookSlug}/${currentPage + 1}`}>Next</a>
+                <a class="btn btn--secondary" href={`/hadees/${safeBookSlug}/${totalPages}`}>Last</a>
+              </>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+  <HadithShareDialog />
+</BaseLayout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const languageRoot = document.querySelector("[data-language-root]");
+    const languageInputs = document.querySelectorAll("[data-language-switcher] input[type=\"radio\"]");
+    const copyButtons = document.querySelectorAll(".copy-hadith-btn");
+    const getActiveLang = () => languageRoot?.dataset.activeLang || "english";
+
+    languageInputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        if (!languageRoot) return;
+        languageRoot.dataset.activeLang = input.value;
+      });
+    });
+
+    copyButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const article = button.closest("article");
+        if (!article) return;
+        const arabicText = article.querySelector(".hadith-arabic")?.textContent.trim() || "";
+        const narrator = article.querySelector(".hadith-narrator")?.textContent.trim() || "";
+        const englishText = article.querySelector(".hadith-english")?.textContent.trim() || "";
+        const reference = article.querySelector(".hadith-reference")?.textContent.trim() || "";
+        const activeLang = getActiveLang();
+        const translationBlock = article.querySelector(`.translation-block[data-lang=\"${activeLang}\"]`);
+        const translationText = activeLang !== "english" && translationBlock
+          ? translationBlock.textContent.trim()
+          : englishText;
+
+        let textToCopy = "";
+        if (arabicText) {
+          textToCopy += `${arabicText}\n\n`;
+        }
+        if (activeLang !== "english" && translationText) {
+          textToCopy += `${translationText}\n\n`;
+        } else {
+          if (narrator) {
+            textToCopy += `${narrator}\n`;
+          }
+          if (englishText) {
+            textToCopy += `${englishText}\n\n`;
+          }
+        }
+        if (reference) {
+          textToCopy += reference;
+        }
+
+        try {
+          await navigator.clipboard.writeText(textToCopy.trim());
+          const originalText = button.textContent;
+          button.textContent = "Copied!";
+          button.style.background = "var(--color-success, #22c55e)";
+
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = "";
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy:", err);
+          button.textContent = "Failed";
+          setTimeout(() => {
+            button.textContent = "Copy";
+          }, 2000);
+        }
+      });
+    });
+  });
+</script>

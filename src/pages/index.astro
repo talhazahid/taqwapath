@@ -1,0 +1,379 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { fetchHadithOfDay } from "../lib/hadithApi.js";
+
+const hadithOfDay = await fetchHadithOfDay();
+const rawHadith = hadithOfDay?.hadith;
+const hadithBook = hadithOfDay?.book;
+const chapterMap = hadithOfDay?.chapterMap || {};
+
+const normalizeHadithText = (value) => {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "object") {
+    if (typeof value.text === "string") return value.text;
+    if (typeof value.text === "object" && typeof value.text.text === "string") return value.text.text;
+    if (typeof value.english === "string") return value.english;
+  }
+  return String(value);
+};
+
+const normalizeHadith = (value) => {
+  if (!value) return null;
+  const text = normalizeHadithText(value.text || value.english);
+  const narrator = value.narrator || (typeof value.text === "object" ? (value.text.narrator || "") : "");
+  return {
+    ...value,
+    text,
+    narrator,
+    arab: value.arab || ""
+  };
+};
+
+const hadith = normalizeHadith(rawHadith);
+
+const normalizeReference = (reference) => {
+  if (!reference) return null;
+  if (typeof reference === "string") return { primary: reference };
+  return {
+    ...reference,
+    primary: reference.primary || reference.reference || reference.main
+  };
+};
+
+const cleanReferenceValue = (value) => {
+  if (typeof value !== "string") return value;
+  return value.replace(/^:\s*/, "");
+};
+
+const getBookSlug = (book) => book?.slug || book?.id || book?.sourceSlug || "";
+
+const buildLocalReferenceLink = (book, number) => {
+  const slug = getBookSlug(book);
+  if (!slug || number === undefined || number === null) return "";
+  return `/hadees/${slug}-${number}`;
+};
+
+const buildReferenceItems = (reference, book, number) => {
+  const items = [];
+  if (reference?.primary) {
+    const localLink = buildLocalReferenceLink(book, number);
+    items.push({ label: "Reference", value: cleanReferenceValue(reference.primary), link: localLink || undefined });
+  }
+  return items;
+};
+
+const formatChapterLine = (entry) => {
+  if (!entry) return "";
+  const title = entry.subChapterTitle || entry.chapterTitle || "";
+  const arabicTitle = entry.subChapterTitleArabic || entry.chapterTitleArabic || "";
+  if (!title && !arabicTitle) return "";
+  const chapterNumber = entry.subChapter ?? entry.chapter;
+  const prefix = chapterNumber ? `Chapter ${chapterNumber}: ` : "Chapter: ";
+  const main = title || arabicTitle;
+  const suffix = title && arabicTitle ? ` - ${arabicTitle}` : "";
+  return `${prefix}${main}${suffix}`;
+};
+
+const referenceItems = buildReferenceItems(normalizeReference(hadith?.reference), hadithBook, hadith?.number);
+const hadithQuestion = formatChapterLine(hadith);
+---
+<BaseLayout
+  title="Salah Timings, Hadith, Quran Recitations & Zakat | TaqwaPath"
+  description="One place for salah/namaz timings, hadith collection, Quran recitations, zakat calculator, and Islamic calendar with Hijri dates."
+>
+  <section class="hero hero--white">
+    <div class="container hero__grid">
+      <div class="anim-fade-up">
+        <span class="pill">Daily essentials</span>
+        <h1 class="hero__headline">
+          One place for Salah timings, Hadith collection, Quran recitations, Zakat calculator, and Islamic calendar.
+        </h1>
+        <p class="hero__lead">
+          Get today&#39;s prayer times (Salah/Namaz), explore trusted Hadith books, listen to Quran by reciter,
+          calculate zakat, and track Hijri dates with one fast, reliable hub.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/salah-namaz-timings">See today&#39;s Salah times</a>
+          <a class="btn btn--ghost" href="/listen-quran">Listen to Quran</a>
+        </div>
+      </div>
+      <div class="card card--featured anim-fade-up anim-delay-1" data-hadith-card>
+        <div class="pill">Hadith of the Day</div>
+        <p
+          class="hadith-question"
+          style={hadithQuestion ? "" : "display: none;"}
+          data-hadith-question
+        >
+          {hadithQuestion}
+        </p>
+        <p class="hadith-snippet" data-hadith-text>
+          {hadith?.text || "Loading the hadith of the day..."}
+        </p>
+        <p
+          class="arabic-text muted"
+          style={hadith?.arab ? "" : "display: none;"}
+          data-hadith-arabic
+        >
+          {hadith?.arab || ""}
+        </p>
+        <div class="reference-block" data-hadith-reference>
+          {referenceItems.length ? (
+            referenceItems.map((item) => (
+              <div class="reference-row">
+                <span class="reference-label">{item.label}</span>
+                <span class="reference-value">
+                  {item.link ? (
+                    <a href={item.link} target="_blank" rel="noreferrer">
+                      {item.value}
+                    </a>
+                  ) : (
+                    item.value
+                  )}
+                </span>
+              </div>
+            ))
+          ) : (
+            <div class="reference-row">
+              <span class="reference-label">Reference</span>
+              <span class="reference-value">Reference will appear here.</span>
+            </div>
+          )}
+        </div>
+        <div style="margin-top: 16px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--white">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div>
+          <h2 class="section-title">Quick access</h2>
+          <p class="section-lead">
+            The core tools you need for daily worship, built to be gentle, fast, and clear.
+          </p>
+        </div>
+        <a class="btn btn--primary btn--compact" href="/islamic-calendar-2026">View 2026 Calendar</a>
+      </div>
+      <div class="feature-grid">
+        <a class="feature-tile anim-fade-up anim-delay-1" href="/zakat-calculator">
+          <div class="card__title">Zakat Calculator</div>
+          <div class="card__meta">Live totals, nisab logic, hawl reminders.</div>
+        </a>
+        <a class="feature-tile anim-fade-up anim-delay-2" href="/salah-namaz-timings">
+          <div class="card__title">Salah Timings</div>
+          <div class="card__meta">Next prayer countdown and monthly view.</div>
+        </a>
+        <a class="feature-tile anim-fade-up anim-delay-3" href="/listen-quran">
+          <div class="card__title">Listen Quran</div>
+          <div class="card__meta">Reciter selection with a global audio player.</div>
+        </a>
+        <a class="feature-tile anim-fade-up anim-delay-1" href="/islamic-calendar-2026">
+          <div class="card__title">Islamic Calendar 2026</div>
+          <div class="card__meta">Hijri and Gregorian dates side by side.</div>
+        </a>
+        <a class="feature-tile anim-fade-up anim-delay-2" href="/hadees">
+          <div class="card__title">Browse Hadith</div>
+          <div class="card__meta">Books, filters, and sharing tools.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="initial-hadith-data">
+  {JSON.stringify({ hadith, book: hadithBook, chapterMap })}
+</script>
+
+<script>
+  const DAILY_DATA = "/data/sunnah/daily.json";
+  const card = document.querySelector("[data-hadith-card]");
+  const questionEl = document.querySelector("[data-hadith-question]");
+  const textEl = document.querySelector("[data-hadith-text]");
+  const arabicEl = document.querySelector("[data-hadith-arabic]");
+  const refEl = document.querySelector("[data-hadith-reference]");
+  let activeHadith = null;
+  let activeBook = null;
+  let chapterMap = {};
+
+  const getDayOfYear = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    return Math.floor((now - start) / 86400000);
+  };
+
+  const normalizeReference = (reference) => {
+    if (!reference) return null;
+    if (typeof reference === "string") return { primary: reference };
+    return {
+      ...reference,
+      primary: reference.primary || reference.reference || reference.main
+    };
+  };
+
+  const cleanReferenceValue = (value) => {
+    if (typeof value !== "string") return value;
+    return value.replace(/^:\s*/, "");
+  };
+
+  const getBookSlug = (book) => book?.slug || book?.id || book?.sourceSlug || "";
+
+  const buildLocalReferenceLink = (book, number) => {
+    const slug = getBookSlug(book);
+    if (!slug || number === undefined || number === null) return "";
+    return `/hadees/${slug}-${number}`;
+  };
+
+  const buildReferenceItems = (reference, book, number) => {
+    const items = [];
+    if (reference?.primary) {
+      const localLink = buildLocalReferenceLink(book, number);
+      items.push({ label: "Reference", value: cleanReferenceValue(reference.primary), link: localLink || undefined });
+    }
+    return items;
+  };
+
+  const normalizeHadithText = (value) => {
+    if (!value) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") {
+      if (typeof value.text === "string") return value.text;
+      if (typeof value.text === "object" && typeof value.text.text === "string") return value.text.text;
+      if (typeof value.english === "string") return value.english;
+    }
+    return String(value);
+  };
+
+  const normalizeHadith = (hadith) => {
+    if (!hadith) return null;
+    return {
+      ...hadith,
+      text: normalizeHadithText(hadith.text || hadith.english),
+      reference: normalizeReference(hadith.reference)
+    };
+  };
+
+  const mergeChapterInfo = (hadith) => {
+    if (!hadith || !chapterMap) return hadith;
+    const entry = chapterMap[hadith.number];
+    if (!entry) return hadith;
+    return {
+      ...hadith,
+      chapter: hadith.chapter ?? entry.chapter,
+      chapterTitle: hadith.chapterTitle ?? entry.chapterTitle,
+      chapterTitleArabic: hadith.chapterTitleArabic ?? entry.chapterTitleArabic,
+      subChapter: hadith.subChapter ?? entry.subChapter,
+      subChapterTitle: hadith.subChapterTitle ?? entry.subChapterTitle,
+      subChapterTitleArabic: hadith.subChapterTitleArabic ?? entry.subChapterTitleArabic
+    };
+  };
+
+  const formatChapterLine = (entry) => {
+    if (!entry) return "";
+    const title = entry.subChapterTitle || entry.chapterTitle || "";
+    const arabicTitle = entry.subChapterTitleArabic || entry.chapterTitleArabic || "";
+    if (!title && !arabicTitle) return "";
+    const chapterNumber = entry.subChapter ?? entry.chapter;
+    const prefix = chapterNumber ? `Chapter ${chapterNumber}: ` : "Chapter: ";
+    const main = title || arabicTitle;
+    const suffix = title && arabicTitle ? ` - ${arabicTitle}` : "";
+    return `${prefix}${main}${suffix}`;
+  };
+
+  const pickMediumHadith = (items) => {
+    const normalized = items.map((item) => normalizeHadith(item)).filter(Boolean);
+    const filtered = normalized.filter((item) => {
+      const text = (item.text || "").replace(/\s+/g, " ").trim();
+      return text.length >= 140 && text.length <= 200;
+    });
+    const pool = filtered.length ? filtered : normalized;
+    if (!pool.length) return null;
+    const index = getDayOfYear() % pool.length;
+    return pool[index];
+  };
+
+  const renderReference = (reference) => {
+    if (!refEl) return;
+    const items = buildReferenceItems(normalizeReference(reference), activeBook, activeHadith?.number);
+    refEl.innerHTML = "";
+    if (!items.length) {
+      const row = document.createElement("div");
+      row.className = "reference-row";
+      row.innerHTML = "<span class=\"reference-label\">Reference</span><span class=\"reference-value\">Reference unavailable.</span>";
+      refEl.appendChild(row);
+      return;
+    }
+    items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "reference-row";
+      const label = document.createElement("span");
+      label.className = "reference-label";
+      label.textContent = item.label;
+      const value = document.createElement("span");
+      value.className = "reference-value";
+      if (item.link) {
+        const link = document.createElement("a");
+        link.href = item.link;
+        link.textContent = item.value;
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        value.appendChild(link);
+      } else {
+        value.textContent = item.value;
+      }
+      row.append(label, value);
+      refEl.appendChild(row);
+    });
+  };
+
+  const setHadith = (hadith, book) => {
+    if (!card || !hadith) return;
+    const normalized = normalizeHadith(hadith);
+    if (!normalized) return;
+    const enriched = mergeChapterInfo(normalized);
+    activeHadith = enriched;
+    if (book) activeBook = book;
+    if (textEl) textEl.textContent = enriched.text || "Hadith text unavailable.";
+    if (arabicEl) {
+      arabicEl.textContent = enriched.arab || "";
+      arabicEl.style.display = enriched.arab ? "block" : "none";
+    }
+    if (questionEl) {
+      const question = formatChapterLine(enriched);
+      questionEl.textContent = question;
+      questionEl.style.display = question ? "block" : "none";
+    }
+    renderReference(enriched.reference);
+  };
+
+  const initialHadithData = document.getElementById('initial-hadith-data');
+  if (initialHadithData) {
+    try {
+      const data = JSON.parse(initialHadithData.textContent);
+      if (data.hadith) {
+        chapterMap = data.chapterMap || {};
+        setHadith(data.hadith, data.book);
+      }
+    } catch (e) {
+      // Ignore parsing errors
+    }
+  }
+
+  const loadHadithOfDay = async () => {
+    try {
+      const response = await fetch(DAILY_DATA);
+      if (!response.ok) throw new Error("Failed to fetch daily hadith.");
+      const payload = await response.json();
+      const items = Array.isArray(payload?.items) ? payload.items : [];
+      if (!items.length) return;
+      const hadith = pickMediumHadith(items);
+      if (!hadith) return;
+      setHadith(hadith, payload?.collection);
+    } catch {
+      // Keep the server-rendered fallback.
+    }
+  };
+
+  loadHadithOfDay();
+</script>

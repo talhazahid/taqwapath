@@ -1,0 +1,355 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Salah / Namaz Timings by City - TaqwaPath"
+  description="Get accurate Salah/Namaz times by location, method, madhab, and monthly schedule."
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Salah Timings</span>
+      <h1 class="section-title">Salah (Namaz) times for today</h1>
+      <p class="section-lead">
+        Adjust your location, calculation method, and madhab for precise timings.
+      </p>
+
+      <div class="grid grid--3" style="margin-bottom: 24px;">
+        <div class="card">
+          <div class="card__title">Location</div>
+          <div class="form-grid">
+            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+              <input class="input" placeholder="City" data-city />
+              <input class="input" placeholder="Country" data-country />
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button class="btn btn--secondary" data-use-location>Use my location</button>
+              <button class="btn btn--ghost" data-update-location>Update</button>
+            </div>
+            <div class="tag" data-location-status></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__title">Calculation method</div>
+          <select class="select" data-method>
+            <option value="3">Muslim World League</option>
+            <option value="2">ISNA</option>
+            <option value="1">Karachi</option>
+            <option value="4">Umm al-Qura</option>
+            <option value="5">Egyptian</option>
+            <option value="0">Jaffriya (Shia)</option>
+          </select>
+          <div class="tag" style="margin-top: 8px;">
+            Timezone: <span data-timezone>--</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__title">Madhab</div>
+          <select class="select" data-school>
+            <option value="1">Hanafi</option>
+            <option value="0">Shafi</option>
+          </select>
+          <div class="tag" data-school-note style="margin-top: 8px; display: none;">
+            Not applicable for Jaffriya.
+          </div>
+          <div class="tag" style="margin-top: 8px;">
+            Last updated <span data-last-updated>--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prayer-grid" style="margin-bottom: 24px;">
+        {["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"].map((name) => (
+          <div class="prayer-card" data-prayer-card={name}>
+            <div class="card__title">
+              {name}
+              <span class="tag" data-prayer-next={name} style="display: none;">Next</span>
+            </div>
+            <div class="muted" data-prayer-time={name}>--:--</div>
+            <div class="tag" data-prayer-countdown={name} style="display: none;"></div>
+            <div class="progress" data-prayer-progress={name} style="display: none;">
+              <div class="progress__bar" data-prayer-progress-bar={name}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div class="card__title">Monthly view</div>
+            <div class="muted">Month-at-a-glance prayer schedule for your location.</div>
+          </div>
+        </div>
+        <div style="overflow-x: auto; margin-top: 16px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Fajr</th>
+                <th>Dhuhr</th>
+                <th>Asr</th>
+                <th>Maghrib</th>
+                <th>Isha</th>
+              </tr>
+            </thead>
+            <tbody data-monthly-body>
+              <tr>
+                <td colspan="6" class="muted">Loading monthly timings...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const API_BASE = "https://api.aladhan.com/v1";
+  const cityInput = document.querySelector("[data-city]");
+  const countryInput = document.querySelector("[data-country]");
+  const methodSelect = document.querySelector("[data-method]");
+  const schoolSelect = document.querySelector("[data-school]");
+  const schoolNote = document.querySelector("[data-school-note]");
+  const timezoneEl = document.querySelector("[data-timezone]");
+  const lastUpdatedEl = document.querySelector("[data-last-updated]");
+  const statusEl = document.querySelector("[data-location-status]");
+  const useLocationBtn = document.querySelector("[data-use-location]");
+  const updateBtn = document.querySelector("[data-update-location]");
+  const monthlyBody = document.querySelector("[data-monthly-body]");
+
+  const prayerNames = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  const prayerCards = new Map();
+  prayerNames.forEach((name) => {
+    prayerCards.set(name, {
+      card: document.querySelector(`[data-prayer-card="${name}"]`),
+      time: document.querySelector(`[data-prayer-time="${name}"]`),
+      next: document.querySelector(`[data-prayer-next="${name}"]`),
+      countdown: document.querySelector(`[data-prayer-countdown="${name}"]`),
+      progress: document.querySelector(`[data-prayer-progress="${name}"]`),
+      progressBar: document.querySelector(`[data-prayer-progress-bar="${name}"]`)
+    });
+  });
+
+  const cleanTime = (time) => (time ? time.split(" ")[0] : "--:--");
+  const formatTime12 = (time) => {
+    if (!time || time === "--:--") return "--:--";
+    const [hour, minute] = time.split(":").map(Number);
+    if (!Number.isFinite(hour) || !Number.isFinite(minute)) return "--:--";
+    const period = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
+  };
+
+  const parseTime = (baseDate, time) => {
+    const [hour, minute] = cleanTime(time).split(":").map(Number);
+    const date = new Date(baseDate);
+    date.setHours(hour, minute, 0, 0);
+    return date;
+  };
+
+  const formatCountdown = (seconds) => {
+    const safe = Math.max(0, Math.floor(seconds));
+    const hours = Math.floor(safe / 3600);
+    const minutes = Math.floor((safe % 3600) / 60);
+    const secs = safe % 60;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
+
+  let currentTimings = null;
+  let nextState = null;
+
+  const updateSchoolAvailability = () => {
+    const isJaffriya = methodSelect?.value === "0";
+    if (schoolSelect) schoolSelect.disabled = Boolean(isJaffriya);
+    if (schoolNote) schoolNote.style.display = isJaffriya ? "inline-flex" : "none";
+  };
+
+  const renderTimes = (timings, meta, dateObj) => {
+    currentTimings = timings;
+    prayerNames.forEach((name) => {
+      const card = prayerCards.get(name);
+      if (card?.time) card.time.textContent = formatTime12(cleanTime(timings[name]));
+      card?.card?.classList.remove("prayer-card--next");
+      if (card?.next) card.next.style.display = "none";
+      if (card?.countdown) card.countdown.style.display = "none";
+      if (card?.progress) card.progress.style.display = "none";
+    });
+
+    if (timezoneEl && meta?.timezone) timezoneEl.textContent = meta.timezone;
+    if (lastUpdatedEl) lastUpdatedEl.textContent = new Date().toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit" });
+
+    const baseDate = dateObj || new Date();
+    const times = prayerNames.map((name) => ({
+      name,
+      date: parseTime(baseDate, timings[name])
+    }));
+    const now = new Date();
+    let next = times.find((entry) => entry.date > now);
+    let prev = null;
+
+    if (!next) {
+      next = { ...times[0], date: new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1, times[0].date.getHours(), times[0].date.getMinutes()) };
+      prev = times[times.length - 1];
+    } else {
+      const nextIndex = times.findIndex((entry) => entry.name === next.name);
+      prev = nextIndex > 0 ? times[nextIndex - 1] : times[times.length - 1];
+    }
+
+    if (prev.date > next.date) {
+      prev = { ...prev, date: new Date(prev.date.getTime() - 86400000) };
+    }
+
+    nextState = { next, prev };
+
+    const nextCard = prayerCards.get(next.name);
+    if (nextCard) {
+      nextCard.card?.classList.add("prayer-card--next");
+      if (nextCard.next) nextCard.next.style.display = "inline-flex";
+      if (nextCard.countdown) nextCard.countdown.style.display = "inline-flex";
+      if (nextCard.progress) nextCard.progress.style.display = "block";
+    }
+  };
+
+  const updateCountdown = () => {
+    if (!nextState) return;
+    const now = new Date();
+    const { next, prev } = nextState;
+    const nextCard = prayerCards.get(next.name);
+    const seconds = (next.date - now) / 1000;
+    if (nextCard?.countdown) {
+      nextCard.countdown.textContent = `Starts in ${formatCountdown(seconds)}`;
+    }
+    const progress = Math.min(1, Math.max(0, (now - prev.date) / (next.date - prev.date)));
+    if (nextCard?.progressBar) {
+      nextCard.progressBar.style.width = `${Math.round(progress * 100)}%`;
+    }
+    if (seconds <= 0) {
+      renderTimes(currentTimings, { timezone: timezoneEl?.textContent || "" }, new Date());
+    }
+  };
+
+  const renderMonthly = (days) => {
+    if (!monthlyBody) return;
+    monthlyBody.innerHTML = days
+      .map((day) => {
+        const timings = day.timings || {};
+        const dateLabel = `${day.date.gregorian.day} ${day.date.gregorian.month.en}`;
+        return `
+          <tr>
+            <td>${dateLabel}</td>
+            <td>${formatTime12(cleanTime(timings.Fajr))}</td>
+            <td>${formatTime12(cleanTime(timings.Dhuhr))}</td>
+            <td>${formatTime12(cleanTime(timings.Asr))}</td>
+            <td>${formatTime12(cleanTime(timings.Maghrib))}</td>
+            <td>${formatTime12(cleanTime(timings.Isha))}</td>
+          </tr>
+        `;
+      })
+      .join("");
+  };
+
+  const fetchByCity = async () => {
+    if (!cityInput?.value || !countryInput?.value) {
+      if (statusEl) statusEl.textContent = "Enter both city and country.";
+      return;
+    }
+    if (statusEl) statusEl.textContent = "Updating timings...";
+    const city = encodeURIComponent(cityInput.value.trim());
+    const country = encodeURIComponent(countryInput.value.trim());
+    const method = methodSelect?.value || "3";
+    const school = schoolSelect?.value || "1";
+
+    const timingsUrl = `${API_BASE}/timingsByCity?city=${city}&country=${country}&method=${method}&school=${school}`;
+    const calendarUrl = `${API_BASE}/calendarByCity?city=${city}&country=${country}&method=${method}&school=${school}&month=${new Date().getMonth() + 1}&year=${new Date().getFullYear()}`;
+
+    const timingsRes = await fetch(timingsUrl);
+    const calendarRes = await fetch(calendarUrl);
+
+    if (!timingsRes.ok || !calendarRes.ok) throw new Error("Failed to fetch timings.");
+    const timingsPayload = await timingsRes.json();
+    const calendarPayload = await calendarRes.json();
+
+    renderTimes(timingsPayload.data.timings, timingsPayload.data.meta, new Date());
+    renderMonthly(calendarPayload.data);
+    if (statusEl) statusEl.textContent = `Location: ${cityInput.value}, ${countryInput.value}`;
+    localStorage.setItem("taqwapath.location", JSON.stringify({ city: cityInput.value, country: countryInput.value }));
+  };
+
+  const fetchByCoords = async (coords) => {
+    if (!coords) return;
+    if (statusEl) statusEl.textContent = "Using detected location...";
+    const method = methodSelect?.value || "3";
+    const school = schoolSelect?.value || "1";
+    const { latitude, longitude } = coords;
+    const timestamp = Math.floor(Date.now() / 1000);
+    const timingsUrl = `${API_BASE}/timings/${timestamp}?latitude=${latitude}&longitude=${longitude}&method=${method}&school=${school}`;
+    const calendarUrl = `${API_BASE}/calendar?latitude=${latitude}&longitude=${longitude}&method=${method}&school=${school}&month=${new Date().getMonth() + 1}&year=${new Date().getFullYear()}`;
+
+    const timingsRes = await fetch(timingsUrl);
+    const calendarRes = await fetch(calendarUrl);
+    if (!timingsRes.ok || !calendarRes.ok) throw new Error("Failed to fetch timings.");
+    const timingsPayload = await timingsRes.json();
+    const calendarPayload = await calendarRes.json();
+
+    renderTimes(timingsPayload.data.timings, timingsPayload.data.meta, new Date());
+    renderMonthly(calendarPayload.data);
+    if (statusEl) statusEl.textContent = "Location detected.";
+  };
+
+  const loadStored = () => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("taqwapath.location") || "");
+      if (stored?.city) cityInput.value = stored.city;
+      if (stored?.country) countryInput.value = stored.country;
+    } catch {
+      // Ignore stored errors.
+    }
+  };
+
+  const setDefaults = () => {
+    if (cityInput && !cityInput.value) cityInput.value = "Karachi";
+    if (countryInput && !countryInput.value) countryInput.value = "Pakistan";
+  };
+
+  loadStored();
+  setDefaults();
+  updateSchoolAvailability();
+
+  updateBtn?.addEventListener("click", async () => {
+    try {
+      await fetchByCity();
+    } catch {
+      if (statusEl) statusEl.textContent = "Unable to update timings.";
+    }
+  });
+
+  useLocationBtn?.addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      if (statusEl) statusEl.textContent = "Geolocation is not supported.";
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          await fetchByCoords(position.coords);
+        } catch {
+          if (statusEl) statusEl.textContent = "Unable to fetch location timings.";
+        }
+      },
+      () => {
+        if (statusEl) statusEl.textContent = "Location permission denied.";
+      }
+    );
+  });
+
+  methodSelect?.addEventListener("change", fetchByCity);
+  schoolSelect?.addEventListener("change", fetchByCity);
+  methodSelect?.addEventListener("change", updateSchoolAvailability);
+
+  fetchByCity().catch(() => {
+    if (statusEl) statusEl.textContent = "Unable to load timings.";
+  });
+
+  setInterval(updateCountdown, 1000);
+</script>

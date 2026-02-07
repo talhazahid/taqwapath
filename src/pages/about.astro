@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="About TaqwaPath"
+  description="Learn about TaqwaPath, a calm modern Islamic utility for daily worship and reflection."
+  showDateStrip={false}
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">About</span>
+      <h1 class="section-title">About TaqwaPath</h1>
+      <p class="section-lead">
+        TaqwaPath is a calm, modern Islamic utility built to support daily worship, learning, and
+        reflection. We focus on clarity, accessibility, and respectful design so you can find what
+        you need quickly.
+      </p>
+
+      <div class="grid grid--2">
+        <div class="card">
+          <div class="card__title">What you can do here</div>
+          <p class="muted">
+            Explore a Hadith library, listen to Quran recitations, view Islamic calendars, check
+            salah timings, and calculate zakat.
+          </p>
+          <div class="pill-row">
+            <span class="chip">Hadith</span>
+            <span class="chip">Quran Audio</span>
+            <span class="chip">Salah Timings</span>
+            <span class="chip">Zakat</span>
+          </div>
+        </div>
+
+        <div class="card card--featured">
+          <div class="card__title">Our approach</div>
+          <p class="muted">
+            TaqwaPath is designed to be lightweight and easy to use. Data is shown for convenience
+            and may vary by method or region. If you spot an issue, please reach out.
+          </p>
+          <div class="tag" style="margin-top: 10px;">
+            Contact: <a href="mailto:info@taqwapath.com">info@taqwapath.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,221 @@
+<dialog class="share-dialog" data-share-dialog aria-labelledby="share-dialog-title">
+  <div class="share-dialog__panel" role="document">
+    <button class="share-dialog__close" type="button" data-share-close aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+    </button>
+    <div class="share-dialog__header">
+      <p class="share-dialog__title" id="share-dialog-title">Share this Hadith</p>
+      <p class="share-dialog__subtitle">Use the options below to share the reference.</p>
+    </div>
+    <div class="share-dialog__content">
+      <p class="share-dialog__arabic arabic-text" data-share-arabic hidden></p>
+      <p class="share-dialog__narrator" data-share-narrator hidden></p>
+      <p class="share-dialog__text" data-share-text></p>
+      <div class="share-dialog__reference" data-share-reference></div>
+    </div>
+    <div class="share-dialog__actions" role="group" aria-label="Share options">
+      <a
+        class="share-icon share-icon--facebook"
+        data-share-facebook
+        href="#"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Share on Facebook"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M13.5 8.5V6.6c0-1 .7-1.3 1.2-1.3h2V2h-2.8C11.7 2 10 3.5 10 6.3v2.2H7.8v3H10v8h3.5v-8H16l.5-3z" />
+        </svg>
+      </a>
+      <a
+        class="share-icon share-icon--twitter"
+        data-share-twitter
+        href="#"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Share on Twitter"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M22 5.8c-.8.4-1.6.6-2.5.8a4.3 4.3 0 0 0 1.9-2.4 8.7 8.7 0 0 1-2.7 1 4.3 4.3 0 0 0-7.4 3.9A12.3 12.3 0 0 1 3 4.7a4.3 4.3 0 0 0 1.3 5.7 4.2 4.2 0 0 1-2-.5v.1a4.3 4.3 0 0 0 3.4 4.2 4.3 4.3 0 0 1-1.9.1 4.3 4.3 0 0 0 4 3A8.7 8.7 0 0 1 2 19.2a12.3 12.3 0 0 0 6.7 2c8.1 0 12.6-6.8 12.6-12.7v-.6A9 9 0 0 0 22 5.8z" />
+        </svg>
+      </a>
+      <a
+        class="share-icon share-icon--whatsapp"
+        data-share-whatsapp
+        href="#"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Share on WhatsApp"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.5 3.5A11.7 11.7 0 0 0 12.1 0C5.6 0 .4 5.2.4 11.7c0 2.1.5 4.1 1.6 5.9L0 24l6.7-1.7a11.7 11.7 0 0 0 5.4 1.4h.1c6.4 0 11.7-5.2 11.7-11.7 0-3.1-1.2-6-3.4-8.1zm-8.4 18.1h-.1c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-4 .9 1-3.9-.2-.4a9.9 9.9 0 0 1-1.5-5.1C2.2 6.3 6.6 1.9 12 1.9c2.6 0 5.1 1 7 2.9 1.9 1.9 2.9 4.4 2.9 7 0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.1-1.8-.9-2.1-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7 0-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.4.1-.6l.4-.4c.1-.1.2-.2.3-.3.1-.1.1-.2.2-.4.1-.2 0-.3 0-.4 0-.1-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.1.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.4.2-1.5-.1-.1-.3-.2-.6-.4z" />
+        </svg>
+      </a>
+      <button class="share-icon share-icon--copy" type="button" data-share-copy aria-label="Copy URL">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm3 4H10a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H10V7h9v14z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const shareDialog = document.querySelector("[data-share-dialog]");
+    if (!shareDialog) return;
+
+    const shareButtons = document.querySelectorAll("[data-share-trigger]");
+    if (!shareButtons.length) return;
+
+    const closeButton = shareDialog.querySelector("[data-share-close]");
+    const arabicEl = shareDialog.querySelector("[data-share-arabic]");
+    const narratorEl = shareDialog.querySelector("[data-share-narrator]");
+    const textEl = shareDialog.querySelector("[data-share-text]");
+    const referenceEl = shareDialog.querySelector("[data-share-reference]");
+    const facebookLink = shareDialog.querySelector("[data-share-facebook]");
+    const twitterLink = shareDialog.querySelector("[data-share-twitter]");
+    const whatsappLink = shareDialog.querySelector("[data-share-whatsapp]");
+    const copyButton = shareDialog.querySelector("[data-share-copy]");
+    const languageRoot = document.querySelector("[data-language-root]");
+
+    const getActiveLang = () => languageRoot?.dataset.activeLang || "english";
+
+    const setText = (el, value) => {
+      if (!el) return;
+      const text = String(value || "").trim();
+      if (text) {
+        el.textContent = text;
+        el.hidden = false;
+      } else {
+        el.textContent = "";
+        el.hidden = true;
+      }
+    };
+
+    const setReference = (node) => {
+      if (!referenceEl) return;
+      referenceEl.innerHTML = "";
+      if (node) {
+        referenceEl.appendChild(node.cloneNode(true));
+      }
+    };
+
+    const buildShareUrl = (article) => {
+      const raw = article?.dataset.shareUrl || window.location.pathname;
+      const canonical = document.querySelector("link[rel=\"canonical\"]")?.href;
+      const origin = canonical ? new URL(canonical).origin : window.location.origin;
+      try {
+        return new URL(raw, origin).toString();
+      } catch (err) {
+        return window.location.href;
+      }
+    };
+
+    const updateShareLinks = (shareUrl) => {
+      if (facebookLink) {
+        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+      }
+      if (twitterLink) {
+        twitterLink.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`;
+      }
+      if (whatsappLink) {
+        whatsappLink.href = `https://wa.me/?text=${encodeURIComponent(shareUrl)}`;
+      }
+      if (copyButton) {
+        copyButton.dataset.url = shareUrl;
+      }
+      shareDialog.dataset.shareUrl = shareUrl;
+    };
+
+    const openShareDialog = (article) => {
+      if (!article) return;
+      const arabicText = article.querySelector(".hadith-arabic")?.textContent || "";
+      const narratorText = article.querySelector(".hadith-narrator")?.textContent || "";
+      const englishText = article.querySelector(".hadith-english")?.textContent || "";
+      const activeLang = getActiveLang();
+      let translationText = englishText;
+
+      if (activeLang !== "english") {
+        const translationBlock = article.querySelector(`.translation-block[data-lang="${activeLang}"]`);
+        if (translationBlock) {
+          translationText = translationBlock.textContent || "";
+        }
+      }
+
+      setText(arabicEl, arabicText);
+      if (activeLang === "english") {
+        setText(narratorEl, narratorText);
+      } else {
+        setText(narratorEl, "");
+      }
+      setText(textEl, translationText || englishText);
+      setReference(article.querySelector(".hadith-reference"));
+      shareDialog.dataset.shareLang = activeLang;
+
+      const shareUrl = buildShareUrl(article);
+      updateShareLinks(shareUrl);
+
+      if (typeof shareDialog.showModal === "function") {
+        shareDialog.showModal();
+      } else {
+        shareDialog.setAttribute("open", "true");
+      }
+
+      document.body.style.overflow = "hidden";
+      if (copyButton) {
+        copyButton.classList.remove("is-copied");
+        copyButton.setAttribute("aria-label", "Copy URL");
+      }
+    };
+
+    const closeShareDialog = () => {
+      if (shareDialog.open) {
+        shareDialog.close();
+      } else {
+        shareDialog.removeAttribute("open");
+      }
+      document.body.style.overflow = "";
+    };
+
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const article = button.closest("article");
+        openShareDialog(article);
+      });
+    });
+
+    if (closeButton) {
+      closeButton.addEventListener("click", closeShareDialog);
+    }
+
+    shareDialog.addEventListener("click", (event) => {
+      if (event.target === shareDialog) {
+        closeShareDialog();
+      }
+    });
+
+    shareDialog.addEventListener("close", () => {
+      document.body.style.overflow = "";
+    });
+
+    if (copyButton) {
+      copyButton.addEventListener("click", async () => {
+        const url = copyButton.dataset.url || shareDialog.dataset.shareUrl || "";
+        if (!url) return;
+        try {
+          await navigator.clipboard.writeText(url);
+          copyButton.classList.add("is-copied");
+          copyButton.setAttribute("aria-label", "Copied");
+          setTimeout(() => {
+            copyButton.classList.remove("is-copied");
+            copyButton.setAttribute("aria-label", "Copy URL");
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy url:", err);
+        }
+      });
+    }
+  });
+</script>

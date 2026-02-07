@@ -1,0 +1,234 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "",
+      "titleArabic": "كِتَاب الطَّهَارَةِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 2,
+      "title": "",
+      "titleArabic": "كِتَاب الصَّلَاةِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 3,
+      "title": "",
+      "titleArabic": "مِنْ كِتَابِ الزَّكَاةِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 4,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الصَّوْمِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 5,
+      "title": "",
+      "titleArabic": "مِنْ كِتَابِ الْمَنَاسِكِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 6,
+      "title": "",
+      "titleArabic": "مِنْ كِتَابِ الْأَضَاحِيِّ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 7,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الصَّيْدِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 8,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الْأَطْعِمَةِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 9,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الْأَشْرِبَةِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 10,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الرُّؤْيَا",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 11,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ النِّكَاحِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 12,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الطَّلَاقِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 13,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الْحُدُودِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 14,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ النُّذُورِ وَالْأَيْمَانِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 15,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الدِّيَاتِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 16,
+      "title": "",
+      "titleArabic": "كِتَاب الْجِهَادِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 17,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ السِّيَرِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 18,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الْبُيُوعِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 19,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الِاسْتِئْذَانِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 20,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ الرِّقَاقِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 21,
+      "title": "",
+      "titleArabic": "مِنْ كِتَابِ الْفَرَائِضِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 22,
+      "title": "",
+      "titleArabic": "مِنْ كِتَابِ الْوَصَايَا",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 23,
+      "title": "",
+      "titleArabic": "وَمِنْ كِتَابِ فَضَائِلِ الْقُرْآنِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    }
+  ]
+}

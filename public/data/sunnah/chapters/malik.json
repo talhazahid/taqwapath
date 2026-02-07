@@ -1,0 +1,614 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "The Times of Prayer",
+      "titleArabic": "كتاب وقوت الصلاة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 2,
+      "title": "Purity",
+      "titleArabic": "كتاب الطهارة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 3,
+      "title": "Prayer",
+      "titleArabic": "كتاب الصلاة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 4,
+      "title": "Forgetfulness in Prayer",
+      "titleArabic": "كتاب السهو",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 5,
+      "title": "Jumu'a",
+      "titleArabic": "كتاب الجمعة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 6,
+      "title": "Prayer in Ramadan",
+      "titleArabic": "كتاب الصلاة فى رمضان",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 7,
+      "title": "Tahajjud",
+      "titleArabic": "كتاب صلاة الليل",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 8,
+      "title": "Prayer in Congregation",
+      "titleArabic": "كتاب صلاة الجماعة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 9,
+      "title": "Shortening the Prayer",
+      "titleArabic": "كتاب قصر الصلاة فى السفر",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 10,
+      "title": "The Two 'Ids",
+      "titleArabic": "كتاب العيدين",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 11,
+      "title": "The Fear Prayer",
+      "titleArabic": "كتاب صلاة الخوف",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 12,
+      "title": "The Eclipse Prayer",
+      "titleArabic": "كتاب صلاة الكسوف",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 13,
+      "title": "Asking for Rain",
+      "titleArabic": "كتاب الاستسقاء",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 14,
+      "title": "The Qibla",
+      "titleArabic": "كتاب القبلة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 15,
+      "title": "The Qur'an",
+      "titleArabic": "كتاب القرآن",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 16,
+      "title": "Burials",
+      "titleArabic": "كتاب الجنائز",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 17,
+      "title": "Zakat",
+      "titleArabic": "كتاب الزكاة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 18,
+      "title": "Fasting",
+      "titleArabic": "كتاب الصيام",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 19,
+      "title": "I'tikaf in Ramadan",
+      "titleArabic": "كتاب الاعتكاف",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 20,
+      "title": "Hajj",
+      "titleArabic": "كتاب الحج",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 21,
+      "title": "Jihad",
+      "titleArabic": "كتاب الجهاد",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 22,
+      "title": "Vows and Oaths",
+      "titleArabic": "كتاب النذور والأيمان",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 23,
+      "title": "Sacrificial Animals",
+      "titleArabic": "كتاب الضحايا",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 24,
+      "title": "Slaughtering Animals",
+      "titleArabic": "كتاب الذبائح",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 25,
+      "title": "Game",
+      "titleArabic": "كتاب الصيد",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 26,
+      "title": "The 'Aqiqa",
+      "titleArabic": "كتاب العقيقة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 27,
+      "title": "Fara'id",
+      "titleArabic": "كتاب الفرائض",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 28,
+      "title": "Marriage",
+      "titleArabic": "كتاب النكاح",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 29,
+      "title": "Divorce",
+      "titleArabic": "كتاب الطلاق",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 30,
+      "title": "Suckling",
+      "titleArabic": "كتاب الرضاع",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 31,
+      "title": "Business Transactions",
+      "titleArabic": "كتاب البيوع",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 32,
+      "title": "Qirad",
+      "titleArabic": "كتاب القراض",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 33,
+      "title": "Sharecropping",
+      "titleArabic": "كتاب المساقاة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 34,
+      "title": "Renting Land",
+      "titleArabic": "كتاب كراء الأرض",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 35,
+      "title": "Pre-emption in Property",
+      "titleArabic": "كتاب الشفعة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 36,
+      "title": "Judgements",
+      "titleArabic": "كتاب الأقضية",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 37,
+      "title": "Wills and Testaments",
+      "titleArabic": "كتاب الوصية",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 38,
+      "title": "Setting Free and Wala'",
+      "titleArabic": "كتاب العتق والولاء",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 39,
+      "title": "The Mukatab",
+      "titleArabic": "كتاب المكاتب",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 40,
+      "title": "The Mudabbar",
+      "titleArabic": "كتاب المدبر",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 41,
+      "title": "Hudud",
+      "titleArabic": "كتاب الحدود",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 42,
+      "title": "Drinks",
+      "titleArabic": "كتاب الأشربة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 43,
+      "title": "Blood-Money",
+      "titleArabic": "كتاب العقول",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 44,
+      "title": "The Oath of Qasama",
+      "titleArabic": "كتاب القسامة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 45,
+      "title": "Madina",
+      "titleArabic": "كتاب الْمَدِينَةِ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 46,
+      "title": "The Decree",
+      "titleArabic": "كتاب القدر",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 47,
+      "title": "Good Character",
+      "titleArabic": "كتاب حسن الخلق",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 48,
+      "title": "Dress",
+      "titleArabic": "كتاب اللباس",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 49,
+      "title": "The Description of the Prophet, may Allah Bless Him and Grant Him Peace",
+      "titleArabic": "كتاب صفة النبى صلى الله عليه وسلم",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 50,
+      "title": "The Evil Eye",
+      "titleArabic": "كتاب العين",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 51,
+      "title": "Hair",
+      "titleArabic": "كتاب الشعر",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 52,
+      "title": "Visions",
+      "titleArabic": "كتاب الرؤيا",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 53,
+      "title": "Greetings",
+      "titleArabic": "كتاب السلام",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 54,
+      "title": "General Subjects",
+      "titleArabic": "كتاب الاستئذان",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 55,
+      "title": "The Oath of Allegiance",
+      "titleArabic": "كتاب البيعة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 56,
+      "title": "Speech",
+      "titleArabic": "كتاب الكلام",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 57,
+      "title": "Jahannam",
+      "titleArabic": "كتاب جهنم",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 58,
+      "title": "Sadaqa",
+      "titleArabic": "كتاب الصدقة",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 59,
+      "title": "Knowledge",
+      "titleArabic": "كتاب العلم",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 60,
+      "title": "The Supplication of the Unjustly Wronged",
+      "titleArabic": "كتاب دعوة المظلوم",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    },
+    {
+      "id": 61,
+      "title": "The Names of the Prophet, may Allah Bless Him and Grant Him Peace",
+      "titleArabic": "كتاب أسماء النبى صلى الله عليه وسلم",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    }
+  ]
+}

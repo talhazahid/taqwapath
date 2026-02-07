@@ -1,0 +1,365 @@
+you are a designer who has a years of experience in developing and designig clean cosistent modern designs using a proper design framework.. you dont use tailwind you use astro frontend framework
+
+---
+
+## PROMPT START — taqwapath.com (Modern Islamic Utility Website)
+
+You are a **senior product designer + senior frontend engineer**. Create the complete UX/UI + frontend implementation plan for a website called **taqwapath.com**.
+
+### 1) Product goal
+
+Build a fast, trustworthy, modern Islamic utility site with:
+
+* **Islamic Calendar (2026)**
+* **Zakat Calculator**
+* **Salah Timings**
+* **Listen Quran (audio streaming)**
+* **Hadith library + sharing tools**
+* A **homepage** that immediately shows **today’s Hijri date** and **Hadith of the Day**
+
+The design must feel **calm, premium, and consistent**, with a modern Islamic aesthetic (subtle geometry, warm neutrals, deep greens, tasteful gold accents), inspired by:
+
+* Dribbble: “Islamic Website - Qolb” (modern Quran/islamic content feel)
+* Dribbble: “Taqwa - Islamic Center & Masjid Website” (palette + premium masjid vibe, soft card UI)
+
+### 2) Visual style & design system (must be consistent everywhere)
+
+**Core style keywords:** modern, minimal, breathable, spiritual, premium, calm, readable.
+
+#### Color palette (base + accents)
+
+Use a palette in the spirit of the “Taqwa” shot:
+
+* Background / canvas: **#F5F6F3**
+* Surfaces/cards: slightly darker/lighter neutrals from that base
+* Primary text: deep green **#29403A**
+* Secondary text: muted gray-green
+* Primary accent (buttons/links/highlights): teal **#5E9D96**
+* Secondary accent: warm gold **#D2A486**
+* Optional supportive accents: **#9A7056**, **#DA9251** used *sparingly* (badges/alerts)
+
+**Rules:**
+
+* Keep contrast accessible (WCAG AA where possible).
+* Use gold only for “special” emphasis (important dates, selected state, key stats).
+* Teal is the main interactive accent (CTAs, links, toggles, active tabs).
+
+#### Typography
+
+Pick a modern, highly readable sans for UI (e.g., Inter-like), and optionally a secondary Arabic-friendly font for Arabic text blocks. Prioritize:
+
+* Strong hierarchy (H1–H4 clear)
+* Comfortable line-height
+* Arabic text rendering support
+
+#### Layout & spacing
+
+* 12-column grid desktop; responsive down to mobile
+* Max content width ~1200–1280px, with full-bleed sections for hero/date strip
+* Spacious padding (8/12/16/24/32 rhythm)
+* Rounded corners (12–20px), soft shadows, thin borders
+
+#### Components (global)
+
+Design and implement these as reusable components:
+
+* Header + navigation
+* Fullwidth **Hijri Date Strip** (70px height) directly under header on all pages (or at minimum homepage)
+* Buttons (primary/secondary/ghost)
+* Cards (standard, clickable, featured)
+* Tabs
+* Search input + filters
+* Data table/list items
+* Skeleton loaders
+* Empty/error states
+* Toast notifications
+* Modal (for share/copy)
+* Sticky global audio player (see section 6)
+
+### 3) Information architecture & pages
+
+Pages required:
+
+1. **Home**
+2. **Hadith**
+
+   * Books listing page
+   * Book details page (all hadith for that book)
+3. **Quran (Listen)**
+4. **Islamic Calendar 2026**
+5. **Zakat Calculator**
+6. **Salah Timings**
+
+Header menu on homepage must include:
+
+* Home
+* Hadees
+* Quran
+* Calendar
+* Zakat Calculator
+
+(You may include “Salah Timings” as a visible header item if it fits, otherwise place it as a secondary item (e.g., “More” dropdown) but still easy to find.)
+
+### 4) Homepage requirements (exact structure)
+
+**Header (sticky)**:
+
+* Left: logo “TaqwaPath” (or taqwapath.com brandmark)
+* Center/right: menu items
+* Right: location selector icon (for Salah), theme toggle (optional), search icon (search hadith/quran)
+
+**Immediately below header**:
+
+* A **fullwidth 70px height row** showing:
+
+  * “Today’s Islamic date: [Day] [Hijri Month] [Hijri Year]”
+  * Optionally show Gregorian date on the right
+  * Subtle background tint + small icon (crescent/calendar)
+
+**After the date row**:
+
+* **Hadith of the Day** section:
+
+  * Beautiful featured card with:
+
+    * Hadith text (Arabic optional + English/Urdu translation if available)
+    * Reference (book name, number)
+    * Buttons: Copy, Share
+    * “Read more” link to its book page
+  * Keep it lightweight, above the fold on desktop if possible.
+
+**Then**:
+
+* Quick-access feature grid (2–3 rows max):
+
+  * “Zakat Calculator”
+  * “Salah Timings”
+  * “Listen Quran”
+  * “Islamic Calendar 2026”
+  * “Browse Hadith Books”
+* Each tile uses consistent iconography + short description + hover micro-interaction.
+
+**Footer**:
+
+* About + disclaimer
+* Data sources credit
+* Social share links
+* Contact page link (optional)
+
+### 5) Zakat Calculator page (match fields + logic like TCF)
+
+Design a premium calculator UX inspired by [https://www.tcf.org.pk/zakat-calculator/](https://www.tcf.org.pk/zakat-calculator/):
+
+* Explain what Zakat is + Nisab + Hawl (brief, scannable)
+* Show **Gold & Silver Rate** section (with date last updated)
+* Use grouped inputs:
+
+**Inputs (grouped):**
+
+1. Cash
+
+* Cash in hand & bank
+* Cash saved for future purpose (e.g., Hajj)
+* Loans given out
+
+2. Investments
+
+* Investments/shares/saving certificates/pensions funded by owned money
+
+3. Gold & Silver
+
+* Weight of gold
+* Weight of silver
+* (Let user choose unit: grams / tola; show conversion hints)
+
+4. Trade goods
+
+* Value of stock (inventory intended for sale)
+
+5. Liabilities (deduct)
+
+* Borrowed money / goods bought on credit
+* Wages due
+* Taxes/rent/utility bills due immediately
+* (Allow “Other liability” custom line item)
+
+**Outputs:**
+
+* Total assets
+* Total liabilities
+* Net Zakatable wealth
+* Nisab threshold used (gold or silver) and why
+* Zakat due = **2.5%** of net zakatable wealth (only if above nisab and hawl condition acknowledged)
+
+**UX requirements:**
+
+* Live-updating totals as user types
+* “Reset” button
+* “Copy amount” button
+* Currency switch (PKR default; optionally USD)
+* Validation + friendly inline helper text
+* A checkbox: “I have owned this wealth for one lunar year (Hawl)” (affects messaging, not math)
+
+### 6) Salah Timings page (UI/UX like salah.com)
+
+Replicate the best UX patterns:
+
+* Detect location (with permission); fallback: manual city search + country
+* Calculation method selector (and madhab option if relevant)
+* Show **today’s prayer times** in a clean card list:
+
+  * Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha
+* Highlight **current/next prayer** with:
+
+  * countdown timer
+  * progress indicator (subtle)
+* Provide monthly view (calendar/table) with download/print option
+* Include timezone and “last updated”
+* Make it mobile-first usable (quick glance, big times)
+
+### 7) Listen Quran page (QuranicAudio integration)
+
+Data source: **[https://quranicaudio.com/](https://quranicaudio.com/)** (fetch reciters + audio sources and use their MP3 streams).
+
+**Page layout:**
+
+* Left (desktop): Reciters list with search
+* Main: Surah list for selected reciter
+* Top: filters (Surah number/name search), sorting, favorites
+* Each surah row:
+
+  * Surah number + name
+  * Play button
+  * Duration (if available) or loading placeholder
+  * Download link (optional)
+* When a user presses play, audio plays using the site-wide player.
+
+**Global audio player behavior (must match screenshot style)**
+Whenever any audio plays, show a **sticky player** (prefer bottom or top; consistent across site). Style it like the screenshot:
+
+* Minimal horizontal bar with:
+
+  * Previous, Play/Pause (in a circular accent button), Next (left side)
+  * Track title + subtitle (e.g., Reciter name as title, Surah as subtitle)
+  * Current time / total duration (right side)
+  * Shuffle + Repeat icons (right side)
+* Smooth transitions, no layout shift
+* Keyboard shortcuts: Space play/pause, arrows seek
+* Remember last played track in localStorage and restore on refresh
+* If user navigates pages, audio continues playing
+
+### 8) Hadith pages (books + book detail + share/copy)
+
+You will “fetch every hadith” from the provided hadith source endpoint (assume you have an API that returns: books, chapters optional, hadith list, references, language).
+
+#### Hadith Books page
+
+* Display books in a modern responsive grid of cards
+* Each book card shows:
+
+  * Book title
+  * Short subtitle (compiler/collection) if available
+  * Hadith count
+  * CTA: “Open book”
+* Provide search + filters (language, collection type, popular)
+
+#### Book detail page
+
+* Header:
+
+  * Book name + metadata
+  * Search within book (fast)
+  * Filter/sort (hadith number, chapter, shortest, etc.)
+* Hadith list:
+
+  * Each hadith in a clean card with:
+
+    * Arabic text block (optional)
+    * Translation text
+    * Reference line (book, hadith number)
+    * Actions row:
+
+      * **Copy** icon (easy copy)
+      * Share menu with:
+
+        * Email
+        * Facebook
+        * Twitter/X
+        * LinkedIn
+        * WhatsApp
+        * Telegram
+  * Copy should copy a nicely formatted snippet including reference + taqwapath.com link
+  * Share opens native share on mobile if possible, otherwise opens share modal with links
+
+**Performance requirements:**
+
+* Pagination or infinite scroll (virtualized list if large)
+* SSR/SEO-friendly URLs:
+
+  * /hadees (books)
+  * /hadees/[book-slug]
+  * Optional: /hadees/[book-slug]/[hadith-number]
+
+### 9) Islamic Calendar 2026 page
+
+Create a rich calendar experience:
+
+* Default view: Month grid
+* Toggle views:
+
+  * Month
+  * List (important dates)
+* Show:
+
+  * Gregorian date
+  * Hijri date
+* Highlight key Islamic dates (if dataset available)
+* Provide city/region setting to adjust Hijri observation method (or add a disclaimer if using a calculated Hijri calendar)
+* Quick jump to month, “Today” button, year switch (2026 focus)
+
+### 10) SEO, accessibility, and trust
+
+* Fast Core Web Vitals, minimal JS where possible
+* SEO:
+
+  * Clean titles + meta descriptions per page
+  * OpenGraph + Twitter cards
+  * Schema where helpful (Organization, WebSite, FAQ if used)
+* Accessibility:
+
+  * Semantic HTML
+  * Focus states
+  * Keyboard navigation for player, menus, modals
+* Trust:
+
+  * Clear “Data sources” footer section
+  * Disclaimers for prayer times calculation + Hijri date methodology
+
+### 11) Responsive behavior
+
+Define layouts for:
+
+* Mobile (360–430)
+* Tablet
+* Desktop
+* Large desktop
+  Make sure:
+* Nav becomes hamburger on mobile
+* Date strip remains readable
+* Player remains usable with thumb-friendly controls
+
+### 12) Deliverables expected from you
+
+Produce:
+
+1. A complete page-by-page UI plan (sections + components)
+2. Component inventory with states (default/hover/active/loading/error)
+3. Data model assumptions (what fields are needed for hadith, quran audio, salah, calendar)
+4. Interaction details (copy/share, audio persistence, location permission handling)
+5. A cohesive visual direction matching the referenced dribbble style
+
+## PROMPT END
+
+---
+
+

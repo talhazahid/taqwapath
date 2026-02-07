@@ -1,0 +1,240 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Islamic Calendar 2026 (Hijri & Gregorian) - TaqwaPath"
+  description="2026 Hijri and Gregorian calendar with Islamic dates, holidays, and monthly views."
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Islamic Calendar 2026</span>
+      <h1 class="section-title">Islamic Calendar 2026</h1>
+      <div class="tag" data-calendar-title style="margin-top: 10px;">January 2026</div>
+      <p class="section-lead">
+        Highlight key dates and adjust for regional observations. Dates are calculated and may vary locally.
+      </p>
+
+      <div class="calendar-controls">
+        <select class="select" data-calendar-month>
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+        <select class="select" data-calendar-year>
+          <option value="2026">2026</option>
+        </select>
+        <select class="select" data-calendar-adjustment>
+          <option value="0">0 days</option>
+          <option value="1">+1 day</option>
+          <option value="-1">-1 day</option>
+          <option value="2">+2 days</option>
+          <option value="-2">-2 days</option>
+        </select>
+      </div>
+
+      <div class="calendar-grid" data-calendar-grid>
+        <div class="card" style="grid-column: 1 / -1;">Loading calendar...</div>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <div class="card__title">Important dates list</div>
+        <div class="list" data-calendar-list></div>
+      </div>
+    </div>
+  </section>
+  <script is:inline>
+  const monthSelect = document.querySelector("[data-calendar-month]");
+  const yearSelect = document.querySelector("[data-calendar-year]");
+  const adjustSelect = document.querySelector("[data-calendar-adjustment]");
+  const grid = document.querySelector("[data-calendar-grid]");
+  const list = document.querySelector("[data-calendar-list]");
+  const title = document.querySelector("[data-calendar-title]");
+
+  const DATA_YEAR = 2026;
+  const DATA_URL = "/data/islamic-calendar/2026.json";
+  let calendarData = null;
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  const setTitle = (month, year) => {
+    if (title) title.textContent = `${monthNames[month - 1]} ${year}`;
+  };
+
+  const cleanHoliday = (holiday) => holiday.replace(/\(.*?\)/g, "").trim();
+  const getHolidayMap = (data) => {
+    const map = new Map();
+    data.forEach((day) => {
+      const holiday = day.hijri?.holidays?.[0];
+      if (!holiday) return;
+      const key = `${day.hijri.day}|${day.hijri.month.en}|${day.hijri.year}`;
+      map.set(key, cleanHoliday(holiday));
+    });
+    return map;
+  };
+
+  const renderCalendar = (data, month, year, adjustment = 0) => {
+    if (!grid) {
+      console.error("Grid element not found");
+      return;
+    }
+    const firstDate = new Date(year, month - 1, 1);
+    const startOffset = (firstDate.getDay() + 6) % 7;
+    const blanks = Array.from({ length: startOffset });
+
+    // Get today's date for highlighting
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() + 1 === month && today.getFullYear() === year;
+    const holidayMap = getHolidayMap(data);
+
+    const cells = [
+      ...weekDays.map((day) => `<div class="calendar-cell calendar-cell--muted"><span class="calendar-cell__day">${day}</span></div>`),
+      ...blanks.map(() => `<div class="calendar-cell calendar-cell--muted"></div>`),
+      ...data.map((day) => {
+        const adjustedHijriDay = Number(day.hijri.day) + adjustment;
+        const holidayKey = `${adjustedHijriDay}|${day.hijri.month.en}|${day.hijri.year}`;
+        const label = holidayMap.get(holidayKey) || "";
+        const isToday = isCurrentMonth && Number(day.gregorian.day) === today.getDate();
+
+        const classNames = [
+          "calendar-cell",
+          isToday && "calendar-cell--today",
+          label && "calendar-cell--highlight"
+        ].filter(Boolean).join(" ");
+        return `
+          <div class="${classNames}">
+            <div class="calendar-cell__day">${day.gregorian.day}</div>
+            <div class="calendar-cell__hijri">${adjustedHijriDay} ${day.hijri.month.en} ${day.hijri.year}</div>
+            ${label ? `<div class="tag">${label}</div>` : ""}
+          </div>
+        `;
+      })
+    ];
+
+    grid.innerHTML = cells.join("");
+  };
+
+  const renderList = (data, monthName, adjustment = 0) => {
+    if (!list) return;
+    const holidayMap = getHolidayMap(data);
+    const highlights = data
+      .map((day) => {
+        const adjustedHijriDay = Number(day.hijri.day) + adjustment;
+        const holidayKey = `${adjustedHijriDay}|${day.hijri.month.en}|${day.hijri.year}`;
+        const label = holidayMap.get(holidayKey);
+        if (!label) return null;
+        return {
+          day: day.gregorian.day,
+          label,
+          hijri: `${adjustedHijriDay} ${day.hijri.month.en} ${day.hijri.year}`
+        };
+      })
+      .filter(Boolean);
+
+    if (!highlights.length) {
+      list.innerHTML = `<div class="list-row"><div class="pill">Info</div><div><strong>No major dates found</strong><div class="list-row__meta">This month has no listed holidays in the dataset.</div></div><div class="muted">${monthName}</div></div>`;
+      return;
+    }
+
+    list.innerHTML = highlights
+      .map(
+        (item) => `
+        <div class="list-row">
+          <div class="pill">${item.day}</div>
+          <div>
+            <strong>${item.label}</strong>
+            <div class="list-row__meta">${item.hijri}</div>
+          </div>
+          <div class="muted">${monthName}</div>
+        </div>
+      `
+      )
+      .join("");
+  };
+
+  const loadCalendarData = async () => {
+    if (calendarData) return;
+    try {
+      const response = await fetch(DATA_URL);
+      if (!response.ok) throw new Error("Failed to load calendar.");
+      const payload = await response.json();
+      calendarData = payload?.months || {};
+    } catch (error) {
+      console.error("Calendar load error:", error);
+      calendarData = null;
+      if (grid) {
+        grid.innerHTML = `<div class="card" style="grid-column: 1 / -1;">Unable to load calendar data.</div>`;
+      }
+    }
+  };
+
+  const renderFromData = (month, year, adjustment) => {
+    setTitle(month, year);
+    const data = Array.isArray(calendarData?.[String(month)]) ? calendarData[String(month)] : [];
+    if (!data.length) {
+      if (grid) {
+        grid.innerHTML = `<div class="card" style="grid-column: 1 / -1;">Calendar data unavailable for this month.</div>`;
+      }
+      return;
+    }
+    renderCalendar(data, month, year, adjustment);
+    renderList(data, `${monthNames[month - 1]} ${year}`, adjustment);
+  };
+
+  const setDefaults = () => {
+    const now = new Date();
+    if (monthSelect) monthSelect.value = String(now.getMonth() + 1);
+    if (yearSelect) yearSelect.value = String(DATA_YEAR);
+    if (adjustSelect) adjustSelect.value = "0";
+  };
+
+  const handleChange = () => {
+    const month = Number(monthSelect?.value) || 1;
+    const year = DATA_YEAR;
+    const adjustment = Number(adjustSelect?.value) || 0;
+    loadCalendarData().then(() => {
+      if (!calendarData) return;
+      renderFromData(month, year, adjustment);
+    });
+  };
+
+  // Ensure DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      setDefaults();
+      handleChange();
+      monthSelect?.addEventListener("change", handleChange);
+      yearSelect?.addEventListener("change", handleChange);
+      adjustSelect?.addEventListener("change", handleChange);
+    });
+  } else {
+    setDefaults();
+    handleChange();
+    monthSelect?.addEventListener("change", handleChange);
+    yearSelect?.addEventListener("change", handleChange);
+    adjustSelect?.addEventListener("change", handleChange);
+  }
+  </script>
+</BaseLayout>

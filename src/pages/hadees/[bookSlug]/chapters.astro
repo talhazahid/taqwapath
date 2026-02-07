@@ -1,0 +1,144 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { fetchHadithBooks, fetchChapters } from "../../../lib/hadithApi.js";
+import { bookDescriptions } from "../../../data/bookDescriptions.js";
+
+export async function getStaticPaths() {
+  const books = await fetchHadithBooks();
+  const paths = [];
+
+  for (const book of books) {
+    const chapters = await fetchChapters(book.slug);
+
+    paths.push({
+      params: { bookSlug: book.slug },
+      props: { book, chapters }
+    });
+  }
+
+  return paths;
+}
+
+const { book, chapters } = Astro.props;
+const bookInfo = bookDescriptions[book.slug] || {};
+---
+<BaseLayout
+  title={`${book.title} Chapters - Hadith Collection - TaqwaPath`}
+  description={`Browse chapters of ${book.title} with hadith references and quick navigation.`}
+>
+  <section class="section">
+    <div class="container">
+      <div class="heading-row">
+        <div>
+          <h1 class="section-title">{bookInfo.title || book.title}</h1>
+        </div>
+        {book.arabicTitle ? (
+          <p class="heading-row__arabic arabic-text">{book.arabicTitle}</p>
+        ) : null}
+      </div>
+
+      <div class="card" style="margin-bottom: 32px;">
+        <p style="line-height: 1.8; margin-bottom: 16px;">
+          {bookInfo.description || book.summary}
+        </p>
+        {bookInfo.compiler ? (
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+            <div>
+              <div class="card__meta">Compiler</div>
+              <strong>{bookInfo.compiler}</strong>
+            </div>
+            <div>
+              <div class="card__meta">Period</div>
+              <strong>{bookInfo.yearCompiled}</strong>
+            </div>
+            <div>
+              <div class="card__meta">Total Hadiths</div>
+              <strong>{bookInfo.totalHadiths || book.count}</strong>
+            </div>
+            <div>
+              <div class="card__meta">Chapters</div>
+              <strong>{bookInfo.chapters || `${chapters.length} books`}</strong>
+            </div>
+          </div>
+        ) : null}
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+          <a class="btn btn--primary" href={`/hadees/${book.slug}`}>View All Hadiths</a>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: var(--color-bg-secondary); border-bottom: 1px solid var(--color-border);">
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; width: 60px;">#</th>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600;">Chapter Title</th>
+              <th style="padding: 12px 16px; text-align: right; font-weight: 600;">Arabic title</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; width: 100px;">From</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; width: 60px;">to</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; width: 100px;">To</th>
+            </tr>
+          </thead>
+          <tbody>
+            {chapters.length ? (
+              chapters.map((chapter, index) => (
+                <tr style={`border-bottom: 1px solid var(--color-border); background: ${index % 2 === 0 ? 'transparent' : 'var(--color-bg-secondary)'};`}>
+                  <td style="padding: 14px 16px; font-weight: 500;">
+                    {chapter.id}
+                  </td>
+                  <td style="padding: 14px 16px;">
+                    <a href={`/hadees/${book.slug}/chapter/${chapter.id}`} style="color: var(--color-ink); text-decoration: none; display: block; hover: text-decoration: underline;">
+                      {chapter.title}
+                    </a>
+                  </td>
+                  <td style="padding: 14px 16px; text-align: right; direction: rtl;">
+                    <a href={`/hadees/${book.slug}/chapter/${chapter.id}`} class="arabic-text" style="color: var(--color-ink); text-decoration: none; display: block; font-size: 1.1rem;">
+                      {chapter.titleArabic || ''}
+                    </a>
+                  </td>
+                  <td style="padding: 14px 16px; text-align: center; font-weight: 500;">
+                    {chapter.hadithRange.start}
+                  </td>
+                  <td style="padding: 14px 16px; text-align: center; color: var(--color-ink-muted);">
+                    to
+                  </td>
+                  <td style="padding: 14px 16px; text-align: center; font-weight: 500;">
+                    {chapter.hadithRange.end}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colspan="6" style="padding: 32px; text-align: center; color: var(--color-ink-muted);">
+                  No chapters available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  table a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    table {
+      font-size: 0.875rem;
+    }
+
+    th, td {
+      padding: 10px 8px !important;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      display: none;
+    }
+  }
+</style>
+
+

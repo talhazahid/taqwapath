@@ -1,0 +1,477 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Zakat Calculator (Gold, Silver, Cash) - TaqwaPath"
+  description="Calculate zakat online with nisab thresholds, gold and silver rates, and live totals."
+>
+  <section class="section">
+    <div class="container">
+      <div class="chapter-layout" data-language-root data-active-lang="english">
+        <aside class="language-panel" data-language-switcher>
+          <div class="language-panel__title">Language</div>
+          <label class="language-option">
+            <input type="radio" name="zakat-language" value="english" checked />
+            <span>English</span>
+          </label>
+          <label class="language-option">
+            <input type="radio" name="zakat-language" value="urdu" />
+            <span>Urdu</span>
+          </label>
+          <label class="language-option">
+            <input type="radio" name="zakat-language" value="bangla" />
+            <span>Bangla</span>
+          </label>
+        </aside>
+
+        <div class="chapter-content">
+          <span class="pill" data-i18n="zakat.pill">Zakat Calculator</span>
+          <h1 class="section-title" data-i18n="zakat.title">Calculate your zakat</h1>
+          <p class="section-lead" data-i18n="zakat.lead">
+            Based on the nisab threshold and hawl condition. Totals update live as you type.
+          </p>
+
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="grid grid--3">
+              <div>
+                <div class="card__title" data-i18n="zakat.goldRate.title">Gold rate</div>
+                <div class="muted" data-i18n="zakat.goldRate.value">PKR 21,000 per gram</div>
+                <div class="tag" data-i18n="zakat.updatedToday">Updated today</div>
+              </div>
+              <div>
+                <div class="card__title" data-i18n="zakat.silverRate.title">Silver rate</div>
+                <div class="muted" data-i18n="zakat.silverRate.value">PKR 260 per gram</div>
+                <div class="tag" data-i18n="zakat.updatedToday">Updated today</div>
+              </div>
+              <div>
+                <div class="card__title" data-i18n="zakat.currency.title">Currency</div>
+                <select class="select" data-currency>
+                  <option value="PKR">PKR</option>
+                  <option value="USD">USD</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-layout" data-zakat-form>
+            <div class="grid" style="gap: 24px;">
+              <div class="card">
+                <div class="card__title" data-i18n="zakat.cash.title">1. Cash</div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="cash-hand" data-i18n="zakat.cash.hand">Cash in hand and bank</label>
+                    <input class="input" id="cash-hand" type="number" min="0" step="0.01" data-field="cash-hand" />
+                  </div>
+                  <div class="field">
+                    <label for="cash-savings" data-i18n="zakat.cash.savings">Cash saved for future purpose</label>
+                    <input class="input" id="cash-savings" type="number" min="0" step="0.01" data-field="cash-savings" />
+                  </div>
+                  <div class="field">
+                    <label for="loans-given" data-i18n="zakat.cash.loans">Loans given out</label>
+                    <input class="input" id="loans-given" type="number" min="0" step="0.01" data-field="loans-given" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card__title" data-i18n="zakat.investments.title">2. Investments</div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="investments" data-i18n="zakat.investments.label">Investments and shares</label>
+                    <input class="input" id="investments" type="number" min="0" step="0.01" data-field="investments" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card__title" data-i18n="zakat.metals.title">3. Gold and Silver</div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="gold-weight" data-i18n="zakat.metals.goldWeight">Gold weight</label>
+                    <div class="form-row" style="grid-template-columns: 1fr 140px;">
+                      <input class="input" id="gold-weight" type="number" min="0" step="0.01" data-field="gold-weight" />
+                      <select class="select" data-unit="gold">
+                        <option value="grams" data-i18n="zakat.unit.grams">grams</option>
+                        <option value="tola" data-i18n="zakat.unit.tola">tola</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="silver-weight" data-i18n="zakat.metals.silverWeight">Silver weight</label>
+                    <div class="form-row" style="grid-template-columns: 1fr 140px;">
+                      <input class="input" id="silver-weight" type="number" min="0" step="0.01" data-field="silver-weight" />
+                      <select class="select" data-unit="silver">
+                        <option value="grams" data-i18n="zakat.unit.grams">grams</option>
+                        <option value="tola" data-i18n="zakat.unit.tola">tola</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="tag" data-i18n="zakat.metals.tolaNote">1 tola = 11.6638 grams</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card__title" data-i18n="zakat.trade.title">4. Trade Goods</div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="trade-goods" data-i18n="zakat.trade.label">Value of stock intended for sale</label>
+                    <input class="input" id="trade-goods" type="number" min="0" step="0.01" data-field="trade-goods" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card__title" data-i18n="zakat.liabilities.title">5. Liabilities (deduct)</div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="liability-credit" data-i18n="zakat.liabilities.credit">Goods bought on credit</label>
+                    <input class="input" id="liability-credit" type="number" min="0" step="0.01" data-field="liability-credit" />
+                  </div>
+                  <div class="field">
+                    <label for="liability-wages" data-i18n="zakat.liabilities.wages">Wages due</label>
+                    <input class="input" id="liability-wages" type="number" min="0" step="0.01" data-field="liability-wages" />
+                  </div>
+                  <div class="field">
+                    <label for="liability-bills" data-i18n="zakat.liabilities.bills">Taxes, rent, utilities due</label>
+                    <input class="input" id="liability-bills" type="number" min="0" step="0.01" data-field="liability-bills" />
+                  </div>
+                  <div class="field">
+                    <label for="liability-other" data-i18n="zakat.liabilities.other">Other liability</label>
+                    <input class="input" id="liability-other" type="number" min="0" step="0.01" data-field="liability-other" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="card calc-summary">
+              <div class="card__title" data-i18n="zakat.summary.title">Zakat Summary</div>
+              <div class="summary-row">
+                <span data-i18n="zakat.summary.assets">Total assets</span>
+                <strong data-output="assets">PKR 0</strong>
+              </div>
+              <div class="summary-row">
+                <span data-i18n="zakat.summary.liabilities">Total liabilities</span>
+                <strong data-output="liabilities">PKR 0</strong>
+              </div>
+              <div class="summary-row">
+                <span data-i18n="zakat.summary.net">Net zakatable wealth</span>
+                <strong data-output="net">PKR 0</strong>
+              </div>
+              <div class="summary-row">
+                <span data-i18n="zakat.summary.nisab">Nisab threshold used</span>
+                <strong data-output="nisab">PKR 0</strong>
+              </div>
+              <div class="summary-row">
+                <span data-i18n="zakat.summary.due">Zakat due (2.5%)</span>
+                <strong data-output="due">PKR 0</strong>
+              </div>
+              <p class="summary-note" data-output="nisab-note" data-lang-text>
+                Zakat is due when net wealth is above nisab.
+              </p>
+              <label class="summary-note" style="display: flex; gap: 8px; align-items: center;">
+                <input type="checkbox" data-hawl />
+                <span data-i18n="zakat.hawl.label">I have owned this wealth for one lunar year (hawl)</span>
+              </label>
+              <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
+                <button class="btn btn--secondary" type="reset" data-reset data-i18n="zakat.button.reset">Reset</button>
+                <button class="btn btn--primary" type="button" data-copy data-i18n="zakat.button.copy">Copy amount</button>
+              </div>
+              <div class="summary-note" data-copy-status data-lang-text style="margin-top: 10px;"></div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const languageRoot = document.querySelector("[data-language-root]");
+  const languageInputs = document.querySelectorAll("[data-language-switcher] input[type=\"radio\"]");
+  const i18nElements = Array.from(document.querySelectorAll("[data-i18n]"));
+  const translations = {
+    english: {
+      "zakat.pill": "Zakat Calculator",
+      "zakat.title": "Calculate your zakat",
+      "zakat.lead": "Based on the nisab threshold and hawl condition. Totals update live as you type.",
+      "zakat.goldRate.title": "Gold rate",
+      "zakat.goldRate.value": "PKR 21,000 per gram",
+      "zakat.silverRate.title": "Silver rate",
+      "zakat.silverRate.value": "PKR 260 per gram",
+      "zakat.updatedToday": "Updated today",
+      "zakat.currency.title": "Currency",
+      "zakat.cash.title": "1. Cash",
+      "zakat.cash.hand": "Cash in hand and bank",
+      "zakat.cash.savings": "Cash saved for future purpose",
+      "zakat.cash.loans": "Loans given out",
+      "zakat.investments.title": "2. Investments",
+      "zakat.investments.label": "Investments and shares",
+      "zakat.metals.title": "3. Gold and Silver",
+      "zakat.metals.goldWeight": "Gold weight",
+      "zakat.metals.silverWeight": "Silver weight",
+      "zakat.unit.grams": "grams",
+      "zakat.unit.tola": "tola",
+      "zakat.metals.tolaNote": "1 tola = 11.6638 grams",
+      "zakat.trade.title": "4. Trade Goods",
+      "zakat.trade.label": "Value of stock intended for sale",
+      "zakat.liabilities.title": "5. Liabilities (deduct)",
+      "zakat.liabilities.credit": "Goods bought on credit",
+      "zakat.liabilities.wages": "Wages due",
+      "zakat.liabilities.bills": "Taxes, rent, utilities due",
+      "zakat.liabilities.other": "Other liability",
+      "zakat.summary.title": "Zakat Summary",
+      "zakat.summary.assets": "Total assets",
+      "zakat.summary.liabilities": "Total liabilities",
+      "zakat.summary.net": "Net zakatable wealth",
+      "zakat.summary.nisab": "Nisab threshold used",
+      "zakat.summary.due": "Zakat due (2.5%)",
+      "zakat.hawl.label": "I have owned this wealth for one lunar year (hawl)",
+      "zakat.button.reset": "Reset",
+      "zakat.button.copy": "Copy amount"
+    },
+    urdu: {
+      "zakat.pill": "زکوٰۃ کیلکولیٹر",
+      "zakat.title": "اپنی زکوٰۃ کا حساب کریں",
+      "zakat.lead": "نصاب کی حد اور حول کی شرط کی بنیاد پر۔ آپ ٹائپ کرتے ہی مجموعہ خودکار طور پر اپڈیٹ ہوتا ہے۔",
+      "zakat.goldRate.title": "سونے کی قیمت",
+      "zakat.goldRate.value": "PKR 21,000 فی گرام",
+      "zakat.silverRate.title": "چاندی کی قیمت",
+      "zakat.silverRate.value": "PKR 260 فی گرام",
+      "zakat.updatedToday": "آج اپ ڈیٹ ہوا",
+      "zakat.currency.title": "کرنسی",
+      "zakat.cash.title": "1. نقد رقم",
+      "zakat.cash.hand": "ہاتھ میں اور بینک میں نقد رقم",
+      "zakat.cash.savings": "مستقبل کے لیے محفوظ نقد رقم",
+      "zakat.cash.loans": "دیے گئے قرضے",
+      "zakat.investments.title": "2. سرمایہ کاری",
+      "zakat.investments.label": "سرمایہ کاری اور حصص",
+      "zakat.metals.title": "3. سونا اور چاندی",
+      "zakat.metals.goldWeight": "سونے کا وزن",
+      "zakat.metals.silverWeight": "چاندی کا وزن",
+      "zakat.unit.grams": "گرام",
+      "zakat.unit.tola": "تولہ",
+      "zakat.metals.tolaNote": "1 تولہ = 11.6638 گرام",
+      "zakat.trade.title": "4. تجارتی مال",
+      "zakat.trade.label": "فروخت کے لیے اسٹاک کی قیمت",
+      "zakat.liabilities.title": "5. واجبات (منہا کریں)",
+      "zakat.liabilities.credit": "ادھار پر خریدے گئے سامان",
+      "zakat.liabilities.wages": "بقایا اجرت",
+      "zakat.liabilities.bills": "بقایا ٹیکس، کرایہ، یوٹیلیٹی بل",
+      "zakat.liabilities.other": "دیگر واجبات",
+      "zakat.summary.title": "زکوٰۃ کا خلاصہ",
+      "zakat.summary.assets": "کل اثاثے",
+      "zakat.summary.liabilities": "کل واجبات",
+      "zakat.summary.net": "قابلِ زکوٰۃ خالص دولت",
+      "zakat.summary.nisab": "استعمال شدہ نصاب حد",
+      "zakat.summary.due": "زکوٰۃ واجب (2.5%)",
+      "zakat.hawl.label": "میں نے یہ دولت ایک قمری سال (حول) تک اپنے پاس رکھی ہے",
+      "zakat.button.reset": "ری سیٹ",
+      "zakat.button.copy": "رقم کاپی کریں"
+    },
+    bangla: {
+      "zakat.pill": "যাকাত ক্যালকুলেটর",
+      "zakat.title": "আপনার যাকাত হিসাব করুন",
+      "zakat.lead": "নিসাবের সীমা ও হাওলের শর্ত অনুযায়ী। আপনি টাইপ করার সাথে সাথে মোট আপডেট হয়।",
+      "zakat.goldRate.title": "সোনার মূল্য",
+      "zakat.goldRate.value": "PKR 21,000 প্রতি গ্রাম",
+      "zakat.silverRate.title": "রূপার মূল্য",
+      "zakat.silverRate.value": "PKR 260 প্রতি গ্রাম",
+      "zakat.updatedToday": "আজ আপডেট করা হয়েছে",
+      "zakat.currency.title": "মুদ্রা",
+      "zakat.cash.title": "1. নগদ অর্থ",
+      "zakat.cash.hand": "হাতে ও ব্যাংকে নগদ অর্থ",
+      "zakat.cash.savings": "ভবিষ্যতের জন্য সংরক্ষিত নগদ অর্থ",
+      "zakat.cash.loans": "প্রদত্ত ঋণ",
+      "zakat.investments.title": "2. বিনিয়োগ",
+      "zakat.investments.label": "বিনিয়োগ ও শেয়ার",
+      "zakat.metals.title": "3. সোনা ও রূপা",
+      "zakat.metals.goldWeight": "সোনার ওজন",
+      "zakat.metals.silverWeight": "রূপার ওজন",
+      "zakat.unit.grams": "গ্রাম",
+      "zakat.unit.tola": "তোলা",
+      "zakat.metals.tolaNote": "1 তোলা = 11.6638 গ্রাম",
+      "zakat.trade.title": "4. ব্যবসার পণ্য",
+      "zakat.trade.label": "বিক্রয়ের জন্য মজুদের মূল্য",
+      "zakat.liabilities.title": "5. দায় (বিয়োগ করুন)",
+      "zakat.liabilities.credit": "বাকিতে কেনা পণ্য",
+      "zakat.liabilities.wages": "বকেয়া মজুরি",
+      "zakat.liabilities.bills": "বকেয়া কর, ভাড়া, ইউটিলিটি বিল",
+      "zakat.liabilities.other": "অন্যান্য দায়",
+      "zakat.summary.title": "যাকাত সারসংক্ষেপ",
+      "zakat.summary.assets": "মোট সম্পদ",
+      "zakat.summary.liabilities": "মোট দায়",
+      "zakat.summary.net": "যাকাতযোগ্য নিট সম্পদ",
+      "zakat.summary.nisab": "ব্যবহৃত নিসাব সীমা",
+      "zakat.summary.due": "যাকাত প্রাপ্য (2.5%)",
+      "zakat.hawl.label": "আমি এই সম্পদ এক চন্দ্র বছর (হাওল) ধরে রেখেছি",
+      "zakat.button.reset": "রিসেট",
+      "zakat.button.copy": "পরিমাণ কপি করুন"
+    }
+  };
+  const dynamicText = {
+    english: {
+      nisabSilver: "Silver nisab used for accessibility.",
+      nisabGold: "Gold nisab used.",
+      dueIfHawl: "Zakat is due if hawl is met.",
+      belowNisab: "Below nisab threshold.",
+      hawlMissing: "Hawl not confirmed.",
+      copySuccess: "Amount copied to clipboard.",
+      copyFailure: "Copy failed. Please copy manually."
+    },
+    urdu: {
+      nisabSilver: "آسانی کے لیے چاندی کا نصاب استعمال کیا گیا۔",
+      nisabGold: "سونے کا نصاب استعمال کیا گیا۔",
+      dueIfHawl: "اگر حول مکمل ہے تو زکوٰۃ واجب ہے۔",
+      belowNisab: "نصاب سے کم ہے۔",
+      hawlMissing: "حول کی تصدیق نہیں ہوئی۔",
+      copySuccess: "رقم کلپ بورڈ پر کاپی ہوگئی۔",
+      copyFailure: "کاپی ناکام رہی۔ براہ کرم دستی طور پر کاپی کریں۔"
+    },
+    bangla: {
+      nisabSilver: "সহজতার জন্য রূপার নিসাব ব্যবহার করা হয়েছে।",
+      nisabGold: "সোনার নিসাব ব্যবহার করা হয়েছে।",
+      dueIfHawl: "হাওল পূর্ণ হলে যাকাত প্রাপ্য।",
+      belowNisab: "নিসাবের নিচে।",
+      hawlMissing: "হাওল নিশ্চিত করা হয়নি।",
+      copySuccess: "পরিমাণ ক্লিপবোর্ডে কপি হয়েছে।",
+      copyFailure: "কপি ব্যর্থ হয়েছে। অনুগ্রহ করে হাতে কপি করুন।"
+    }
+  };
+
+  const getActiveLang = () => languageRoot?.dataset.activeLang || "english";
+  const applyTranslations = (lang) => {
+    const table = translations[lang] || translations.english;
+    i18nElements.forEach((el) => {
+      const key = el.dataset.i18n;
+      if (!key) return;
+      const text = table[key] ?? translations.english[key];
+      if (typeof text === "string") el.textContent = text;
+    });
+  };
+
+  const form = document.querySelector("[data-zakat-form]");
+  if (form) {
+    const inputs = Array.from(form.querySelectorAll("input[data-field]"));
+    const currencySelect = document.querySelector("[data-currency]");
+    const hawlCheck = document.querySelector("[data-hawl]");
+    const output = {
+      assets: document.querySelector('[data-output="assets"]'),
+      liabilities: document.querySelector('[data-output="liabilities"]'),
+      net: document.querySelector('[data-output="net"]'),
+      nisab: document.querySelector('[data-output="nisab"]'),
+      due: document.querySelector('[data-output="due"]'),
+      nisabNote: document.querySelector('[data-output="nisab-note"]')
+    };
+    const copyBtn = document.querySelector("[data-copy]");
+    const copyStatus = document.querySelector("[data-copy-status]");
+
+    const GOLD_RATE = 21000;
+    const SILVER_RATE = 260;
+    const TOLA_TO_GRAM = 11.6638;
+
+    const getCurrency = () => (currencySelect ? currencySelect.value : "PKR");
+
+    const formatMoney = (value) => {
+      const formatter = new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: getCurrency(),
+        currencyDisplay: "code",
+        maximumFractionDigits: 2
+      });
+      return formatter.format(value || 0);
+    };
+
+    const getValue = (name) => {
+      const field = form.querySelector(`[data-field="${name}"]`);
+      return field ? Number(field.value) || 0 : 0;
+    };
+
+    const getDynamicText = (key) => {
+      const lang = getActiveLang();
+      return dynamicText[lang]?.[key] || dynamicText.english[key] || "";
+    };
+
+    const compute = () => {
+      const cash =
+        getValue("cash-hand") +
+        getValue("cash-savings") +
+        getValue("loans-given") +
+        getValue("investments") +
+        getValue("trade-goods");
+
+      const goldWeight = getValue("gold-weight");
+      const silverWeight = getValue("silver-weight");
+      const goldUnit = form.querySelector('[data-unit="gold"]')?.value || "grams";
+      const silverUnit = form.querySelector('[data-unit="silver"]')?.value || "grams";
+
+      const goldGrams = goldUnit === "tola" ? goldWeight * TOLA_TO_GRAM : goldWeight;
+      const silverGrams = silverUnit === "tola" ? silverWeight * TOLA_TO_GRAM : silverWeight;
+
+      const metals = goldGrams * GOLD_RATE + silverGrams * SILVER_RATE;
+
+      const liabilities =
+        getValue("liability-credit") +
+        getValue("liability-wages") +
+        getValue("liability-bills") +
+        getValue("liability-other");
+
+      const assets = cash + metals;
+      const net = Math.max(assets - liabilities, 0);
+
+      const nisabGold = GOLD_RATE * 87.48;
+      const nisabSilver = SILVER_RATE * 612.36;
+      const nisab = Math.min(nisabGold, nisabSilver);
+      const nisabLabel = nisab === nisabSilver ? getDynamicText("nisabSilver") : getDynamicText("nisabGold");
+      const nisabStatus = net >= nisab ? getDynamicText("dueIfHawl") : getDynamicText("belowNisab");
+
+      const due = net >= nisab ? net * 0.025 : 0;
+
+      output.assets.textContent = formatMoney(assets);
+      output.liabilities.textContent = formatMoney(liabilities);
+      output.net.textContent = formatMoney(net);
+      output.nisab.textContent = formatMoney(nisab);
+      output.due.textContent = formatMoney(due);
+      output.nisabNote.textContent = `${nisabLabel} ${nisabStatus}`.trim();
+
+      if (hawlCheck && !hawlCheck.checked) {
+        output.nisabNote.textContent += ` ${getDynamicText("hawlMissing")}`;
+      }
+    };
+
+    const resetForm = () => {
+      inputs.forEach((input) => {
+        input.value = "";
+      });
+      compute();
+    };
+
+    inputs.forEach((input) => input.addEventListener("input", compute));
+    form.querySelectorAll("select").forEach((select) => select.addEventListener("change", compute));
+    currencySelect?.addEventListener("change", compute);
+    hawlCheck?.addEventListener("change", compute);
+    document.querySelector("[data-reset]")?.addEventListener("click", resetForm);
+
+    copyBtn?.addEventListener("click", async () => {
+      const text = output.due?.textContent || "";
+      try {
+        await navigator.clipboard.writeText(text);
+        if (copyStatus) copyStatus.textContent = getDynamicText("copySuccess");
+      } catch {
+        if (copyStatus) copyStatus.textContent = getDynamicText("copyFailure");
+      }
+    });
+
+    const updateLanguage = (lang) => {
+      if (languageRoot) languageRoot.dataset.activeLang = lang;
+      applyTranslations(lang);
+      if (copyStatus) copyStatus.textContent = "";
+      compute();
+    };
+
+    languageInputs.forEach((input) => {
+      input.addEventListener("change", () => updateLanguage(input.value));
+    });
+
+    updateLanguage(getActiveLang());
+  }
+</script>

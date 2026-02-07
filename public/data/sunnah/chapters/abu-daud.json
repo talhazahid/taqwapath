@@ -1,0 +1,434 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Purification (Kitab Al-Taharah)",
+      "titleArabic": "كتاب الطهارة",
+      "hadithRange": {
+        "start": 1,
+        "end": 390
+      },
+      "hadithCount": 390
+    },
+    {
+      "id": 2,
+      "title": "Prayer (Kitab Al-Salat)",
+      "titleArabic": "كتاب الصلاة",
+      "hadithRange": {
+        "start": 391,
+        "end": 1160
+      },
+      "hadithCount": 770
+    },
+    {
+      "id": 3,
+      "title": "The Book Of The Prayer For Rain (Kitab al-Istisqa')",
+      "titleArabic": "كتاب الاستسقاء",
+      "hadithRange": {
+        "start": 1161,
+        "end": 1197
+      },
+      "hadithCount": 37
+    },
+    {
+      "id": 4,
+      "title": "Prayer (Kitab Al-Salat): Detailed Rules of Law about the Prayer during Journey",
+      "titleArabic": "كتاب صلاة السفر",
+      "hadithRange": {
+        "start": 1198,
+        "end": 1249
+      },
+      "hadithCount": 52
+    },
+    {
+      "id": 5,
+      "title": "Prayer (Kitab Al-Salat): Voluntary Prayers",
+      "titleArabic": "كتاب التطوع",
+      "hadithRange": {
+        "start": 1250,
+        "end": 1370
+      },
+      "hadithCount": 121
+    },
+    {
+      "id": 6,
+      "title": "Prayer (Kitab Al-Salat): Detailed Injunctions about Ramadan",
+      "titleArabic": "كتاب شهر رمضان",
+      "hadithRange": {
+        "start": 1371,
+        "end": 1400
+      },
+      "hadithCount": 30
+    },
+    {
+      "id": 7,
+      "title": "Prayer (Kitab Al-Salat): Prostration while reciting the Qur'an",
+      "titleArabic": "كتاب سجود القرآن",
+      "hadithRange": {
+        "start": 1401,
+        "end": 1415
+      },
+      "hadithCount": 15
+    },
+    {
+      "id": 8,
+      "title": "Prayer (Kitab Al-Salat): Detailed Injunctions about Witr",
+      "titleArabic": "كتاب الوتر",
+      "hadithRange": {
+        "start": 1416,
+        "end": 1555
+      },
+      "hadithCount": 140
+    },
+    {
+      "id": 9,
+      "title": "Zakat (Kitab Al-Zakat)",
+      "titleArabic": "كتاب الزكاة",
+      "hadithRange": {
+        "start": 1556,
+        "end": 1700
+      },
+      "hadithCount": 145
+    },
+    {
+      "id": 10,
+      "title": "The Book of Lost and Found Items",
+      "titleArabic": "كتاب اللقطة",
+      "hadithRange": {
+        "start": 1701,
+        "end": 1720
+      },
+      "hadithCount": 20
+    },
+    {
+      "id": 11,
+      "title": "The Rites of Hajj (Kitab Al-Manasik Wa'l-Hajj)",
+      "titleArabic": "كتاب المناسك",
+      "hadithRange": {
+        "start": 1721,
+        "end": 2045
+      },
+      "hadithCount": 325
+    },
+    {
+      "id": 12,
+      "title": "Marriage (Kitab Al-Nikah)",
+      "titleArabic": "كتاب النكاح",
+      "hadithRange": {
+        "start": 2046,
+        "end": 2174
+      },
+      "hadithCount": 129
+    },
+    {
+      "id": 13,
+      "title": "Divorce (Kitab Al-Talaq)",
+      "titleArabic": "كتاب الطلاق",
+      "hadithRange": {
+        "start": 2175,
+        "end": 2312
+      },
+      "hadithCount": 138
+    },
+    {
+      "id": 14,
+      "title": "Fasting (Kitab Al-Siyam)",
+      "titleArabic": "كتاب الصوم",
+      "hadithRange": {
+        "start": 2313,
+        "end": 2476
+      },
+      "hadithCount": 164
+    },
+    {
+      "id": 15,
+      "title": "Jihad (Kitab Al-Jihad)",
+      "titleArabic": "كتاب الجهاد",
+      "hadithRange": {
+        "start": 2477,
+        "end": 2787
+      },
+      "hadithCount": 311
+    },
+    {
+      "id": 16,
+      "title": "Sacrifice (Kitab Al-Dahaya)",
+      "titleArabic": "كتاب الضحايا",
+      "hadithRange": {
+        "start": 2788,
+        "end": 2843
+      },
+      "hadithCount": 56
+    },
+    {
+      "id": 17,
+      "title": "Game (Kitab Al-Said)",
+      "titleArabic": "كتاب الصيد",
+      "hadithRange": {
+        "start": 2844,
+        "end": 2861
+      },
+      "hadithCount": 18
+    },
+    {
+      "id": 18,
+      "title": "Wills (Kitab Al-Wasaya)",
+      "titleArabic": "كتاب الوصايا",
+      "hadithRange": {
+        "start": 2862,
+        "end": 2884
+      },
+      "hadithCount": 23
+    },
+    {
+      "id": 19,
+      "title": "Shares of Inheritance (Kitab Al-Fara'id)",
+      "titleArabic": "كتاب الفرائض",
+      "hadithRange": {
+        "start": 2885,
+        "end": 2927
+      },
+      "hadithCount": 43
+    },
+    {
+      "id": 20,
+      "title": "Tribute, Spoils, and Rulership (Kitab Al-Kharaj, Wal-Fai' Wal-Imarah)",
+      "titleArabic": "كتاب الخراج والإمارة والفىء",
+      "hadithRange": {
+        "start": 2928,
+        "end": 3088
+      },
+      "hadithCount": 161
+    },
+    {
+      "id": 21,
+      "title": "Funerals (Kitab Al-Jana'iz)",
+      "titleArabic": "كتاب الجنائز",
+      "hadithRange": {
+        "start": 3089,
+        "end": 3241
+      },
+      "hadithCount": 153
+    },
+    {
+      "id": 22,
+      "title": "Oaths and Vows (Kitab Al-Aiman Wa Al-Nudhur)",
+      "titleArabic": "كتاب الأيمان والنذور",
+      "hadithRange": {
+        "start": 3242,
+        "end": 3325
+      },
+      "hadithCount": 84
+    },
+    {
+      "id": 23,
+      "title": "Commercial Transactions (Kitab Al-Buyu)",
+      "titleArabic": "كتاب البيوع",
+      "hadithRange": {
+        "start": 3326,
+        "end": 3415
+      },
+      "hadithCount": 90
+    },
+    {
+      "id": 24,
+      "title": "Wages (Kitab Al-Ijarah)",
+      "titleArabic": "كتاب الإجارة",
+      "hadithRange": {
+        "start": 3416,
+        "end": 3570
+      },
+      "hadithCount": 155
+    },
+    {
+      "id": 25,
+      "title": "The Office of the Judge (Kitab Al-Aqdiyah)",
+      "titleArabic": "كتاب الأقضية",
+      "hadithRange": {
+        "start": 3571,
+        "end": 3640
+      },
+      "hadithCount": 70
+    },
+    {
+      "id": 26,
+      "title": "Knowledge (Kitab Al-Ilm)",
+      "titleArabic": "كتاب العلم",
+      "hadithRange": {
+        "start": 3641,
+        "end": 3668
+      },
+      "hadithCount": 28
+    },
+    {
+      "id": 27,
+      "title": "Drinks (Kitab Al-Ashribah)",
+      "titleArabic": "كتاب الأشربة",
+      "hadithRange": {
+        "start": 3669,
+        "end": 3735
+      },
+      "hadithCount": 67
+    },
+    {
+      "id": 28,
+      "title": "Foods (Kitab Al-At'imah)",
+      "titleArabic": "كتاب الأطعمة",
+      "hadithRange": {
+        "start": 3736,
+        "end": 3854
+      },
+      "hadithCount": 119
+    },
+    {
+      "id": 29,
+      "title": "Medicine (Kitab Al-Tibb)",
+      "titleArabic": "كتاب الطب",
+      "hadithRange": {
+        "start": 3855,
+        "end": 3903
+      },
+      "hadithCount": 49
+    },
+    {
+      "id": 30,
+      "title": "Divination and Omens (Kitab Al-Kahanah Wa Al-Tatayyur)",
+      "titleArabic": "كتاب الكهانة و التطير",
+      "hadithRange": {
+        "start": 3904,
+        "end": 3925
+      },
+      "hadithCount": 22
+    },
+    {
+      "id": 31,
+      "title": "The Book of Manumission of Slaves",
+      "titleArabic": "كتاب العتق",
+      "hadithRange": {
+        "start": 3926,
+        "end": 3968
+      },
+      "hadithCount": 43
+    },
+    {
+      "id": 32,
+      "title": "Dialects and Readings of the Qur'an (Kitab Al-Huruf Wa Al-Qira'at)",
+      "titleArabic": "كتاب الحروف والقراءات",
+      "hadithRange": {
+        "start": 3969,
+        "end": 4008
+      },
+      "hadithCount": 40
+    },
+    {
+      "id": 33,
+      "title": "Hot Baths (Kitab Al-Hammam)",
+      "titleArabic": "كتاب الحمَّام",
+      "hadithRange": {
+        "start": 4009,
+        "end": 4019
+      },
+      "hadithCount": 11
+    },
+    {
+      "id": 34,
+      "title": "Clothing (Kitab Al-Libas)",
+      "titleArabic": "كتاب اللباس",
+      "hadithRange": {
+        "start": 4020,
+        "end": 4158
+      },
+      "hadithCount": 139
+    },
+    {
+      "id": 35,
+      "title": "Combing the Hair (Kitab Al-Tarajjul)",
+      "titleArabic": "كتاب الترجل",
+      "hadithRange": {
+        "start": 4159,
+        "end": 4213
+      },
+      "hadithCount": 55
+    },
+    {
+      "id": 36,
+      "title": "Signet-Rings (Kitab Al-Khatam)",
+      "titleArabic": "كتاب الخاتم",
+      "hadithRange": {
+        "start": 4214,
+        "end": 4239
+      },
+      "hadithCount": 26
+    },
+    {
+      "id": 37,
+      "title": "Trials and Fierce Battles (Kitab Al-Fitan Wa Al-Malahim)",
+      "titleArabic": "كتاب الفتن والملاحم",
+      "hadithRange": {
+        "start": 4240,
+        "end": 4278
+      },
+      "hadithCount": 39
+    },
+    {
+      "id": 38,
+      "title": "The Promised Deliverer (Kitab Al-Mahdi)",
+      "titleArabic": "كتاب المهدى",
+      "hadithRange": {
+        "start": 4279,
+        "end": 4290
+      },
+      "hadithCount": 12
+    },
+    {
+      "id": 39,
+      "title": "Battles (Kitab Al-Malahim)",
+      "titleArabic": "كتاب الملاحم",
+      "hadithRange": {
+        "start": 4291,
+        "end": 4350
+      },
+      "hadithCount": 60
+    },
+    {
+      "id": 40,
+      "title": "Prescribed Punishments (Kitab Al-Hudud)",
+      "titleArabic": "كتاب الحدود",
+      "hadithRange": {
+        "start": 4351,
+        "end": 4493
+      },
+      "hadithCount": 143
+    },
+    {
+      "id": 41,
+      "title": "Types of Blood-Wit (Kitab Al-Diyat)",
+      "titleArabic": "كتاب الديات",
+      "hadithRange": {
+        "start": 4494,
+        "end": 4595
+      },
+      "hadithCount": 102
+    },
+    {
+      "id": 42,
+      "title": "Model Behavior of the Prophet (Kitab Al-Sunnah)",
+      "titleArabic": "كتاب السنة",
+      "hadithRange": {
+        "start": 4596,
+        "end": 4772
+      },
+      "hadithCount": 177
+    },
+    {
+      "id": 43,
+      "title": "General Behavior (Kitab Al-Adab)",
+      "titleArabic": "كتاب الأدب",
+      "hadithRange": {
+        "start": 4773,
+        "end": 5274
+      },
+      "hadithCount": 502
+    }
+  ]
+}

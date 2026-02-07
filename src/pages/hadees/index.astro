@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { fetchHadithBooks } from "../../lib/hadithApi.js";
+
+const books = await fetchHadithBooks();
+const typeLabels = {
+  popular: "Popular",
+  fiqh: "Fiqh focused",
+  ethics: "Ethics and adab"
+};
+const typeKeys = Object.keys(typeLabels);
+const availableTypes = typeKeys.filter((key) => books.some((book) => book.types?.includes(key)));
+---
+<BaseLayout
+  title="Hadith Collection Library - TaqwaPath"
+  description="Browse hadith collections like Sahih Bukhari and Muslim with filters, references, and sharing."
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Hadith library</span>
+      <h1 class="section-title">Browse hadith books</h1>
+      <p class="section-lead">
+        Explore reliable collections with quick search, filters, and share-ready references.
+      </p>
+      <div class="filter-row">
+        <div class="card">
+          <div class="card__title">Collection type</div>
+          <select class="select" data-type-filter>
+            <option value="all">All collections</option>
+            {availableTypes.map((type) => (
+              <option value={type}>{typeLabels[type]}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid--3">
+        {books.length ? (
+          books.map((book) => (
+            <a
+              class="card card--link anim-fade-up"
+              href={`/hadees/${book.slug}/chapters`}
+              data-book-card
+              data-types={book.types?.join(",") || ""}
+            >
+              <div class="card__title">{book.title}</div>
+              <div class="card__meta">{book.compiler}</div>
+              <p class="muted">{book.summary}</p>
+              <div class="pill-row" style="margin-bottom: 12px;">
+                <span class="chip">{book.count || "Many"} hadith</span>
+                <span class="chip">Reference ready</span>
+              </div>
+              <div class="card__cta">
+                <span class="btn btn--primary">Browse Chapters</span>
+              </div>
+            </a>
+          ))
+        ) : (
+          <div class="card">
+            <strong>No collections available.</strong>
+            <p class="muted">Unable to load the hadith list right now.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const filter = document.querySelector("[data-type-filter]");
+  const cards = [...document.querySelectorAll("[data-book-card]")];
+
+  const applyFilter = () => {
+    if (!filter) return;
+    const value = filter.value;
+    cards.forEach((card) => {
+      const types = (card.dataset.types || "").split(",").filter(Boolean);
+      const isMatch = value === "all" || types.includes(value);
+      card.style.display = isMatch ? "" : "none";
+    });
+  };
+
+  filter?.addEventListener("change", applyFilter);
+  applyFilter();
+</script>

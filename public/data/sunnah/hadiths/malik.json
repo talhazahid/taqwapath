@@ -1,0 +1,17 @@
+{
+  "collection": {
+    "id": "malik",
+    "slug": "malik",
+    "sourceSlug": "malik",
+    "title": "Muwatta Malik",
+    "arabicTitle": "موطأ مالك",
+    "compiler": "Imam Malik",
+    "summary": "Early collection blending hadith with legal rulings.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 61,
+    "count": 0
+  },
+  "hadiths": []
+}

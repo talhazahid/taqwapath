@@ -1,0 +1,17 @@
+{
+  "collection": {
+    "id": "darimi",
+    "slug": "darimi",
+    "sourceSlug": "darimi",
+    "title": "Sunan al-Darimi",
+    "arabicTitle": "سنن الدارمي",
+    "compiler": "Imam al-Darimi",
+    "summary": "A foundational collection with a focus on law and guidance.",
+    "tags": [
+      "fiqh"
+    ],
+    "chapterCount": 23,
+    "count": 0
+  },
+  "hadiths": []
+}

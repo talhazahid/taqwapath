@@ -1,0 +1,54 @@
+---
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Hadees", href: "/hadees" },
+  { label: "Quran", href: "/listen-quran" },
+  { label: "Calendar", href: "/islamic-calendar-2026" },
+  { label: "Ramzan 2026", href: "/ramzan-2026" },
+  { label: "Zakat Calculator", href: "/zakat-calculator" },
+  { label: "Salah Timings", href: "/salah-namaz-timings" }
+];
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/">
+      <span>TaqwaPath</span>
+    </a>
+    <nav class="nav" data-open="false">
+      <ul class="nav__list">
+        {navItems.map((item) => (
+          <li>
+            <a class="nav__link" href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <div class="nav__actions">
+        <button class="nav__toggle js-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const nav = document.querySelector(".nav");
+  const toggle = document.querySelector(".js-nav-toggle");
+
+  if (nav && toggle) {
+    toggle.addEventListener("click", () => {
+      const isOpen = nav.dataset.open === "true";
+      nav.dataset.open = String(!isOpen);
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!nav.contains(event.target) && nav.dataset.open === "true") {
+        nav.dataset.open = "false";
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+</script>

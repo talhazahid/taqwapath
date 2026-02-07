@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .mosque-fill { fill: #2d7a4f; }
+    </style>
+  </defs>
+
+  <!-- Main dome -->
+  <ellipse cx="32" cy="28" rx="14" ry="10" class="mosque-fill"/>
+
+  <!-- Crescent on top of dome -->
+  <path d="M 32 16 Q 28 18 28 22 Q 28 18.5 32 17 Q 36 18.5 36 22 Q 36 18 32 16 Z" class="mosque-fill"/>
+
+  <!-- Left minaret -->
+  <rect x="12" y="32" width="6" height="20" class="mosque-fill"/>
+  <rect x="13" y="28" width="4" height="4" class="mosque-fill"/>
+  <ellipse cx="15" cy="27" rx="3" ry="2" class="mosque-fill"/>
+  <path d="M 15 24 Q 13.5 25 13.5 27 Q 13.5 25.5 15 24.5 Q 16.5 25.5 16.5 27 Q 16.5 25 15 24 Z" class="mosque-fill"/>
+
+  <!-- Right minaret -->
+  <rect x="46" y="32" width="6" height="20" class="mosque-fill"/>
+  <rect x="47" y="28" width="4" height="4" class="mosque-fill"/>
+  <ellipse cx="49" cy="27" rx="3" ry="2" class="mosque-fill"/>
+  <path d="M 49 24 Q 47.5 25 47.5 27 Q 47.5 25.5 49 24.5 Q 50.5 25.5 50.5 27 Q 50.5 25 49 24 Z" class="mosque-fill"/>
+
+  <!-- Main building -->
+  <rect x="20" y="32" width="24" height="20" class="mosque-fill"/>
+
+  <!-- Entrance arch -->
+  <path d="M 28 52 L 28 44 Q 28 40 32 40 Q 36 40 36 44 L 36 52 Z" fill="#f5f6f3"/>
+
+  <!-- Base -->
+  <rect x="18" y="52" width="28" height="3" class="mosque-fill"/>
+</svg>

@@ -1,0 +1,84 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Musnad Abu Bakr as-Siddiq (ra)",
+      "titleArabic": "مُسْنَدُ أَبِي بَكْرٍ الصِّدِّيقِ رَضِيَ اللَّهُ عَنْهُ",
+      "hadithRange": {
+        "start": 1,
+        "end": 81
+      },
+      "hadithCount": 81
+    },
+    {
+      "id": 2,
+      "title": "Musnad `Umar b. al-Khattab (ra)",
+      "titleArabic": "مُسْنَدِ عُمَرَ بْنِ الْخَطَّابِ رَضِيَ اللَّهُ عَنْهُ",
+      "hadithRange": {
+        "start": 82,
+        "end": 390
+      },
+      "hadithCount": 309
+    },
+    {
+      "id": 3,
+      "title": "The Hadeeth of Saqeefah",
+      "titleArabic": "حَدِيثُ السَّقِيفَةِ",
+      "hadithRange": {
+        "start": 391,
+        "end": 398
+      },
+      "hadithCount": 8
+    },
+    {
+      "id": 4,
+      "title": "Musnad Uthman ibn Affan",
+      "titleArabic": "مُسْنَدُ عُثْمَانَ بْنِ عَفَّانَ رَضِيَ اللَّهُ عَنْهُ",
+      "hadithRange": {
+        "start": 399,
+        "end": 561
+      },
+      "hadithCount": 163
+    },
+    {
+      "id": 5,
+      "title": "Musnad 'Ali Ibn Abi Talib",
+      "titleArabic": "وَمِنْ مُسْنَدِ عَلِيِّ بْنِ أَبِي طَالِبٍ رَضِيَ اللَّهُ عَنْهُ",
+      "hadithRange": {
+        "start": 562,
+        "end": 1380
+      },
+      "hadithCount": 819
+    },
+    {
+      "id": 6,
+      "title": "Musnad of Abu Muhammad Talhah bin 'Ubaidullah",
+      "titleArabic": "مُسْنَدُ أَبِي مُحَمَّدٍ طَلْحَةَ بْنِ عُبَيْدِ اللَّهِ رَضِيَ اللَّهُ تَعَالَى عَنْهُ",
+      "hadithRange": {
+        "start": 1381,
+        "end": 1404
+      },
+      "hadithCount": 24
+    },
+    {
+      "id": 7,
+      "title": "The Musnad of az-Zubair bin al-'Awwam",
+      "titleArabic": "مُسْنَدُ الزُّبَيْرِ بْنِ الْعَوَّامِ رَضِيَ اللَّهُ عَنْهُ",
+      "hadithRange": {
+        "start": 1405,
+        "end": 1438
+      },
+      "hadithCount": 34
+    },
+    {
+      "id": 31,
+      "title": "",
+      "titleArabic": "حَدِيثُ أَبِي رِمْثَةَ عَنْ النَّبِيَّ رَضِيَ اللَّهُ عَنْهُ",
+      "hadithRange": {
+        "start": 0,
+        "end": 0
+      },
+      "hadithCount": 0
+    }
+  ]
+}

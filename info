@@ -1,0 +1,26 @@
+
+/home/ubuntu/taqwapath
+Host: 162.19.205.74
+Username: ubuntu
+Password: Johnwoo4756!@
+Port: 22 (default)
+SSH Command:
+ssh ubuntu@162.19.205.74
+
+
+
+- Server path: /home/ubuntu/taqwapath
+  Info file details
+
+  - Server path: /home/ubuntu/taqwapath
+  - Host: 162.19.205.74
+  - User: ubuntu
+  - Port: 22
+  Env/SSH files found (none inside the repo)
+
+  - SSH config: C:\Users\talha\.ssh\config
+      - Has Host audioconverter-vps → HostName 162.19.205.74, User ubuntu, IdentityFile ~/.ssh/vps_audioconverter, Port 22
+  - Key pair for that host:
+      - C:\Users\talha\.ssh\vps_audioconverter
+      - C:\Users\talha\.ssh\vps_audioconverter.pub
+  - SSH agent env: C:\Users\talha\.ssh\agent.env

@@ -1,0 +1,32 @@
+# Node / Astro
+node_modules/
+dist/
+.astro/
+
+# Local audio assets (very large)
+public/audio/
+dist/audio/
+
+# Mobile app (separate repo)
+mobile-app/
+
+# Logs / temp
+*.log
+*.tmp
+.tmp*
+tmpclaude-*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Tooling
+.claude/
+
+# Archives
+*.tar.gz
+
+# Windows reserved
+nul

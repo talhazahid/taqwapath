@@ -1,0 +1,15 @@
+{
+  "name": "taqwapath",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "scrape:sunnah": "node scripts/scrape-sunnah.js"
+  },
+  "dependencies": {
+    "astro": "^4.13.2"
+  }
+}

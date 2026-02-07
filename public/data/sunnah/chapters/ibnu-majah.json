@@ -1,0 +1,374 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "The Book of Purification and its Sunnah",
+      "titleArabic": "كتاب الطهارة وسننها",
+      "hadithRange": {
+        "start": 267,
+        "end": 666
+      },
+      "hadithCount": 400
+    },
+    {
+      "id": 2,
+      "title": "The Book of the Prayer",
+      "titleArabic": "كتاب الصلاة",
+      "hadithRange": {
+        "start": 667,
+        "end": 705
+      },
+      "hadithCount": 39
+    },
+    {
+      "id": 3,
+      "title": "The Book of the Adhan and the Sunnah Regarding It",
+      "titleArabic": "كتاب الأذان والسنة فيها",
+      "hadithRange": {
+        "start": 706,
+        "end": 734
+      },
+      "hadithCount": 29
+    },
+    {
+      "id": 4,
+      "title": "The Book On The Mosques And The Congregations",
+      "titleArabic": "كتاب المساجد والجماعات",
+      "hadithRange": {
+        "start": 735,
+        "end": 802
+      },
+      "hadithCount": 68
+    },
+    {
+      "id": 5,
+      "title": "Establishing the Prayer and the Sunnah Regarding Them",
+      "titleArabic": "كتاب إقامة الصلاة والسنة فيها",
+      "hadithRange": {
+        "start": 803,
+        "end": 1432
+      },
+      "hadithCount": 630
+    },
+    {
+      "id": 6,
+      "title": "Chapters Regarding Funerals",
+      "titleArabic": "كتاب الجنائز",
+      "hadithRange": {
+        "start": 1433,
+        "end": 1637
+      },
+      "hadithCount": 205
+    },
+    {
+      "id": 7,
+      "title": "Fasting",
+      "titleArabic": "كتاب الصيام",
+      "hadithRange": {
+        "start": 1638,
+        "end": 1782
+      },
+      "hadithCount": 145
+    },
+    {
+      "id": 8,
+      "title": "The Chapters Regarding Zakat",
+      "titleArabic": "كتاب الزكاة",
+      "hadithRange": {
+        "start": 1783,
+        "end": 1844
+      },
+      "hadithCount": 62
+    },
+    {
+      "id": 9,
+      "title": "The Chapters on Marriage",
+      "titleArabic": "كتاب النكاح",
+      "hadithRange": {
+        "start": 1845,
+        "end": 2015
+      },
+      "hadithCount": 171
+    },
+    {
+      "id": 10,
+      "title": "The Chapters on Divorce",
+      "titleArabic": "كتاب الطلاق",
+      "hadithRange": {
+        "start": 2016,
+        "end": 2477
+      },
+      "hadithCount": 462
+    },
+    {
+      "id": 11,
+      "title": "The Chapters on Expiation",
+      "titleArabic": "كتاب الكفارات",
+      "hadithRange": {
+        "start": 2090,
+        "end": 2136
+      },
+      "hadithCount": 47
+    },
+    {
+      "id": 12,
+      "title": "The Chapters on Business Transactions",
+      "titleArabic": "كتاب التجارات",
+      "hadithRange": {
+        "start": 2137,
+        "end": 2307
+      },
+      "hadithCount": 171
+    },
+    {
+      "id": 13,
+      "title": "The Chapters on Rulings",
+      "titleArabic": "كتاب الأحكام",
+      "hadithRange": {
+        "start": 2308,
+        "end": 2374
+      },
+      "hadithCount": 67
+    },
+    {
+      "id": 14,
+      "title": "The Chapters on Gifts",
+      "titleArabic": "كتاب الهبات",
+      "hadithRange": {
+        "start": 2375,
+        "end": 2389
+      },
+      "hadithCount": 15
+    },
+    {
+      "id": 15,
+      "title": "The Chapters on Charity",
+      "titleArabic": "كتاب الصدقات",
+      "hadithRange": {
+        "start": 2390,
+        "end": 2528
+      },
+      "hadithCount": 139
+    },
+    {
+      "id": 16,
+      "title": "The Chapters on Pawning",
+      "titleArabic": "كتاب الرهون",
+      "hadithRange": {
+        "start": 2436,
+        "end": 2491
+      },
+      "hadithCount": 56
+    },
+    {
+      "id": 17,
+      "title": "The Chapters on Pre-emption",
+      "titleArabic": "كتاب الشفعة",
+      "hadithRange": {
+        "start": 2492,
+        "end": 2501
+      },
+      "hadithCount": 10
+    },
+    {
+      "id": 18,
+      "title": "The Chapters on Lost Property",
+      "titleArabic": "كتاب اللقطة",
+      "hadithRange": {
+        "start": 2502,
+        "end": 2511
+      },
+      "hadithCount": 10
+    },
+    {
+      "id": 19,
+      "title": "The Chapters on Manumission (of Slaves)",
+      "titleArabic": "كتاب العتق",
+      "hadithRange": {
+        "start": 2512,
+        "end": 2532
+      },
+      "hadithCount": 21
+    },
+    {
+      "id": 20,
+      "title": "The Chapters on Legal Punishments",
+      "titleArabic": "كتاب الحدود",
+      "hadithRange": {
+        "start": 2533,
+        "end": 2614
+      },
+      "hadithCount": 82
+    },
+    {
+      "id": 21,
+      "title": "The Chapters on Blood Money",
+      "titleArabic": "كتاب الديات",
+      "hadithRange": {
+        "start": 2615,
+        "end": 2694
+      },
+      "hadithCount": 80
+    },
+    {
+      "id": 22,
+      "title": "The Chapters on Wills",
+      "titleArabic": "كتاب الوصايا",
+      "hadithRange": {
+        "start": 2695,
+        "end": 2718
+      },
+      "hadithCount": 24
+    },
+    {
+      "id": 23,
+      "title": "Chapters on Shares of Inheritance",
+      "titleArabic": "كتاب الفرائض",
+      "hadithRange": {
+        "start": 2719,
+        "end": 2752
+      },
+      "hadithCount": 34
+    },
+    {
+      "id": 24,
+      "title": "The Chapters on Jihad",
+      "titleArabic": "كتاب الجهاد",
+      "hadithRange": {
+        "start": 2753,
+        "end": 2881
+      },
+      "hadithCount": 129
+    },
+    {
+      "id": 25,
+      "title": "Chapters on Hajj Rituals",
+      "titleArabic": "كتاب المناسك",
+      "hadithRange": {
+        "start": 2882,
+        "end": 3119
+      },
+      "hadithCount": 238
+    },
+    {
+      "id": 26,
+      "title": "Chapters on Sacrifices",
+      "titleArabic": "كتاب الأضاحي",
+      "hadithRange": {
+        "start": 3120,
+        "end": 3161
+      },
+      "hadithCount": 42
+    },
+    {
+      "id": 27,
+      "title": "Chapters on Slaughtering",
+      "titleArabic": "كتاب الذبائح",
+      "hadithRange": {
+        "start": 3162,
+        "end": 3199
+      },
+      "hadithCount": 38
+    },
+    {
+      "id": 28,
+      "title": "Chapters on Hunting",
+      "titleArabic": "كتاب الصيد",
+      "hadithRange": {
+        "start": 3200,
+        "end": 3250
+      },
+      "hadithCount": 51
+    },
+    {
+      "id": 29,
+      "title": "Chapters on Food",
+      "titleArabic": "كتاب الأطعمة",
+      "hadithRange": {
+        "start": 3251,
+        "end": 3370
+      },
+      "hadithCount": 120
+    },
+    {
+      "id": 30,
+      "title": "Chapters on Drinks",
+      "titleArabic": "كتاب الأشربة",
+      "hadithRange": {
+        "start": 3371,
+        "end": 3435
+      },
+      "hadithCount": 65
+    },
+    {
+      "id": 31,
+      "title": "Chapters on Medicine",
+      "titleArabic": "كتاب الطب",
+      "hadithRange": {
+        "start": 3436,
+        "end": 3549
+      },
+      "hadithCount": 114
+    },
+    {
+      "id": 32,
+      "title": "Chapters on Dress",
+      "titleArabic": "كتاب اللباس",
+      "hadithRange": {
+        "start": 3550,
+        "end": 3656
+      },
+      "hadithCount": 107
+    },
+    {
+      "id": 33,
+      "title": "Etiquette",
+      "titleArabic": "كتاب الأدب",
+      "hadithRange": {
+        "start": 3657,
+        "end": 3826
+      },
+      "hadithCount": 170
+    },
+    {
+      "id": 34,
+      "title": "Supplication",
+      "titleArabic": "كتاب الدعاء",
+      "hadithRange": {
+        "start": 3827,
+        "end": 3892
+      },
+      "hadithCount": 66
+    },
+    {
+      "id": 35,
+      "title": "Interpretation of Dreams",
+      "titleArabic": "كتاب تعبير الرؤيا",
+      "hadithRange": {
+        "start": 3893,
+        "end": 3926
+      },
+      "hadithCount": 34
+    },
+    {
+      "id": 36,
+      "title": "Tribulations",
+      "titleArabic": "كتاب الفتن",
+      "hadithRange": {
+        "start": 3927,
+        "end": 4099
+      },
+      "hadithCount": 173
+    },
+    {
+      "id": 37,
+      "title": "Zuhd",
+      "titleArabic": "كتاب الزهد",
+      "hadithRange": {
+        "start": 4100,
+        "end": 4341
+      },
+      "hadithCount": 242
+    }
+  ]
+}
