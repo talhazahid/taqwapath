@@ -839,6 +839,7 @@ textarea {
 
 .quran-controls .select {
   font-size: calc(1em - 5px);
+  height: 44px;
   appearance: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236b7a73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
@@ -847,12 +848,17 @@ textarea {
   padding-right: 38px;
 }
 
+.quran-controls .input {
+  font-size: calc(1em - 5px);
+  height: 44px;
+}
+
 .quran-controls__search .card__title {
   font-size: calc(1em - 1px);
 }
 
 .quran-controls__search .input {
-  font-size: calc(1em - 2px);
+  font-size: inherit;
 }
 
 @media (max-width: 960px) {
