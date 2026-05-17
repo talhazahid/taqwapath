@@ -1,5 +1,170 @@
 ---
+import fs from "node:fs/promises";
+import path from "node:path";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+const calendarPath = path.join(process.cwd(), "public", "data", "islamic-calendar", "2026.json");
+const calendarPayload = JSON.parse(await fs.readFile(calendarPath, "utf8"));
+const currentDate = new Date();
+const startOfToday = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+const initialMonth = currentDate.getMonth() + 1;
+const initialMonthName = monthNames[initialMonth - 1];
+const monthOrder = Object.keys(calendarPayload?.months || {}).sort((a, b) => Number(a) - Number(b));
+const initialMonthData = Array.isArray(calendarPayload?.months?.[String(initialMonth)])
+  ? calendarPayload.months[String(initialMonth)]
+  : [];
+const formatGregorianLong = (date) =>
+  new Intl.DateTimeFormat("en", {
+    month: "long",
+    day: "2-digit",
+    year: "numeric"
+  }).format(date);
+const cleanHoliday = (holiday) => String(holiday || "").replace(/\(.*?\)/g, "").trim();
+const normalizeHolidayKey = (holiday) =>
+  cleanHoliday(holiday)
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+const allowedHolidayKeys = new Set([
+  "lailat ul miraj",
+  "lailat ul bara at",
+  "1st day of ramadan",
+  "lailat ul qadr",
+  "eid ul fitr",
+  "hajj",
+  "arafa",
+  "eid ul adha",
+  "1st day of muharram",
+  "ashura",
+  "mawlid birth al nabi",
+  "beginning of the holy months",
+  "end of the holy months",
+  "treaty of hudaybiyya",
+  "first time adhan was called in 622 ad"
+]);
+const isIslamicHolidayEvent = (holiday) => allowedHolidayKeys.has(normalizeHolidayKey(holiday));
+const formatSpecialTitle = (holiday) => {
+  const normalized = normalizeHolidayKey(holiday);
+  const titleMap = new Map([
+    ["lailat ul miraj", "Shab e Meraj"],
+    ["lailat ul bara at", "Shab e Barat"],
+    ["1st day of ramadan", "Ramadan"],
+    ["lailat ul qadr", "Laylat al Qadr"],
+    ["eid ul fitr", "Eid ul Fitr"],
+    ["hajj", "Hajj"],
+    ["arafa", "Arafa"],
+    ["eid ul adha", "Eid ul Adha"],
+    ["1st day of muharram", "Muharram"],
+    ["ashura", "Ashura"],
+    ["mawlid birth al nabi", "Mawlid al Nabi"],
+    ["beginning of the holy months", "Beginning of the holy months"],
+    ["end of the holy months", "End of the holy months"],
+    ["treaty of hudaybiyya", "Treaty of Hudaybiyya"]
+  ]);
+  const title = titleMap.get(normalized) || cleanHoliday(holiday).replace(/[-_]+/g, " ");
+  return /\b2026\b/.test(title) ? title : `${title} 2026`;
+};
+const collectSpecialDays = (months) => {
+  const seen = new Set();
+  const events = [];
+  monthOrder.forEach((monthKey) => {
+    const monthDays = Array.isArray(months?.[monthKey]) ? months[monthKey] : [];
+    monthDays.forEach((day) => {
+      const holidays = Array.isArray(day?.hijri?.holidays) ? day.hijri.holidays : [];
+      holidays.forEach((holiday) => {
+        const label = cleanHoliday(holiday);
+        if (!label || !isIslamicHolidayEvent(label)) return;
+        const key = normalizeHolidayKey(label);
+        if (seen.has(key)) return;
+        const gregorianDate = new Date(2026, Number(monthKey) - 1, Number(day?.gregorian?.day));
+        if (!(gregorianDate instanceof Date) || Number.isNaN(gregorianDate.getTime())) return;
+        if (gregorianDate < startOfToday) return;
+        seen.add(key);
+        events.push({
+          title: formatSpecialTitle(label),
+          gregorian: formatGregorianLong(gregorianDate),
+          month: new Intl.DateTimeFormat("en", { month: "short" }).format(gregorianDate),
+          day: String(gregorianDate.getDate()).padStart(2, "0"),
+          hijri: `${day.hijri.day} ${day.hijri.month.en} ${day.hijri.year}`
+        });
+      });
+    });
+  });
+
+  if (!events.length) {
+    monthOrder.forEach((monthKey) => {
+      const monthDays = Array.isArray(months?.[monthKey]) ? months[monthKey] : [];
+      monthDays.forEach((day) => {
+        const holidays = Array.isArray(day?.hijri?.holidays) ? day.hijri.holidays : [];
+        holidays.forEach((holiday) => {
+          const label = cleanHoliday(holiday);
+          if (!label || !isIslamicHolidayEvent(label)) return;
+          const key = normalizeHolidayKey(label);
+          if (seen.has(key)) return;
+          seen.add(key);
+          const gregorianDate = new Date(2026, Number(monthKey) - 1, Number(day?.gregorian?.day));
+          if (Number.isNaN(gregorianDate.getTime())) return;
+          events.push({
+            title: formatSpecialTitle(label),
+            gregorian: formatGregorianLong(gregorianDate),
+            month: new Intl.DateTimeFormat("en", { month: "short" }).format(gregorianDate),
+            day: String(gregorianDate.getDate()).padStart(2, "0"),
+            hijri: `${day.hijri.day} ${day.hijri.month.en} ${day.hijri.year}`
+          });
+        });
+      });
+    });
+  }
+
+  return events.slice(0, 10);
+};
+const initialSpecialDays = collectSpecialDays(calendarPayload?.months || {});
+const initialSpecialDaysMarkup = initialSpecialDays
+  .map(
+    (item) => `
+      <div class="special-day">
+        <div class="special-day__date">
+          <span class="special-day__month">${item.month}</span>
+          <span class="special-day__day">${item.day}</span>
+        </div>
+        <div class="special-day__body">
+          <div class="special-day__title">${item.title}</div>
+          <div class="special-day__meta">${item.hijri}</div>
+        </div>
+        <div class="special-day__right">${item.gregorian}</div>
+      </div>
+    `
+  )
+  .join("");
+const initialHolidayMap = new Map(
+  initialMonthData
+    .filter((day) => Array.isArray(day?.hijri?.holidays) && day.hijri.holidays.length)
+    .map((day) => {
+      const key = `${day.hijri.day}|${day.hijri.month.en}|${day.hijri.year}`;
+      return [key, cleanHoliday(day.hijri.holidays[0])];
+    })
+);
+const initialTodayHijriEntry = initialMonthData.find(
+  (day) => Number(day?.gregorian?.day) === currentDate.getDate()
+);
+const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijriEntry?.hijri?.month?.en && initialTodayHijriEntry?.hijri?.year
+  ? `${initialTodayHijriEntry.hijri.day} ${initialTodayHijriEntry.hijri.month.en}, ${initialTodayHijriEntry.hijri.year}`
+  : "Loading...";
 ---
 <BaseLayout
   title="Islamic Calendar 2026 (Hijri & Gregorian) - TaqwaPath"
@@ -9,7 +174,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="container">
       <span class="pill">Islamic Calendar 2026</span>
       <h1 class="section-title">Islamic Calendar 2026</h1>
-      <div class="tag" data-calendar-title style="margin-top: 10px;">January 2026</div>
+      <div class="tag" data-calendar-title style="margin-top: 10px;">{initialMonthName} 2026</div>
+
+      <div class="card card--white calendar-intro" style="margin: 24px 0;">
+        <div class="card__title">Today Hijri Date in Karachi - <span data-calendar-today-hijri>{initialTodayHijri}</span></div>
+        <p class="section-lead calendar-intro__text" style="margin-bottom: 14px;">
+          Islamic Calendar depends on the movement of the moon. The beginning of each month is marked by the observance
+          of a new moon seen for the first time. Visibility of the new moon depends on various factors such as weather;
+          hence the Islamic Calendar is only an estimate of future Islamic events.
+        </p>
+        <p class="section-lead calendar-intro__text" style="margin-bottom: 0;">
+          IslamicFinder provides the most accurate Islamic calendar with special Islamic days and events tracking. You
+          can convert Hijri dates to Gregorian and vice versa, and change Hijri date settings to adjust and customize
+          your calendar within a few clicks.
+        </p>
+      </div>
+
       <p class="section-lead">
         Highlight key dates and adjust for regional observations. Dates are calculated and may vary locally.
       </p>
@@ -45,9 +225,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div class="card" style="grid-column: 1 / -1;">Loading calendar...</div>
       </div>
 
-      <div class="card" style="margin-top: 24px;">
-        <div class="card__title">Important dates list</div>
-        <div class="list" data-calendar-list></div>
+      <div class="card card--white" id="special-islamic-days" style="margin: 24px 0;">
+        <div class="heading-row">
+          <div>
+            <div class="card__title">Special Islamic Days</div>
+            <div class="card__meta">Upcoming special dates for 2026.</div>
+          </div>
+        </div>
+        <div class="special-days" data-special-days set:html={initialSpecialDaysMarkup}></div>
       </div>
     </div>
   </section>
@@ -56,13 +241,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   const yearSelect = document.querySelector("[data-calendar-year]");
   const adjustSelect = document.querySelector("[data-calendar-adjustment]");
   const grid = document.querySelector("[data-calendar-grid]");
-  const list = document.querySelector("[data-calendar-list]");
+  const specialDays = document.querySelector("[data-special-days]");
   const title = document.querySelector("[data-calendar-title]");
-
-  const DATA_YEAR = 2026;
-  const DATA_URL = "/data/islamic-calendar/2026.json";
-  let calendarData = null;
-
+  const todayHijri = document.querySelector("[data-calendar-today-hijri]");
   const monthNames = [
     "January",
     "February",
@@ -77,6 +258,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     "November",
     "December"
   ];
+
+  const DATA_YEAR = 2026;
+  const DATA_URL = "/data/islamic-calendar/2026.json";
+  let calendarData = null;
+
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const setTitle = (month, year) => {
@@ -88,7 +274,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const map = new Map();
     data.forEach((day) => {
       const holiday = day.hijri?.holidays?.[0];
-      if (!holiday) return;
+      if (!holiday || !isIslamicHolidayEvent(holiday)) return;
       const key = `${day.hijri.day}|${day.hijri.month.en}|${day.hijri.year}`;
       map.set(key, cleanHoliday(holiday));
     });
@@ -108,6 +294,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const today = new Date();
     const isCurrentMonth = today.getMonth() + 1 === month && today.getFullYear() === year;
     const holidayMap = getHolidayMap(data);
+    const seenHolidayLabels = new Set();
 
     const cells = [
       ...weekDays.map((day) => `<div class="calendar-cell calendar-cell--muted"><span class="calendar-cell__day">${day}</span></div>`),
@@ -117,17 +304,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const holidayKey = `${adjustedHijriDay}|${day.hijri.month.en}|${day.hijri.year}`;
         const label = holidayMap.get(holidayKey) || "";
         const isToday = isCurrentMonth && Number(day.gregorian.day) === today.getDate();
+        const labelKey = label ? normalizeHolidayKey(label) : "";
+        const showLabel = label && !seenHolidayLabels.has(labelKey);
+        if (showLabel) seenHolidayLabels.add(labelKey);
 
         const classNames = [
           "calendar-cell",
           isToday && "calendar-cell--today",
-          label && "calendar-cell--highlight"
+          showLabel && "calendar-cell--highlight"
         ].filter(Boolean).join(" ");
         return `
           <div class="${classNames}">
             <div class="calendar-cell__day">${day.gregorian.day}</div>
             <div class="calendar-cell__hijri">${adjustedHijriDay} ${day.hijri.month.en} ${day.hijri.year}</div>
-            ${label ? `<div class="tag">${label}</div>` : ""}
+            ${showLabel ? `<div class="tag">${label}</div>` : ""}
           </div>
         `;
       })
@@ -136,42 +326,101 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     grid.innerHTML = cells.join("");
   };
 
-  const renderList = (data, monthName, adjustment = 0) => {
-    if (!list) return;
-    const holidayMap = getHolidayMap(data);
-    const highlights = data
-      .map((day) => {
-        const adjustedHijriDay = Number(day.hijri.day) + adjustment;
-        const holidayKey = `${adjustedHijriDay}|${day.hijri.month.en}|${day.hijri.year}`;
-        const label = holidayMap.get(holidayKey);
-        if (!label) return null;
-        return {
-          day: day.gregorian.day,
-          label,
-          hijri: `${adjustedHijriDay} ${day.hijri.month.en} ${day.hijri.year}`
-        };
-      })
-      .filter(Boolean);
+  const normalizeHolidayKey = (holiday) =>
+    String(holiday || "")
+      .replace(/\(.*?\)/g, "")
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
 
-    if (!highlights.length) {
-      list.innerHTML = `<div class="list-row"><div class="pill">Info</div><div><strong>No major dates found</strong><div class="list-row__meta">This month has no listed holidays in the dataset.</div></div><div class="muted">${monthName}</div></div>`;
+  const formatSpecialTitle = (holiday) => {
+    const titleMap = {
+      "lailat ul miraj": "Shab e Meraj 2026",
+      "lailat ul bara at": "Shab e Barat 2026",
+      "1st day of ramadan": "Ramadan 2026",
+      "lailat ul qadr": "Laylat al Qadr 2026",
+      "eid ul fitr": "Eid ul Fitr 2026",
+      hajj: "Hajj 2026",
+      arafa: "Arafa 2026",
+      "eid ul adha": "Eid ul Adha 2026",
+      "1st day of muharram": "Muharram 2026",
+      ashura: "Ashura 2026",
+      "mawlid birth al nabi": "Mawlid al Nabi 2026",
+      "beginning of the holy months": "Beginning of the holy months 2026",
+      "end of the holy months": "End of the holy months 2026",
+      "treaty of hudaybiyya": "Treaty of Hudaybiyya 2026"
+    };
+    const normalized = normalizeHolidayKey(holiday);
+    return titleMap[normalized] || `${String(holiday || "").replace(/[-_]+/g, " ").trim()} 2026`;
+  };
+
+  const renderSpecialDays = (months) => {
+    if (!specialDays) return;
+    const seen = new Set();
+    const items = [];
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    Object.keys(months || {})
+      .sort((a, b) => Number(a) - Number(b))
+      .forEach((monthKey) => {
+        const monthDays = Array.isArray(months?.[monthKey]) ? months[monthKey] : [];
+        monthDays.forEach((day) => {
+          const holidays = Array.isArray(day?.hijri?.holidays) ? day.hijri.holidays : [];
+          holidays.forEach((holiday) => {
+            const label = String(holiday || "").replace(/\(.*?\)/g, "").trim();
+            const key = normalizeHolidayKey(label);
+            if (!key || seen.has(key)) return;
+            const gregorianDate = new Date(DATA_YEAR, Number(monthKey) - 1, Number(day?.gregorian?.day));
+            if (Number.isNaN(gregorianDate.getTime())) return;
+            if (gregorianDate < today) return;
+            seen.add(key);
+            items.push({
+              title: formatSpecialTitle(label),
+              gregorian: new Intl.DateTimeFormat("en", {
+                month: "long",
+                day: "2-digit",
+                year: "numeric"
+              }).format(gregorianDate),
+              month: new Intl.DateTimeFormat("en", { month: "short" }).format(gregorianDate),
+              day: String(gregorianDate.getDate()).padStart(2, "0"),
+              hijri: `${day.hijri.day} ${day.hijri.month.en} ${day.hijri.year}`
+            });
+          });
+        });
+      });
+
+    if (!items.length) {
+      specialDays.innerHTML = `
+        <div class="special-day special-day--empty">
+          <div class="special-day__date">
+            <span class="special-day__month">--</span>
+            <span class="special-day__day">--</span>
+          </div>
+          <div class="special-day__body">
+            <div class="special-day__title">No special dates found</div>
+            <div class="special-day__meta">This year has no listed upcoming holidays in the dataset.</div>
+          </div>
+          <div class="special-day__right">2026</div>
+        </div>
+      `;
       return;
     }
 
-    list.innerHTML = highlights
-      .map(
-        (item) => `
-        <div class="list-row">
-          <div class="pill">${item.day}</div>
-          <div>
-            <strong>${item.label}</strong>
-            <div class="list-row__meta">${item.hijri}</div>
-          </div>
-          <div class="muted">${monthName}</div>
+    specialDays.innerHTML = items.slice(0, 10).map((item) => `
+      <div class="special-day">
+        <div class="special-day__date">
+          <span class="special-day__month">${item.month}</span>
+          <span class="special-day__day">${item.day}</span>
         </div>
-      `
-      )
-      .join("");
+        <div class="special-day__body">
+          <div class="special-day__title">${item.title}</div>
+          <div class="special-day__meta">${item.hijri}</div>
+        </div>
+        <div class="special-day__right">${item.gregorian}</div>
+      </div>
+    `).join("");
   };
 
   const loadCalendarData = async () => {
@@ -190,6 +439,45 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   };
 
+  const formatHijri = (hijri) => {
+    if (!hijri?.day || !hijri?.month?.en || !hijri?.year) return null;
+    return `${hijri.day} ${hijri.month.en}, ${hijri.year}`;
+  };
+
+  const setTodayHijriText = async () => {
+    if (!todayHijri) return;
+    const now = new Date();
+    const dataYear = now.getFullYear();
+    try {
+      const response = await fetch(`/data/islamic-calendar/${dataYear}.json`);
+      if (response.ok) {
+        const payload = await response.json();
+        const monthData = payload?.months?.[String(now.getMonth() + 1)];
+        if (Array.isArray(monthData)) {
+          const matched = monthData.find((day) => Number(day?.gregorian?.day) === now.getDate());
+          const formatted = formatHijri(matched?.hijri);
+          if (formatted) {
+            todayHijri.textContent = formatted;
+            return;
+          }
+        }
+      }
+    } catch {
+      // Fallback below.
+    }
+
+    try {
+      const fallback = new Intl.DateTimeFormat("en-u-ca-islamic", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(now);
+      todayHijri.textContent = fallback.replace(/(\d+)\s+([A-Za-z]+)\s+(\d+)/, "$1 $2, $3");
+    } catch {
+      todayHijri.textContent = "Islamic date unavailable";
+    }
+  };
+
   const renderFromData = (month, year, adjustment) => {
     setTitle(month, year);
     const data = Array.isArray(calendarData?.[String(month)]) ? calendarData[String(month)] : [];
@@ -200,7 +488,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       return;
     }
     renderCalendar(data, month, year, adjustment);
-    renderList(data, `${monthNames[month - 1]} ${year}`, adjustment);
   };
 
   const setDefaults = () => {
@@ -217,6 +504,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     loadCalendarData().then(() => {
       if (!calendarData) return;
       renderFromData(month, year, adjustment);
+      renderSpecialDays(calendarData);
     });
   };
 
@@ -224,6 +512,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       setDefaults();
+      setTodayHijriText();
       handleChange();
       monthSelect?.addEventListener("change", handleChange);
       yearSelect?.addEventListener("change", handleChange);
@@ -231,6 +520,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     });
   } else {
     setDefaults();
+    setTodayHijriText();
     handleChange();
     monthSelect?.addEventListener("change", handleChange);
     yearSelect?.addEventListener("change", handleChange);

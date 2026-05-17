@@ -144,7 +144,7 @@ textarea {
 
 .filter-row {
   display: grid;
-  grid-template-columns: minmax(240px, 360px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-5);
   margin-bottom: 24px;
 }
@@ -155,6 +155,10 @@ textarea {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-card);
   padding: var(--space-5);
+}
+
+.card--white {
+  background: #fff;
 }
 
 .card--featured {
@@ -222,6 +226,193 @@ textarea {
   margin-top: var(--space-3);
 }
 
+.hadith-search {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.hadith-search__form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+.hadith-results {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.hadith-search__status {
+  white-space: nowrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.calendar-events {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.special-days {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.calendar-intro {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.calendar-intro .card__title,
+.calendar-intro .section-lead,
+.calendar-intro__text {
+  width: 100%;
+  max-width: none;
+}
+
+.calendar-event {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: var(--space-4);
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(214, 219, 209, 0.9);
+  background: #fff;
+}
+
+.calendar-event__date {
+  border-radius: 12px;
+  border: 1px solid rgba(210, 164, 134, 0.22);
+  background: rgba(210, 164, 134, 0.08);
+  overflow: hidden;
+  text-align: center;
+}
+
+.calendar-event__month {
+  display: block;
+  background: var(--color-teal);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  padding: 5px 8px;
+  text-transform: capitalize;
+}
+
+.calendar-event__day {
+  display: block;
+  padding: 8px 6px 10px;
+  font-size: 1.55rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.calendar-event__body {
+  min-width: 0;
+}
+
+.calendar-event__title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.calendar-event__meta {
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.calendar-event__right {
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+.calendar-event--empty .calendar-event__month {
+  background: var(--color-gold);
+}
+
+.special-day {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(214, 219, 209, 0.9);
+  background: #fff;
+}
+
+.special-day__date {
+  border-radius: 12px;
+  border: 1px solid rgba(210, 164, 134, 0.22);
+  background: rgba(210, 164, 134, 0.08);
+  overflow: hidden;
+  text-align: center;
+}
+
+.special-day__month {
+  display: block;
+  background: var(--color-teal);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  padding: 5px 8px;
+  text-transform: capitalize;
+}
+
+.special-day__day {
+  display: block;
+  padding: 8px 6px 10px;
+  font-size: 1.55rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.special-day__body {
+  min-width: 0;
+}
+
+.special-day__title {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.special-day__meta {
+  font-size: 0.92rem;
+  color: var(--color-ink-muted);
+}
+
+.special-day__right {
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+.special-day--empty .special-day__month {
+  background: var(--color-gold);
+}
+
+.hadith-result {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.hadith-result__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hadith-result__excerpt {
+  margin: 0;
+  color: var(--color-ink);
+}
+
 .card--link {
   display: grid;
   gap: var(--space-2);
@@ -233,6 +424,22 @@ textarea {
   transform: translateY(-4px);
   border-color: rgba(94, 157, 150, 0.4);
   box-shadow: var(--shadow-card);
+}
+
+.card--clickable {
+  cursor: pointer;
+  transition: transform var(--transition), border var(--transition), box-shadow var(--transition);
+}
+
+.card--clickable:hover {
+  transform: translateY(-2px);
+  border-color: rgba(94, 157, 150, 0.4);
+  box-shadow: var(--shadow-card);
+}
+
+.card--clickable:focus-visible {
+  outline: 2px solid rgba(94, 157, 150, 0.55);
+  outline-offset: 2px;
 }
 
 .arabic-text {
@@ -536,6 +743,17 @@ textarea {
   transition: border var(--transition), box-shadow var(--transition);
 }
 
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236b7a73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px 8px;
+}
+
 .input:focus,
 .select:focus,
 .textarea:focus {
@@ -650,12 +868,131 @@ textarea {
   font-weight: 600;
 }
 
+.table-scroll {
+  overflow: visible;
+}
+
+.monthly-mobile {
+  display: none;
+}
+
+.table--sticky thead {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 8;
+}
+
+.table--sticky th {
+  position: static;
+  background: #f7f8f5;
+}
+
+.monthly-mobile__calendar,
+.monthly-mobile__details {
+  border-radius: var(--radius-lg);
+}
+
+.monthly-mobile__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.monthly-mobile__head strong {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-family: var(--font-display);
+}
+
+.monthly-mobile__nav {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-ink);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.monthly-mobile__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--color-ink-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.monthly-mobile__weekdays span {
+  text-align: center;
+}
+
+.monthly-mobile__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.monthly-mobile__empty {
+  min-height: 36px;
+}
+
+.monthly-mobile__day {
+  min-height: 36px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.monthly-mobile__day.is-today {
+  background: rgba(94, 157, 150, 0.18);
+  border-color: rgba(94, 157, 150, 0.35);
+}
+
+.monthly-mobile__day.is-selected {
+  background: rgba(210, 164, 134, 0.28);
+  border-color: rgba(210, 164, 134, 0.4);
+}
+
+.monthly-mobile__date {
+  margin: 0 0 var(--space-3);
+  font-size: 2rem;
+  font-family: var(--font-display);
+}
+
+.monthly-mobile__list {
+  display: grid;
+  gap: 6px;
+}
+
+.monthly-mobile__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.monthly-mobile__row:last-child {
+  border-bottom: 0;
+}
+
+.monthly-mobile__row strong {
+  color: var(--color-teal-dark);
+}
+
 .site-header {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(245, 246, 243, 0.92);
-  backdrop-filter: blur(10px);
+  background: #fff;
   border-bottom: 1px solid rgba(214, 219, 209, 0.6);
 }
 
@@ -802,6 +1139,7 @@ textarea {
   display: grid;
   gap: var(--space-4);
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-top: 20px;
 }
 
 .feature-tile {
@@ -1369,6 +1707,17 @@ textarea {
   color: var(--color-ink-muted);
 }
 
+.footer__store {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.footer__store-badge {
+  width: 180px;
+  max-width: 100%;
+}
+
 .footer__donate {
   display: grid;
   gap: 6px;
@@ -1423,7 +1772,24 @@ textarea {
   }
 
   .nav__list {
-    display: none;
+    display: grid;
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    height: calc(100vh - var(--header-height));
+    width: min(82vw, 320px);
+    background: #fff;
+    border-left: 1px solid var(--color-border);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-card);
+    transform: translateX(104%);
+    transition: transform var(--transition);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 42;
+    align-content: start;
+    gap: 2px;
   }
 
   .nav__toggle {
@@ -1435,23 +1801,40 @@ textarea {
     width: 42px;
     height: 42px;
     border-radius: 12px;
+    position: relative;
+    z-index: 43;
+  }
+
+  .nav__backdrop {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(15, 22, 20, 0.32);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+    z-index: 41;
+  }
+
+  .nav[data-open="true"] .nav__backdrop {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .nav[data-open="true"] .nav__list {
-    display: grid;
-    position: absolute;
-    top: calc(var(--header-height) + 12px);
-    right: 16px;
-    background: #fff;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    padding: var(--space-3);
-    box-shadow: var(--shadow-card);
+    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .nav__list a {
-    padding: 8px 10px;
+    display: block;
+    padding: 10px 10px;
     border-radius: 10px;
+    font-size: 1.05rem;
   }
 
   .nav__list a:hover {
@@ -1463,6 +1846,24 @@ textarea {
     border-radius: 20px;
     gap: var(--space-2);
   }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  .salah-controls-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .salah-prayer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .table--sticky thead {
+    top: var(--header-height);
+  }
 }
 
 @media (max-width: 640px) {
@@ -1472,13 +1873,50 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .filter-row,
+  .hadith-search__form {
+    grid-template-columns: 1fr;
+  }
+
   .reference-row {
     grid-template-columns: 1fr;
   }
 
+  .salah-controls-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .salah-prayer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .table-scroll {
+    display: none;
+  }
+
+  .monthly-mobile {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .monthly-mobile__head strong {
+    font-size: 1.6rem;
+  }
+
+  .monthly-mobile__date {
+    font-size: 1.7rem;
+  }
+
   .date-strip__inner {
+    padding: 10px 5px;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .date-strip {
+    height: auto;
   }
 
   .audio-player__time {
@@ -1496,6 +1934,34 @@ textarea {
 
   .share-dialog__title {
     letter-spacing: 0.12rem;
+  }
+
+  .calendar-event {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .calendar-event__right {
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: -4px;
+  }
+
+  .feature-grid {
+    margin-top: 20px;
+  }
+
+  .special-days {
+    grid-template-columns: 1fr;
+  }
+
+  .special-day {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .special-day__right {
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: -4px;
   }
 }
 
