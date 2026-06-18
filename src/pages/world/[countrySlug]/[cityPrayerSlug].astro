@@ -124,37 +124,6 @@ if (!country || !city) {
         ))}
       </div>
 
-      <div class="grid grid--2" style="margin-bottom: 24px;">
-        <div class="card">
-          <h2 class="card__title">What time is Salah in {city.name}?</h2>
-          <p class="muted">Use the prayer cards above for today&apos;s Salah times in {city.name}, including Fajr, Dhuhr, Asr, Maghrib, and Isha. The next prayer is marked automatically.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">What time is Maghrib Salah?</h2>
-          <p class="muted">The Maghrib card shows today&apos;s Maghrib Salah time for {city.name}. It updates when the selected calculation method changes.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">What time is Asr Salah?</h2>
-          <p class="muted">The Asr card shows today&apos;s Asr Salah time for {city.name}. Hanafi and Shafi madhab settings can change the Asr time.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">What time is Fajr Salah?</h2>
-          <p class="muted">The Fajr card shows today&apos;s Fajr Salah time for {city.name}. Use the monthly schedule below to check upcoming Fajr times.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">What time is Isha Salah?</h2>
-          <p class="muted">The Isha card shows today&apos;s Isha Salah time for {city.name}. The full month table also lists Isha for each date.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">What time is Salah today?</h2>
-          <p class="muted">Today&apos;s Salah schedule is shown above and the full monthly prayer timetable is available below for {city.name}, {country.country}.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">What time is Jummah Salah?</h2>
-          <p class="muted">Jummah khutbah and prayer times are set by individual mosques. Use Dhuhr as a reference and confirm the exact Jummah time with your local mosque.</p>
-        </div>
-      </div>
-
       <div class="card card--white">
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
           <div>
@@ -207,16 +176,36 @@ if (!country || !city) {
 
       <div class="grid grid--2" style="margin-top: 24px;">
         <div class="card">
-          <h2 class="card__title">Which prayer times are shown?</h2>
-          <p class="muted">The page shows Fajr, Dhuhr, Asr, Maghrib, and Isha, with Sunrise included as a reference time.</p>
+          <h2 class="card__title">What time is Salah in {city.name}?</h2>
+          <p class="muted" data-salah-answer="all">Loading today&apos;s Salah times for {city.name}...</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Fajr Salah?</h2>
+          <p class="muted" data-salah-answer="Fajr">Loading Fajr time for {city.name}...</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Asr Salah?</h2>
+          <p class="muted" data-salah-answer="Asr">Loading Asr time for {city.name}...</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Maghrib Salah?</h2>
+          <p class="muted" data-salah-answer="Maghrib">Loading Maghrib time for {city.name}...</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Isha Salah?</h2>
+          <p class="muted" data-salah-answer="Isha">Loading Isha time for {city.name}...</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Salah today?</h2>
+          <p class="muted" data-salah-answer="today">Loading today&apos;s prayer schedule for {city.name}...</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Jummah Salah?</h2>
+          <p class="muted" data-salah-answer="Jummah">Loading Jummah reference time for {city.name}...</p>
         </div>
         <div class="card">
           <h2 class="card__title">Why can prayer times differ?</h2>
           <p class="muted">Prayer times may differ because of calculation method, madhab, latitude handling, mosque practice, and local authority decisions.</p>
-        </div>
-        <div class="card">
-          <h2 class="card__title">Can I view the full month?</h2>
-          <p class="muted">Yes. The monthly view lists the prayer schedule for the selected month and updates when method or madhab changes.</p>
         </div>
       </div>
     </div>
@@ -231,6 +220,7 @@ if (!country || !city) {
   const schoolNote = document.querySelector("[data-school-note]");
   const timezoneEl = document.querySelector("[data-timezone]");
   const lastUpdatedEl = document.querySelector("[data-last-updated]");
+  const salahAnswerEls = Array.from(document.querySelectorAll("[data-salah-answer]"));
   const monthlyBody = document.querySelector("[data-monthly-body]");
   const monthGrid = document.querySelector("[data-month-grid]");
   const monthLabel = document.querySelector("[data-month-label]");
@@ -276,6 +266,33 @@ if (!country || !city) {
     const date = new Date(baseDate);
     date.setHours(hour, minute, 0, 0);
     return date;
+  };
+
+  const getDisplayTime = (timings, name) => formatTime12(cleanTime(timings?.[name]));
+
+  const updateSalahAnswers = (timings) => {
+    if (!salahAnswerEls.length || !timings) return;
+    const fajr = getDisplayTime(timings, "Fajr");
+    const dhuhr = getDisplayTime(timings, "Dhuhr");
+    const asr = getDisplayTime(timings, "Asr");
+    const maghrib = getDisplayTime(timings, "Maghrib");
+    const isha = getDisplayTime(timings, "Isha");
+    const methodLabel = methodSelect?.selectedOptions?.[0]?.textContent?.trim() || "selected method";
+    const schoolLabel = schoolSelect?.disabled ? "" : ` and ${schoolSelect?.selectedOptions?.[0]?.textContent?.trim() || "selected"} madhab`;
+    const dateLabel = new Date().toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+    const answers = {
+      all: `Today in ${cityName}, ${countryName}, Salah times are Fajr ${fajr}, Dhuhr ${dhuhr}, Asr ${asr}, Maghrib ${maghrib}, and Isha ${isha}. These times use ${methodLabel}${schoolLabel}.`,
+      Fajr: `Fajr Salah in ${cityName} today is ${fajr}. The time can change slightly by calculation method and local mosque practice.`,
+      Asr: `Asr Salah in ${cityName} today is ${asr}. If you switch between Hanafi and Shafi madhab, the Asr time may change.`,
+      Maghrib: `Maghrib Salah in ${cityName} today is ${maghrib}. This is the sunset prayer time shown for ${dateLabel}.`,
+      Isha: `Isha Salah in ${cityName} today is ${isha}. The monthly schedule above shows Isha times for the rest of the selected month.`,
+      today: `For ${dateLabel}, ${cityName} prayer times are Fajr ${fajr}, Dhuhr ${dhuhr}, Asr ${asr}, Maghrib ${maghrib}, and Isha ${isha}.`,
+      Jummah: `Jummah Salah in ${cityName} is set by individual mosques. Use today’s Dhuhr time, ${dhuhr}, as a reference and confirm the khutbah time with your local mosque.`
+    };
+    salahAnswerEls.forEach((el) => {
+      const key = el.dataset.salahAnswer;
+      if (answers[key]) el.textContent = answers[key];
+    });
   };
 
   const formatCountdown = (seconds) => {
@@ -375,6 +392,7 @@ if (!country || !city) {
     if (lastUpdatedEl) {
       lastUpdatedEl.textContent = new Date(fetchedAt).toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit" });
     }
+    updateSalahAnswers(timings);
 
     const baseDate = dateObj || new Date();
     const times = prayerNames.map((name) => ({
