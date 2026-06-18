@@ -39,16 +39,28 @@ if (!country || !city) {
   canonicalPath={`/world/${country.countrySlug}/${city.cityPrayerSlug}`}
   faqItems={[
     {
-      question: `Which prayer times are shown for ${city.name}?`,
-      answer: `This page shows Fajr, Dhuhr, Asr, Maghrib, and Isha prayer times for ${city.name}, ${country.country}, with Sunrise included as a reference time.`
+      question: `What time is Salah in ${city.name}?`,
+      answer: `Use the live prayer cards on this page to check today’s Salah times in ${city.name}, including Fajr, Dhuhr, Asr, Maghrib, and Isha.`
     },
     {
-      question: `Why can ${city.name} prayer times differ?`,
-      answer: "Prayer times may differ because of calculation method, madhab, latitude handling, mosque practice, and local authority decisions."
+      question: `What time is Maghrib Salah in ${city.name}?`,
+      answer: `The Maghrib card shows today's Maghrib Salah time for ${city.name}. It updates with the selected calculation method.`
     },
     {
-      question: `Can I view the full monthly prayer schedule for ${city.name}?`,
-      answer: "Yes. The monthly view lists the prayer schedule for the selected month and updates when method or madhab changes."
+      question: `What time is Asr Salah in ${city.name}?`,
+      answer: `The Asr card shows today's Asr Salah time for ${city.name}. The time can change when you switch madhab or calculation method.`
+    },
+    {
+      question: `What time is Fajr Salah in ${city.name}?`,
+      answer: `The Fajr card shows today's Fajr Salah time for ${city.name}, with the monthly schedule available below for planning.`
+    },
+    {
+      question: `What time is Isha Salah in ${city.name}?`,
+      answer: `The Isha card shows today's Isha Salah time for ${city.name}, and the monthly view lists Isha times for the selected month.`
+    },
+    {
+      question: `What time is Jummah Salah in ${city.name}?`,
+      answer: "Jummah Salah is set by local mosques and is not a single city-wide time. Use the Dhuhr time as a reference and confirm the khutbah time with your mosque."
     }
   ]}
 >
@@ -112,6 +124,37 @@ if (!country || !city) {
         ))}
       </div>
 
+      <div class="grid grid--2" style="margin-bottom: 24px;">
+        <div class="card">
+          <h2 class="card__title">What time is Salah in {city.name}?</h2>
+          <p class="muted">Use the prayer cards above for today&apos;s Salah times in {city.name}, including Fajr, Dhuhr, Asr, Maghrib, and Isha. The next prayer is marked automatically.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Maghrib Salah?</h2>
+          <p class="muted">The Maghrib card shows today&apos;s Maghrib Salah time for {city.name}. It updates when the selected calculation method changes.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Asr Salah?</h2>
+          <p class="muted">The Asr card shows today&apos;s Asr Salah time for {city.name}. Hanafi and Shafi madhab settings can change the Asr time.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Fajr Salah?</h2>
+          <p class="muted">The Fajr card shows today&apos;s Fajr Salah time for {city.name}. Use the monthly schedule below to check upcoming Fajr times.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Isha Salah?</h2>
+          <p class="muted">The Isha card shows today&apos;s Isha Salah time for {city.name}. The full month table also lists Isha for each date.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Salah today?</h2>
+          <p class="muted">Today&apos;s Salah schedule is shown above and the full monthly prayer timetable is available below for {city.name}, {country.country}.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What time is Jummah Salah?</h2>
+          <p class="muted">Jummah khutbah and prayer times are set by individual mosques. Use Dhuhr as a reference and confirm the exact Jummah time with your local mosque.</p>
+        </div>
+      </div>
+
       <div class="card card--white">
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
           <div>
@@ -162,7 +205,7 @@ if (!country || !city) {
         </div>
       </div>
 
-      <div class="grid grid--3" style="margin-top: 24px;">
+      <div class="grid grid--2" style="margin-top: 24px;">
         <div class="card">
           <h2 class="card__title">Which prayer times are shown?</h2>
           <p class="muted">The page shows Fajr, Dhuhr, Asr, Maghrib, and Isha, with Sunrise included as a reference time.</p>

@@ -11,16 +11,24 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
   description="Calculate zakat online with nisab thresholds, gold and silver rates, and live totals."
   faqItems={[
     {
-      question: "What assets are included in Zakat?",
-      answer: "Common zakatable assets include cash, bank balances, savings, receivables, investments, gold, silver, and business stock intended for sale."
+      question: "What is Zakat?",
+      answer: "Zakat is an obligatory act of worship in Islam where eligible Muslims give a fixed share of zakatable wealth to eligible recipients."
     },
     {
-      question: "What is nisab?",
-      answer: "Nisab is the minimum threshold used to determine whether zakat may be due. This calculator compares gold and silver thresholds and uses the lower value for accessibility."
+      question: "How to calculate Zakat?",
+      answer: "Add zakatable assets such as cash, gold, silver, investments, receivables, and trade goods, subtract eligible short-term liabilities, then calculate 2.5 percent if the net amount is above nisab and held for hawl."
     },
     {
-      question: "Is the Zakat calculator a final religious ruling?",
-      answer: "No. The calculation is an estimate for convenience. Zakat rulings can vary by asset type, school of thought, and personal situation."
+      question: "How much Zakat should I pay?",
+      answer: "The standard calculation is 2.5 percent of net zakatable wealth when it reaches nisab and has been owned for one lunar year, but personal cases should be checked with a qualified scholar."
+    },
+    {
+      question: "How to calculate Zakat on gold?",
+      answer: "Enter the gold weight, choose grams or tola, and the calculator estimates its current value before adding it to total zakatable wealth."
+    },
+    {
+      question: "How to calculate Zakat on cash?",
+      answer: "Enter cash in hand, bank balances, savings, loans given out, and other eligible cash-like assets. These are included in the net zakatable total."
     }
   ]}
 >
@@ -207,19 +215,44 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
           </div>
         </div>
 
-        <div class="grid grid--3" style="margin-top: 24px;">
-          <div class="card">
-            <h2 class="card__title">What assets are included in Zakat?</h2>
-            <p class="muted">Common zakatable assets include cash, bank balances, savings, receivables, investments, gold, silver, and business stock intended for sale.</p>
-          </div>
-          <div class="card">
-            <h2 class="card__title">What is nisab?</h2>
-            <p class="muted">Nisab is the minimum threshold used to determine whether zakat may be due. This calculator compares gold and silver thresholds and uses the lower value for accessibility.</p>
-          </div>
-          <div class="card">
-            <h2 class="card__title">Is this a final religious ruling?</h2>
-            <p class="muted">No. The calculation is an estimate for convenience. Zakat rulings can vary by asset type, school of thought, and personal situation.</p>
-          </div>
+      </div>
+
+      <div class="grid grid--2" style="margin-top: 24px;">
+        <div class="card">
+          <h2 class="card__title">What is Zakat?</h2>
+          <p class="muted">Zakat is an obligatory act of worship in Islam where eligible Muslims give from qualifying wealth to eligible recipients. It purifies wealth and supports those who have a right to receive it.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What is Zakat in Islam?</h2>
+          <p class="muted">In Islam, Zakat is due when zakatable wealth reaches nisab and remains with the owner for one lunar year. The most common rate is 2.5 percent on net zakatable wealth.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How to calculate Zakat?</h2>
+          <p class="muted">Add cash, savings, receivables, investments, gold, silver, and trade goods. Subtract eligible short-term liabilities, compare the net amount with nisab, then calculate 2.5 percent if hawl is complete.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How is Zakat calculated?</h2>
+          <p class="muted">Zakat is calculated from net zakatable assets, not simply from income. This calculator totals eligible assets, deducts liabilities, checks nisab, and shows the estimated Zakat due.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How to calculate Zakat on gold?</h2>
+          <p class="muted">Enter your gold weight in grams or tola. The calculator converts the weight to grams, applies the selected currency rate, and adds the value to your zakatable wealth.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How to calculate Zakat on cash?</h2>
+          <p class="muted">Include cash in hand, bank balances, savings, and recoverable loans given out. If your net zakatable wealth is above nisab after one lunar year, Zakat is usually 2.5 percent.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How much is Zakat?</h2>
+          <p class="muted">For most cash, gold, silver, investment, and trade assets, Zakat is commonly calculated at 2.5 percent of net zakatable wealth when nisab and hawl conditions are met.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How much Zakat should I pay?</h2>
+          <p class="muted">Use the result as an estimate of the amount to pay. Asset details, debts, business stock, and scholarly views can affect the final ruling, so complex cases should be reviewed with a scholar.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How to determine Zakat?</h2>
+          <p class="muted">Determine whether your eligible assets are above nisab, confirm the hawl period, deduct eligible liabilities, and calculate the Zakat amount from the remaining zakatable wealth.</p>
         </div>
       </div>
     </div>

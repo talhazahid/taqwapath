@@ -195,24 +195,78 @@ const initialTodayHijriEntry =
 const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijriEntry?.hijri?.month?.en && initialTodayHijriEntry?.hijri?.year
   ? `${initialTodayHijriEntry.hijri.day} ${normalizeHijriMonthName(initialTodayHijriEntry.hijri.month.en)}, ${initialTodayHijriEntry.hijri.year}`
   : "Loading...";
+
+const findHijriDay = (monthName, dayNumber) => {
+  for (const monthKey of monthOrder) {
+    const monthDays = Array.isArray(calendarPayload?.months?.[monthKey]) ? calendarPayload.months[monthKey] : [];
+    const match = monthDays.find((day) =>
+      Number(day?.hijri?.day) === dayNumber &&
+      normalizeHijriMonthName(day?.hijri?.month?.en) === monthName
+    );
+    if (match) return { ...match, monthKey };
+  }
+  return null;
+};
+const formatCalendarEntryDate = (entry) => {
+  if (!entry?.monthKey || !entry?.gregorian?.day) return "an estimated date listed in the calendar";
+  const gregorianDate = new Date(year, Number(entry.monthKey) - 1, Number(entry.gregorian.day));
+  return Number.isNaN(gregorianDate.getTime()) ? "an estimated date listed in the calendar" : formatGregorianLong(gregorianDate);
+};
+const muharramStart = findHijriDay("Muharram", 1);
+const eidAlFitr = findHijriDay("Shawwal", 1);
+const hajjStart = findHijriDay("Dhu al-Hijjah", 8) || findHijriDay("Dhu al-Hijjah", 9);
+const arafahDay = findHijriDay("Dhu al-Hijjah", 9);
+const calendarFaqItems = [
+  {
+    question: "What is the Islamic date today?",
+    answer: currentDate.getFullYear() === year
+      ? `Today’s estimated Islamic date in Karachi is ${initialTodayHijri}. Local moon sighting can shift the date.`
+      : `This ${year} page shows estimated Hijri dates for each Gregorian day. Use the calendar grid to compare Islamic and Gregorian dates.`
+  },
+  {
+    question: "What is today in Hijri?",
+    answer: currentDate.getFullYear() === year
+      ? `Today in Hijri is estimated as ${initialTodayHijri} for Karachi. Confirm local rulings for worship dates.`
+      : `For ${year}, select any day in the calendar grid to see its estimated Hijri date.`
+  },
+  {
+    question: "What is the Hijri date now?",
+    answer: currentDate.getFullYear() === year
+      ? `The current estimated Hijri date shown on this page is ${initialTodayHijri}.`
+      : `The ${year} calendar maps each Gregorian date to an estimated Hijri date for planning.`
+  },
+  {
+    question: "What date is today in the Arabic calendar?",
+    answer: currentDate.getFullYear() === year
+      ? `The Arabic or Hijri calendar date today is estimated as ${initialTodayHijri}.`
+      : `Use the ${year} calendar grid to find the Arabic or Hijri date for any Gregorian day in that year.`
+  },
+  {
+    question: `What is the Islamic calendar ${year}?`,
+    answer: `The Islamic calendar ${year} page lists estimated Hijri dates, Gregorian dates, and major Islamic events for ${year}.`
+  },
+  {
+    question: `When is Hajj ${year}?`,
+    answer: `Hajj ${year} is estimated around ${formatCalendarEntryDate(hajjStart)}. Day of Arafah is estimated around ${formatCalendarEntryDate(arafahDay)}.`
+  },
+  {
+    question: `When is Eid al Fitr ${year}?`,
+    answer: `Eid al Fitr ${year} is estimated around ${formatCalendarEntryDate(eidAlFitr)}, subject to moon sighting.`
+  },
+  {
+    question: `When is Eid ul Fitr ${year}?`,
+    answer: `Eid ul Fitr ${year} is another spelling for Eid al Fitr and is estimated around ${formatCalendarEntryDate(eidAlFitr)}.`
+  },
+  {
+    question: `When is Muharram ${year}?`,
+    answer: `1 Muharram in ${year} is estimated around ${formatCalendarEntryDate(muharramStart)}, subject to local moon sighting.`
+  }
+];
 ---
 <BaseLayout
   title={`Islamic Calendar ${year} (Hijri & Gregorian) - TaqwaPath`}
   description={`${year} Hijri and Gregorian calendar with Islamic dates, holidays, and monthly views. Dates are estimated and may vary by moon sighting.`}
-  faqItems={[
-    {
-      question: `How should I use the Islamic calendar ${year} page?`,
-      answer: `Use this page to compare Gregorian dates with Hijri dates for planning, reminders, internal links, and estimated Islamic events throughout ${year}.`
-    },
-    {
-      question: "Can Hijri dates change?",
-      answer: "Yes. Islamic months depend on moon sighting, so Ramadan, Eid, Muharram, Ashura, Hajj, and Arafah dates may shift by local announcement."
-    },
-    {
-      question: "Which Islamic dates are highlighted?",
-      answer: "The calendar highlights major references such as 1st Ramadan, Laylat al Qadr, Eid ul Fitr, Arafah, Eid ul Adha, 1st Muharram, Ashura, and Mawlid al Nabi."
-    }
-  ]}
+  faqItems={calendarFaqItems}
 >
   <section class="section">
     <div class="container calendar-container">
@@ -304,18 +358,42 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         </p>
       </div>
 
-      <div class="grid grid--3" style="margin: 24px 0;">
+      <div class="grid grid--2" style="margin: 24px 0;">
         <div class="card">
-          <h2 class="card__title">How should I use this Islamic calendar?</h2>
-          <p class="muted">Use this page to compare Gregorian dates with Hijri dates for planning, reminders, internal links, and estimated Islamic events throughout {year}.</p>
+          <h2 class="card__title">What is the Islamic date today?</h2>
+          <p class="muted">{calendarFaqItems[0].answer}</p>
         </div>
         <div class="card">
-          <h2 class="card__title">Can Hijri dates change?</h2>
-          <p class="muted">Yes. Islamic months depend on moon sighting, so Ramadan, Eid, Muharram, Ashura, Hajj, and Arafah dates may shift by local announcement.</p>
+          <h2 class="card__title">What is today in Hijri?</h2>
+          <p class="muted">{calendarFaqItems[1].answer}</p>
         </div>
         <div class="card">
-          <h2 class="card__title">Which dates are highlighted?</h2>
-          <p class="muted">The calendar highlights major references such as 1st Ramadan, Laylat al Qadr, Eid ul Fitr, Arafah, Eid ul Adha, 1st Muharram, Ashura, and Mawlid al Nabi.</p>
+          <h2 class="card__title">What is the Hijri date now?</h2>
+          <p class="muted">{calendarFaqItems[2].answer}</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What date is today in the Arabic calendar?</h2>
+          <p class="muted">{calendarFaqItems[3].answer}</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Islamic calendar {year}</h2>
+          <p class="muted">{calendarFaqItems[4].answer}</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">When is Hajj {year}?</h2>
+          <p class="muted">{calendarFaqItems[5].answer}</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">When is Eid al Fitr {year}?</h2>
+          <p class="muted">{calendarFaqItems[6].answer}</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">When is Eid ul Fitr {year}?</h2>
+          <p class="muted">{calendarFaqItems[7].answer}</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">When is Muharram {year}?</h2>
+          <p class="muted">{calendarFaqItems[8].answer}</p>
         </div>
       </div>
 
