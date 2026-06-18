@@ -38,6 +38,8 @@ const allowedHolidayKeys = new Set([
   "eid ul adha",
   "1st day of muharram",
   "ashura",
+  "mawlid al nabi",
+  "mawlid of the prophet",
   "mawlid birth al nabi",
   "beginning of the holy months",
   "end of the holy months",
@@ -54,6 +56,8 @@ const majorHolidayKeys = new Set([
   "eid ul adha",
   "1st day of muharram",
   "ashura",
+  "mawlid al nabi",
+  "mawlid of the prophet",
   "mawlid birth al nabi"
 ]);
 const isMajorHoliday = (holiday) => majorHolidayKeys.has(normalizeHolidayKey(holiday));
@@ -277,6 +281,9 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         <p class="section-lead calendar-intro__text" style="margin-bottom: 0;">
           This page keeps Hijri and Gregorian dates together so the year can be indexed cleanly and used as an internal linking target.
         </p>
+        <p class="section-lead calendar-intro__text" data-calendar-source style="margin-top: 12px; margin-bottom: 0;">
+          Calendar source: loading latest Hijri data.
+        </p>
       </div>
 
       <div class="calendar-grid" data-calendar-grid>
@@ -337,10 +344,13 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
     const detailMeta = document.querySelector("[data-calendar-detail-meta]");
     const detailBadge = document.querySelector("[data-calendar-detail-badge]");
     const detailNote = document.querySelector("[data-calendar-detail-note]");
+    const sourceNote = document.querySelector("[data-calendar-source]");
 
     const DATA_YEAR = year;
     const DATA_URL = `/data/islamic-calendar/${DATA_YEAR}.json`;
+    const LIVE_API_BASE = "https://api.aladhan.com/v1/gToHCalendar";
     let calendarData = null;
+    let calendarSource = "local";
 
     const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -367,6 +377,8 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
       "eid ul adha",
       "1st day of muharram",
       "ashura",
+      "mawlid al nabi",
+      "mawlid of the prophet",
       "mawlid birth al nabi",
       "beginning of the holy months",
       "end of the holy months",
@@ -384,6 +396,8 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
       "eid ul adha",
       "1st day of muharram",
       "ashura",
+      "mawlid al nabi",
+      "mawlid of the prophet",
       "mawlid birth al nabi"
     ]);
     const isMajorHoliday = (holiday) => majorHolidayKeys.has(normalizeHolidayKey(holiday));
@@ -420,6 +434,19 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
       return `${dayOverride} ${normalizeHijriMonthName(hijri.month.en)} ${hijri.year}`;
     };
 
+    const getDerivedHoliday = (hijri, dayOverride = hijri?.day) => {
+      const day = Number(dayOverride);
+      const month = normalizeHijriMonthName(hijri?.month?.en);
+      if (month === "Muharram" && day === 1) return "1st day of Muharram";
+      if (month === "Muharram" && day === 10) return "Ashura";
+      if (month === "Ramadan" && day === 1) return "1st day of Ramadan";
+      if (month === "Shawwal" && day === 1) return "Eid-ul-Fitr";
+      if (month === "Dhu al-Hijjah" && day === 9) return "Arafa";
+      if (month === "Dhu al-Hijjah" && day === 10) return "Eid-ul-Adha";
+      if (month === "Rabi al-Awwal" && day === 12) return "Mawlid of the Prophet";
+      return "";
+    };
+
     const formatEventLabel = (holiday) => {
       const normalized = normalizeHolidayKey(holiday);
       const labelMap = {
@@ -431,6 +458,8 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         "eid ul adha": "Eid ul Adha",
         "1st day of muharram": "Islamic New Year",
         ashura: "10 Muharram",
+        "mawlid al nabi": "Mawlid al Nabi",
+        "mawlid of the prophet": "Mawlid al Nabi",
         "mawlid birth al nabi": "Mawlid al Nabi"
       };
       return labelMap[normalized] || cleanHoliday(holiday);
@@ -463,7 +492,7 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         ...data.map((day) => {
           const adjustedHijriDay = Number(day.hijri.day) + adjustment;
           const holidayKey = `${adjustedHijriDay}|${day.hijri.month.en}|${day.hijri.year}`;
-          const rawHoliday = holidayMap.get(holidayKey) || "";
+          const rawHoliday = holidayMap.get(holidayKey) || getDerivedHoliday(day.hijri, adjustedHijriDay);
           const label = rawHoliday ? formatEventLabel(rawHoliday) : "";
           const isToday = isCurrentMonth && Number(day.gregorian.day) === today.getDate();
           const labelKey = rawHoliday ? normalizeHolidayKey(rawHoliday) : "";
@@ -525,6 +554,8 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         "eid ul adha": "Eid ul Adha",
         "1st day of muharram": "1st Muharram (Islamic New Year)",
         ashura: "10 Muharram (Ashura)",
+        "mawlid al nabi": "Mawlid al Nabi",
+        "mawlid of the prophet": "Mawlid al Nabi",
         "mawlid birth al nabi": "Mawlid al Nabi",
         "beginning of the holy months": "Beginning of the holy months",
         "end of the holy months": "End of the holy months",
@@ -576,7 +607,9 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
           const monthDays = Array.isArray(months?.[monthKey]) ? months[monthKey] : [];
           monthDays.forEach((day) => {
             const holidays = Array.isArray(day?.hijri?.holidays) ? day.hijri.holidays : [];
-            holidays.forEach((holiday) => {
+            const derivedHoliday = getDerivedHoliday(day.hijri);
+            const calendarHolidays = derivedHoliday ? [derivedHoliday, ...holidays] : holidays;
+            calendarHolidays.forEach((holiday) => {
               const label = String(holiday || "").replace(/\(.*?\)/g, "").trim();
               const key = normalizeHolidayKey(label);
               if (!key || seen.has(key) || !isIslamicHolidayEvent(label)) return;
@@ -631,13 +664,75 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
       `).join("");
     };
 
+    const normalizeApiText = (value) => String(value || "").replace(/[^\x20-\x7E]/g, "").trim();
+
+    const normalizeApiDay = (day) => ({
+      gregorian: {
+        day: normalizeApiText(day?.gregorian?.day)
+      },
+      hijri: {
+        day: normalizeApiText(day?.hijri?.day),
+        month: {
+          en: normalizeApiText(day?.hijri?.month?.en)
+        },
+        year: normalizeApiText(day?.hijri?.year),
+        holidays: Array.isArray(day?.hijri?.holidays)
+          ? day.hijri.holidays.map(normalizeApiText).filter(Boolean)
+          : []
+      }
+    });
+
+    const fetchLiveCalendarData = async () => {
+      const monthEntries = await Promise.all(
+        Array.from({ length: 12 }, async (_, index) => {
+          const month = index + 1;
+          const response = await fetch(`${LIVE_API_BASE}/${month}/${DATA_YEAR}`, {
+            cache: "no-store"
+          });
+          if (!response.ok) throw new Error(`Unable to refresh Hijri calendar for ${DATA_YEAR}-${month}.`);
+          const payload = await response.json();
+          const days = Array.isArray(payload?.data) ? payload.data.map(normalizeApiDay) : [];
+          if (!days.length) throw new Error(`Empty Hijri calendar response for ${DATA_YEAR}-${month}.`);
+          return [String(month), days];
+        })
+      );
+      return Object.fromEntries(monthEntries);
+    };
+
+    const setCalendarSourceText = () => {
+      if (!sourceNote) return;
+      const now = new Date();
+      const refreshedAt = new Intl.DateTimeFormat("en", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      }).format(now);
+      sourceNote.textContent =
+        calendarSource === "live"
+          ? `Calendar source: live AlAdhan Hijri API, refreshed ${refreshedAt}. Dates remain estimates and can shift with local moon sighting.`
+          : "Calendar source: local fallback data. Dates remain estimates and can shift with local moon sighting.";
+    };
+
     const loadCalendarData = async () => {
       if (calendarData) return;
+      try {
+        calendarData = await fetchLiveCalendarData();
+        calendarSource = "live";
+        setCalendarSourceText();
+        return;
+      } catch (error) {
+        console.warn("Live calendar refresh failed; using local fallback.", error);
+      }
+
       try {
         const response = await fetch(DATA_URL);
         if (!response.ok) throw new Error("Failed to load calendar.");
         const payload = await response.json();
         calendarData = payload?.months || {};
+        calendarSource = "local";
+        setCalendarSourceText();
       } catch (error) {
         console.error("Calendar load error:", error);
         calendarData = null;
