@@ -5,27 +5,88 @@ import Header from "../components/Header.astro";
 import DateStrip from "../components/DateStrip.astro";
 import Footer from "../components/Footer.astro";
 import AudioPlayer from "../components/AudioPlayer.astro";
+import { prayerLocations } from "../data/prayerLocations.js";
 
 const {
   title = "TaqwaPath",
   description = "A modern Islamic utility site for daily worship, learning, and reflection.",
-  showDateStrip = true
+  showDateStrip = true,
+  canonicalPath: canonicalPathOverride
 } = Astro.props;
 
-const siteUrl = Astro.site?.toString() || "https://taqwapath.com";
-const canonical = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImage = new URL("/og-default.png", siteUrl).toString();
+const siteUrl = (Astro.site?.toString() || "https://taqwapath.com").replace(/\/+$/, "");
+const normalizePathname = (pathname = "/") => {
+  if (!pathname || pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "");
+};
+const canonicalPath = normalizePathname(canonicalPathOverride || Astro.url.pathname);
+const canonical = canonicalPath === "/" ? siteUrl : `${siteUrl}${canonicalPath}`;
+const ogImage = `${siteUrl}/og-image.png`;
+const organizationId = `${siteUrl}/#organization`;
+const websiteId = `${siteUrl}/#website`;
+const pageId = `${canonical}#webpage`;
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: title,
-  description,
-  url: canonical,
-  inLanguage: "en",
-  isPartOf: {
-    "@type": "WebSite",
-    name: "TaqwaPath",
-    url: siteUrl
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": organizationId,
+      name: "TaqwaPath",
+      url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: ogImage,
+        width: 1200,
+        height: 630
+      },
+      sameAs: [
+        "https://github.com/talhazahid/taqwapath",
+        "https://play.google.com/store/apps/details?id=com.taqwapath.taqwapath_mobile"
+      ],
+      description: "TaqwaPath is a calm Islamic utility for Salah timings, Quran recitations, Hadith search, Zakat calculation, Hijri dates, Islamic calendar pages, and Ramadan references."
+    },
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      name: "TaqwaPath",
+      url: siteUrl,
+      publisher: {
+        "@id": organizationId
+      },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${siteUrl}/hadith?search={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": pageId,
+      name: title,
+      description,
+      url: canonical,
+      inLanguage: "en",
+      isPartOf: {
+        "@id": websiteId
+      },
+      about: {
+        "@id": organizationId
+      },
+      publisher: {
+        "@id": organizationId
+      },
+      dateModified: new Date().toISOString().split("T")[0]
+    }
+  ]
+};
+const trustJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${siteUrl}/about#maintainer`,
+  name: "Talha Zahid",
+  url: `${siteUrl}/about`,
+  affiliation: {
+    "@id": organizationId
   }
 };
 ---
@@ -36,8 +97,10 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="google-adsense-account" content="ca-pub-1039785764922996" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#f5f6f3" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
@@ -63,7 +126,8 @@ const jsonLd = {
 
       gtag('config', 'G-E9TFE950EH');
     </script>
-    <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(trustJsonLd)} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -81,5 +145,226 @@ const jsonLd = {
       <Footer />
     </div>
     <AudioPlayer />
+    <script define:vars={{ prayerLocations }}>
+      (() => {
+        const defaultRoute = { countrySlug: "pakistan", citySlug: "karachi" };
+        const prayerSuffix = "-prayer-times";
+
+        const normalizeValue = (value = "") =>
+          String(value)
+            .trim()
+            .toLowerCase()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .replace(/-{2,}/g, "-");
+
+        const routePath = (countrySlug, citySlug) => `/world/${countrySlug}/${citySlug}`;
+
+        const findCountry = (countrySlug) =>
+          prayerLocations.find((entry) => entry.countrySlug === countrySlug);
+
+        const findCity = (country, citySlug) =>
+          country?.cities?.find((entry) => entry.slug === citySlug);
+
+        const isValidRoute = (countrySlug, citySlug) => {
+          const country = findCountry(countrySlug);
+          const city = findCity(country, citySlug);
+          return Boolean(country && city);
+        };
+
+        const parseWorldPath = (pathname = window.location.pathname) => {
+          const parts = String(pathname).replace(/^\/+|\/+$/g, "").split("/");
+          if (parts.length < 3 || parts[0] !== "world") return null;
+          const countrySlug = parts[1];
+          const rawCitySlug = parts[2];
+          const citySlug = rawCitySlug.endsWith(prayerSuffix)
+            ? rawCitySlug.slice(0, -prayerSuffix.length)
+            : rawCitySlug;
+          if (!isValidRoute(countrySlug, citySlug)) return null;
+          return { countrySlug, citySlug };
+        };
+
+        const resolveByNames = (countryName, cityName) => {
+          const normalizedCountry = normalizeValue(countryName);
+          const normalizedCity = normalizeValue(cityName);
+          if (!normalizedCountry || !normalizedCity) return null;
+          const country = prayerLocations.find(
+            (entry) => normalizeValue(entry.country) === normalizedCountry
+          );
+          if (!country) return null;
+          const city = country.cities.find(
+            (entry) => normalizeValue(entry.name) === normalizedCity
+          );
+          if (!city) return null;
+          return { countrySlug: country.countrySlug, citySlug: city.slug };
+        };
+
+        const resolveByCountryOnly = (countryName) => {
+          const normalizedCountry = normalizeValue(countryName);
+          if (!normalizedCountry) return null;
+          const country = prayerLocations.find(
+            (entry) => normalizeValue(entry.country) === normalizedCountry
+          );
+          const city = country?.cities?.[0];
+          if (!country || !city) return null;
+          return { countrySlug: country.countrySlug, citySlug: city.slug };
+        };
+
+        const readStoredRoute = () => {
+          try {
+            const parsed = JSON.parse(localStorage.getItem("taqwapath.salah.route") || "");
+            if (!parsed?.countrySlug || !parsed?.citySlug) return null;
+            if (!isValidRoute(parsed.countrySlug, parsed.citySlug)) return null;
+            return { countrySlug: parsed.countrySlug, citySlug: parsed.citySlug };
+          } catch {
+            return null;
+          }
+        };
+
+        const storeRoute = (route) => {
+          if (!route?.countrySlug || !route?.citySlug) return;
+          const country = findCountry(route.countrySlug);
+          const city = findCity(country, route.citySlug);
+          if (!country || !city) return;
+
+          try {
+            localStorage.setItem(
+              "taqwapath.salah.route",
+              JSON.stringify({
+                countrySlug: country.countrySlug,
+                citySlug: city.slug
+              })
+            );
+          } catch {
+            // Ignore storage errors.
+          }
+
+          try {
+            localStorage.setItem(
+              "taqwapath.location",
+              JSON.stringify({
+                country: country.country,
+                city: city.name
+              })
+            );
+          } catch {
+            // Ignore storage errors.
+          }
+        };
+
+        const resolveFromNavigator = () =>
+          new Promise((resolve) => {
+            if (!navigator.geolocation) {
+              resolve(null);
+              return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+              async (position) => {
+                try {
+                  const lat = position.coords?.latitude;
+                  const lon = position.coords?.longitude;
+                  if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+                    resolve(null);
+                    return;
+                  }
+
+                  const url =
+                    `https://nominatim.openstreetmap.org/reverse?format=jsonv2` +
+                    `&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}` +
+                    `&addressdetails=1`;
+                  const response = await fetch(url);
+                  if (!response.ok) {
+                    resolve(null);
+                    return;
+                  }
+                  const data = await response.json();
+                  const address = data?.address || {};
+                  const countryName = address.country || "";
+                  const cityName =
+                    address.city ||
+                    address.town ||
+                    address.village ||
+                    address.county ||
+                    address.state_district ||
+                    "";
+
+                  resolve(
+                    resolveByNames(countryName, cityName) || resolveByCountryOnly(countryName)
+                  );
+                } catch {
+                  resolve(null);
+                }
+              },
+              () => resolve(null),
+              { enableHighAccuracy: false, timeout: 6000, maximumAge: 3600000 }
+            );
+          });
+
+        const resolveFromIp = async () => {
+          try {
+            const response = await fetch("https://ipapi.co/json/");
+            if (!response.ok) return null;
+            const data = await response.json();
+            return (
+              resolveByNames(data?.country_name, data?.city) ||
+              resolveByCountryOnly(data?.country_name)
+            );
+          } catch {
+            return null;
+          }
+        };
+
+        let routePromise = null;
+
+        const resolveRoute = (forceRefresh = false) => {
+          if (forceRefresh) routePromise = null;
+          if (routePromise) return routePromise;
+
+          routePromise = (async () => {
+            const routeFromPath = parseWorldPath();
+            if (routeFromPath) {
+              storeRoute(routeFromPath);
+              return routeFromPath;
+            }
+
+            const storedRoute = readStoredRoute();
+            if (storedRoute) {
+              storeRoute(storedRoute);
+              return storedRoute;
+            }
+
+            const navigatorRoute = await resolveFromNavigator();
+            if (navigatorRoute) {
+              storeRoute(navigatorRoute);
+              return navigatorRoute;
+            }
+
+            const ipRoute = await resolveFromIp();
+            if (ipRoute) {
+              storeRoute(ipRoute);
+              return ipRoute;
+            }
+
+            storeRoute(defaultRoute);
+            return defaultRoute;
+          })();
+
+          return routePromise;
+        };
+
+        window.__resolveTaqwaSalahRoute = resolveRoute;
+        window.__getTaqwaSalahPath = async () => {
+          const route = await resolveRoute();
+          return routePath(route.countrySlug, route.citySlug);
+        };
+
+        resolveRoute();
+      })();
+    </script>
+    <script>
+      import "../scripts/hadith-interactions.js";
+    </script>
   </body>
 </html>

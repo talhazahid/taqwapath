@@ -35,6 +35,12 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
           <p class="section-lead" data-i18n="zakat.lead">
             Based on the nisab threshold and hawl condition. Totals update live as you type.
           </p>
+          <div class="card card--white" style="margin-bottom: 24px;">
+            <h2 class="card__title">Calculate Zakat on cash, gold, silver, investments, and trade goods</h2>
+            <p class="muted">
+              This Zakat calculator estimates zakat due at 2.5 percent after comparing net zakatable wealth with the nisab threshold. Add cash, savings, loans given, investments, gold, silver, trade goods, and deductible liabilities to see total assets, total liabilities, net zakatable wealth, nisab, and estimated zakat due. The result is a practical estimate and should be checked with a qualified scholar for personal cases.
+            </p>
+          </div>
 
           <div class="card" style="margin-bottom: 24px;">
             <div class="grid grid--3">
@@ -184,6 +190,21 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
               </div>
               <div class="summary-note" data-copy-status data-lang-text style="margin-top: 10px;"></div>
             </aside>
+          </div>
+        </div>
+
+        <div class="grid grid--3" style="margin-top: 24px;">
+          <div class="card">
+            <h2 class="card__title">What assets are included in Zakat?</h2>
+            <p class="muted">Common zakatable assets include cash, bank balances, savings, receivables, investments, gold, silver, and business stock intended for sale.</p>
+          </div>
+          <div class="card">
+            <h2 class="card__title">What is nisab?</h2>
+            <p class="muted">Nisab is the minimum threshold used to determine whether zakat may be due. This calculator compares gold and silver thresholds and uses the lower value for accessibility.</p>
+          </div>
+          <div class="card">
+            <h2 class="card__title">Is this a final religious ruling?</h2>
+            <p class="muted">No. The calculation is an estimate for convenience. Zakat rulings can vary by asset type, school of thought, and personal situation.</p>
           </div>
         </div>
       </div>

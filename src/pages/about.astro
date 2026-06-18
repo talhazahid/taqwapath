@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import EmailLink from "../components/EmailLink.astro";
 ---
 <BaseLayout
   title="About TaqwaPath"
@@ -11,14 +12,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <span class="pill">About</span>
       <h1 class="section-title">About TaqwaPath</h1>
       <p class="section-lead">
-        TaqwaPath is a calm, modern Islamic utility built to support daily worship, learning, and
-        reflection. We focus on clarity, accessibility, and respectful design so you can find what
-        you need quickly.
+        TaqwaPath is a calm, modern Islamic utility built to support daily worship, learning, and reflection. It brings Salah timings, Quran recitations, Hadith collections, Zakat calculation, Hijri dates, Islamic calendar pages, and Ramadan references into one clean experience.
       </p>
+      <div class="card card--white" style="margin-bottom: 24px;">
+        <h2 class="card__title">Why TaqwaPath exists</h2>
+        <p class="muted">
+          The goal of TaqwaPath is simple: make everyday Islamic tools easier to find, easier to understand, and easier to use. Whether you want to check today&apos;s prayer times, listen to Quran, browse Hadith, calculate Zakat, or plan around important Islamic dates, TaqwaPath keeps everything clear, fast, and respectful.
+        </p>
+      </div>
 
       <div class="grid grid--2">
         <div class="card">
-          <div class="card__title">What you can do here</div>
+          <h2 class="card__title">What you can do here</h2>
           <p class="muted">
             Explore a Hadith library, listen to Quran recitations, view Islamic calendars, check
             salah timings, and calculate zakat.
@@ -32,14 +37,28 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
 
         <div class="card card--featured">
-          <div class="card__title">Our approach</div>
+          <h2 class="card__title">Our approach</h2>
           <p class="muted">
-            TaqwaPath is designed to be lightweight and easy to use. Data is shown for convenience
-            and may vary by method or region. If you spot an issue, please reach out.
+            TaqwaPath is designed with a UX first approach. The interface avoids clutter, uses simple navigation, and focuses on practical Islamic needs. Data is provided for convenience and may vary by method, region, moon sighting, or scholarly opinion.
           </p>
           <div class="tag" style="margin-top: 10px;">
-            Contact: <a href="mailto:info@taqwapath.com">info@taqwapath.com</a>
+            Contact: <EmailLink />
           </div>
+        </div>
+      </div>
+
+      <div class="grid grid--3" style="margin-top: 24px;">
+        <div class="card">
+          <h2 class="card__title">Who maintains TaqwaPath?</h2>
+          <p class="muted">TaqwaPath is maintained by Talha Zahid. Feedback, corrections, and source concerns are welcome through the contact email.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">How should users treat the data?</h2>
+          <p class="muted">Prayer times, Hijri dates, and zakat results are useful references. Users should confirm local prayer schedules, moon sighting announcements, and personal zakat rulings where needed.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">What makes the experience different?</h2>
+          <p class="muted">The site prioritizes calm design, readable pages, mobile-friendly layouts, direct internal links, and practical answers before decorative content.</p>
         </div>
       </div>
     </div>

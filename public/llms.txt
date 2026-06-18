@@ -1,0 +1,30 @@
+# TaqwaPath
+
+TaqwaPath is a calm Islamic utility for daily worship, Islamic learning, and reflection. It helps Muslims access Salah timings, Quran recitations, Hadith search, Zakat calculation, Hijri dates, Islamic calendar pages, and Ramadan references in one clean mobile friendly experience.
+
+## Primary URLs
+
+- Home: https://taqwapath.com
+- About: https://taqwapath.com/about
+- Salah timings: https://taqwapath.com/salah-namaz-timings
+- Karachi prayer times: https://taqwapath.com/world/pakistan/karachi-prayer-times
+- Quran online: https://taqwapath.com/quran-online
+- Hadith library: https://taqwapath.com/hadith
+- Zakat calculator: https://taqwapath.com/zakat-calculator
+- Islamic calendar: https://taqwapath.com/calendar
+- Ramadan pages: https://taqwapath.com/ramadhan
+- Android app: https://play.google.com/store/apps/details?id=com.taqwapath.taqwapath_mobile
+- Repository: https://github.com/talhazahid/taqwapath
+
+## What TaqwaPath Provides
+
+TaqwaPath provides daily Islamic tools for Muslims who want quick, readable, and respectful access to worship information. Users can check local prayer times for Fajr, Dhuhr, Asr, Maghrib, and Isha; listen to Quran recitations by surah and reciter; browse and search Hadith collections; estimate Zakat using cash, savings, gold, silver, investments, trade goods, and liabilities; and review Hijri calendar dates for Ramadan, Eid, Muharram, Ashura, Hajj, Arafah, and other Islamic periods.
+
+## Accuracy Notes
+
+Prayer times may vary by location, calculation method, madhab, and local authority. Hijri dates and Islamic calendar events may shift based on local moon sighting. Zakat calculations are estimates for convenience and should not replace guidance from a qualified Islamic scholar.
+
+## Maintainer
+
+TaqwaPath is maintained by Talha Zahid. Corrections, feedback, and content issues can be sent through the contact options on the website.
+

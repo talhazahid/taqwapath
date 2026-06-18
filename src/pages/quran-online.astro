@@ -1,0 +1,409 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { fallbackSurahs } from "../data/quran.js";
+import quranDurations from "../data/quran-durations.json";
+
+const fetchJson = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Fetch failed.");
+    return await response.json();
+  } catch {
+    return null;
+  }
+};
+
+const rawSurahs = (await fetchJson("https://quranicaudio.com/api/surahs")) ?? fallbackSurahs;
+
+const normalizePath = (path = "") => {
+  if (!path) return "";
+  return path.endsWith("/") ? path : `${path}/`;
+};
+
+const recitationModes = [
+  { id: "recitation", label: "Recitation", sectionId: 1 },
+  { id: "translation", label: "Recitation with translation", sectionId: 4 }
+];
+
+const reciters = [
+  {
+    key: "abdulbaset",
+    label: "Abdul Basit 'Abd us-Samad",
+    recitationPath: normalizePath("abdul_basit_murattal/"),
+    translationPath: normalizePath("abdulbasit_w_ibrahim_walk_si/"),
+    recitationStyle: "Murattal",
+    translationStyle: "Saheeh Intl Translation"
+  },
+  {
+    key: "mishari",
+    label: "Mishari Rashid al-`Afasy",
+    recitationPath: normalizePath("mishaari_raashid_al_3afaasee/"),
+    translationPath: normalizePath("mishaari_w_ibrahim_walk_si/"),
+    recitationStyle: "Murattal",
+    translationStyle: "Saheeh Intl Translation"
+  }
+];
+
+const surahs = rawSurahs
+  .map((surah) => {
+    const number = Number(surah.id ?? surah.number ?? 0);
+    const name = surah.name?.simple || surah.name || `Surah ${number}`;
+    const revelation = surah.revelation_place || surah.revelationPlace || "makkah";
+    return {
+      number,
+      name,
+      revelation,
+      duration: surah.duration || null
+    };
+  })
+  .filter((surah) => surah.number)
+  .sort((a, b) => a.number - b.number);
+
+const defaultMode = recitationModes[0]?.id || "recitation";
+const activeReciter = reciters[0] ?? {
+  name: "Reciter",
+  label: "Reciter",
+  recitationStyle: "Murattal",
+  translationStyle: "Translation",
+  recitationPath: "",
+  translationPath: ""
+};
+
+const buildRemoteUrl = (path, number) => {
+  const padded = String(number).padStart(3, "0");
+  return `https://download.quranicaudio.com/quran/${path}${padded}.mp3`;
+};
+
+const buildLocalUrl = (path, number) => {
+  const padded = String(number).padStart(3, "0");
+  return `/audio/${path}${padded}.mp3`;
+};
+
+const activeReciterName = activeReciter.label || activeReciter.name;
+const activeReciterPath = defaultMode === "translation" ? activeReciter.translationPath : activeReciter.recitationPath;
+const activeReciterStyle = defaultMode === "translation" ? activeReciter.translationStyle : activeReciter.recitationStyle;
+const activeReciterLabel = `${activeReciterName}${activeReciterStyle ? ` - ${activeReciterStyle}` : ""}`;
+const durationMap = quranDurations?.reciters ?? {};
+const activeReciterDurations = activeReciterPath ? durationMap[activeReciterPath] : null;
+
+const formatDuration = (seconds) => {
+  if (!Number.isFinite(seconds) || seconds <= 0) return "--:--";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
+---
+<BaseLayout
+  title="Online Quran Recitations - TaqwaPath"
+  description="Stream Quran recitations by trusted reciters, search by surah, and play audio with a global player."
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Online Quran</span>
+      <h1 class="section-title">Online Quran recitations</h1>
+      <p class="section-lead">
+        Choose a reciter, search by surah, and play audio with the global sticky player.
+      </p>
+      <div class="card card--white" style="margin-bottom: 18px;">
+        <h2 class="card__title">Listen to Quran online by surah and reciter</h2>
+        <p class="muted">
+          The Quran online section helps users listen to Quran recitations with a simple searchable list of all 114 surahs. Choose a trusted reciter, filter by Meccan or Medinan surahs, and play audio through a mobile-friendly player. This page is useful for people searching for Quran online, Quran audio, Quran recitation, listen Quran online, Quran by surah, and Quran reciter playback.
+        </p>
+      </div>
+
+      <div data-main-column>
+        <div class="card" style="margin-bottom: 18px;">
+          <div class="quran-controls">
+            <div class="quran-controls__search">
+              <div class="card__title">Search surah</div>
+              <input class="input" placeholder="Search by name or number" data-surah-search />
+            </div>
+            <div>
+              <div class="card__title">Sort</div>
+              <select class="select" data-surah-sort>
+                <option value="number">By surah number</option>
+                <option value="name">By name</option>
+              </select>
+            </div>
+            <div>
+              <div class="card__title">Reciter</div>
+              <select class="select" data-reciter-select>
+                {reciters.map((reciter, index) => (
+                  <option
+                    value={reciter.key}
+                    data-reciter-label-text={reciter.label}
+                    data-reciter-recitation-path={reciter.recitationPath}
+                    data-reciter-translation-path={reciter.translationPath}
+                    data-reciter-recitation-style={reciter.recitationStyle}
+                    data-reciter-translation-style={reciter.translationStyle}
+                    selected={index === 0}
+                  >
+                    {reciter.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div class="card__title">Recitation type</div>
+              <select class="select" data-recitation-mode>
+                {recitationModes.map((mode) => (
+                  <option value={mode.id} selected={mode.id === defaultMode}>
+                    {mode.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div class="card__title">Filters</div>
+              <select class="select" data-surah-filter>
+                <option value="all">All surahs</option>
+                <option value="makkah">Meccan</option>
+                <option value="madinah">Medinan</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="list" data-surah-list>
+          {surahs.map((surah) => {
+            const initialDuration = activeReciterDurations
+              ? activeReciterDurations[surah.number]
+              : null;
+            return (
+              <div
+                class="list-row"
+                data-surah-row
+                data-surah-number={surah.number}
+                data-surah-name={String(surah.name).toLowerCase()}
+                data-surah-revelation={surah.revelation}
+              >
+                <div class="pill">{surah.number}</div>
+                <div>
+                  <strong>{surah.name}</strong>
+                  <div class="list-row__meta">
+                    Reciter: <span data-reciter-label>{activeReciterName}</span>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span class="muted" data-duration={surah.number}>
+                    {formatDuration(initialDuration)}
+                  </span>
+                  <button
+                    class="btn btn--secondary js-play-track"
+                    data-surah-number={surah.number}
+                    data-track-src={buildLocalUrl(activeReciterPath, surah.number)}
+                    data-track-fallback-src={buildRemoteUrl(activeReciterPath, surah.number)}
+                    data-track-title={`Surah ${surah.name}`}
+                    data-track-subtitle={activeReciterLabel}
+                  >
+                    <span class="play-btn-text">Play</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div class="grid grid--3" style="margin-top: 24px;">
+          <div class="card">
+            <h2 class="card__title">How do I find a surah?</h2>
+            <p class="muted">Use the search box to find a surah by name or number, then press play to start listening.</p>
+          </div>
+          <div class="card">
+            <h2 class="card__title">Can I choose a reciter?</h2>
+            <p class="muted">Yes. Select a reciter and recitation type before playing a surah. The global audio player follows your selection.</p>
+          </div>
+          <div class="card">
+            <h2 class="card__title">Is this page mobile friendly?</h2>
+            <p class="muted">The layout is designed for quick Quran listening on phones, tablets, and desktop browsers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="quran-duration-data" set:html={JSON.stringify(durationMap)}></script>
+
+<script is:inline>
+  window.addEventListener("DOMContentLoaded", () => {
+    const recitationSelect = document.querySelector("[data-recitation-mode]");
+    const reciterSelect = document.querySelector("[data-reciter-select]");
+    const reciterOptions = Array.from(reciterSelect?.querySelectorAll("option") || []);
+    const reciterLabels = Array.from(document.querySelectorAll("[data-reciter-label]"));
+    const surahRows = Array.from(document.querySelectorAll("[data-surah-row]"));
+    const surahList = document.querySelector("[data-surah-list]");
+    const surahSearch = document.querySelector("[data-surah-search]");
+    const surahSort = document.querySelector("[data-surah-sort]");
+    const surahFilter = document.querySelector("[data-surah-filter]");
+    const playButtons = Array.from(document.querySelectorAll(".js-play-track"));
+    const durationDataEl = document.querySelector("#quran-duration-data");
+    let durationMap = {};
+    const durationElements = Array.from(document.querySelectorAll("[data-duration]"));
+
+    const formatDuration = (seconds) => {
+      if (!Number.isFinite(seconds) || seconds <= 0) return "--:--";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    const applyDurations = (path) => {
+      const durations = durationMap[path];
+      durationElements.forEach((el) => {
+        const surahNumber = Number(el.dataset.duration || 0);
+        const duration = durations ? durations[surahNumber] : null;
+        el.textContent = Number.isFinite(duration) && duration > 0 ? formatDuration(duration) : "--:--";
+      });
+    };
+
+    const loadDurationMap = async () => {
+      if (Object.keys(durationMap).length) return;
+      if (durationDataEl) {
+        try {
+          durationMap = JSON.parse(durationDataEl.textContent || "{}");
+        } catch {
+          durationMap = {};
+        }
+      }
+      if (Object.keys(durationMap).length) return;
+      try {
+        const response = await fetch("/data/quran-durations.json");
+        if (!response.ok) return;
+        const data = await response.json();
+        durationMap = data?.reciters || {};
+      } catch {
+        durationMap = {};
+      }
+    };
+
+    const durationMapReady = loadDurationMap();
+
+    const buildRemoteUrl = (path, number) => {
+      const padded = String(number).padStart(3, "0");
+      return `https://download.quranicaudio.com/quran/${path}${padded}.mp3`;
+    };
+
+    const buildLocalUrl = (path, number) => {
+      const padded = String(number).padStart(3, "0");
+      return `/audio/${path}${padded}.mp3`;
+    };
+
+    const getReciterPath = (option, mode) => {
+      if (!option) return "";
+      const recitationPath = option.dataset.reciterRecitationPath || "";
+      const translationPath = option.dataset.reciterTranslationPath || "";
+      return mode === "translation" ? translationPath || recitationPath : recitationPath || translationPath;
+    };
+
+    const getReciterStyle = (option, mode) => {
+      if (!option) return "";
+      const recitationStyle = option.dataset.reciterRecitationStyle || "";
+      const translationStyle = option.dataset.reciterTranslationStyle || "";
+      return mode === "translation" ? translationStyle || recitationStyle : recitationStyle || translationStyle;
+    };
+
+    const setReciterFromOption = (option) => {
+      if (!option) return;
+      const name = option.dataset.reciterLabelText || option.dataset.reciterLabel || option.dataset.reciterName || "Reciter";
+      const mode = recitationSelect?.value || "recitation";
+      const style = getReciterStyle(option, mode);
+      const path = getReciterPath(option, mode);
+
+      reciterLabels.forEach((label) => {
+        label.textContent = name;
+      });
+
+      const subtitle = `${name}${style ? ` - ${style}` : ""}`;
+      playButtons.forEach((button) => {
+        const surahNumber = button.dataset.surahNumber;
+        if (!surahNumber) return;
+        button.dataset.trackSrc = buildLocalUrl(path, surahNumber);
+        button.dataset.trackFallbackSrc = buildRemoteUrl(path, surahNumber);
+        button.dataset.trackSubtitle = subtitle;
+      });
+
+      if (Object.keys(durationMap).length) {
+        applyDurations(path);
+      } else {
+        durationMapReady.then(() => applyDurations(path));
+      }
+
+      if (recitationSelect) {
+        localStorage.setItem(
+          "taqwapath.reciter",
+          JSON.stringify({
+            mode,
+            reciter: option.value
+          })
+        );
+      }
+    };
+
+    const setRecitationMode = () => {
+      if (!reciterSelect) return;
+      const selected = reciterSelect.selectedOptions?.[0] || reciterOptions[0];
+      if (selected) setReciterFromOption(selected);
+    };
+
+    const applySurahFilters = () => {
+      const term = (surahSearch?.value || "").trim().toLowerCase();
+      const filter = surahFilter?.value || "all";
+
+      surahRows.forEach((row) => {
+        const name = row.dataset.surahName || "";
+        const number = row.dataset.surahNumber || "";
+        const revelation = row.dataset.surahRevelation || "";
+        const matchesSearch = !term || name.includes(term) || number.includes(term);
+        const matchesFilter = filter === "all" || revelation === filter;
+        row.style.display = matchesSearch && matchesFilter ? "" : "none";
+      });
+    };
+
+    const applySurahSort = () => {
+      if (!surahList) return;
+      const mode = surahSort?.value || "number";
+      const sorted = [...surahRows].sort((a, b) => {
+        if (mode === "name") {
+          return (a.dataset.surahName || "").localeCompare(b.dataset.surahName || "");
+        }
+        return Number(a.dataset.surahNumber || 0) - Number(b.dataset.surahNumber || 0);
+      });
+      sorted.forEach((row) => surahList.appendChild(row));
+    };
+
+    recitationSelect?.addEventListener("change", () => {
+      setRecitationMode();
+    });
+
+    reciterSelect?.addEventListener("change", () => {
+      const selected = reciterSelect.selectedOptions?.[0];
+      if (selected) setReciterFromOption(selected);
+    });
+
+    surahSearch?.addEventListener("input", applySurahFilters);
+    surahFilter?.addEventListener("change", applySurahFilters);
+    surahSort?.addEventListener("change", applySurahSort);
+
+    const stored = localStorage.getItem("taqwapath.reciter");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (recitationSelect && parsed.mode) recitationSelect.value = parsed.mode;
+        if (reciterSelect && parsed.reciter) reciterSelect.value = parsed.reciter;
+        setRecitationMode();
+      } catch {
+        // Ignore stored reciter.
+      }
+    } else {
+      setRecitationMode();
+    }
+
+    durationMapReady.then(() => {
+      if (!Object.keys(durationMap).length) return;
+      const selected = reciterSelect?.selectedOptions?.[0];
+      const currentPath = getReciterPath(selected, recitationSelect?.value || "recitation");
+      applyDurations(currentPath);
+    });
+  });
+</script>

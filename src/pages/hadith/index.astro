@@ -1,0 +1,246 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { fetchHadithBooks } from "../../lib/hadithApi.js";
+
+const books = await fetchHadithBooks();
+const typeLabels = {
+  popular: "Popular",
+  fiqh: "Fiqh focused",
+  ethics: "Ethics and adab"
+};
+const typeKeys = Object.keys(typeLabels);
+const availableTypes = typeKeys.filter((key) => books.some((book) => book.types?.includes(key)));
+---
+<BaseLayout
+  title="Hadith Collection Library - TaqwaPath"
+  description="Search hadith across trusted collections and browse books with filters and references."
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Hadith Collection</span>
+      <h1 class="section-title">Search hadith</h1>
+      <p class="section-lead">
+        Search one word at a time across the full hadith library, or browse collections by type.
+      </p>
+      <div class="card card--white" style="margin-bottom: 18px;">
+        <h2 class="card__title">Browse and search Hadith collections</h2>
+        <p class="muted">
+          The TaqwaPath Hadith library helps users search Hadith text, browse books, open chapter pages, and share reference-friendly Hadith URLs. It includes well-known collections such as Sahih al Bukhari, Sahih Muslim, Sunan Abu Dawud, Jami at Tirmidhi, Sunan Ibn Majah, Muwatta Malik, Musnad Ahmad, and Sunan an Nasai. This section supports searches for Hadith collection, Hadith search, Sahih Bukhari Hadith, Sahih Muslim Hadith, Islamic Hadith, and daily Hadith references.
+        </p>
+      </div>
+
+      <div class="filter-row">
+        <div class="card">
+          <div class="card__title">Search hadith</div>
+          <form class="hadith-search__form" data-hadith-search-form>
+            <input
+              class="input"
+              type="search"
+              placeholder="Search one word, then press Enter"
+              data-hadith-search-input
+            />
+            <button class="btn btn--primary" type="submit">Search</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card__title">Collection type</div>
+          <select class="select" data-type-filter>
+            <option value="all">All collections</option>
+            {availableTypes.map((type) => (
+              <option value={type}>{typeLabels[type]}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div class="muted" style="margin-bottom: 18px;" data-hadith-search-hint>
+        Search returns the first matching word only.
+      </div>
+
+      <div class="hadith-results hadith-search__status" data-hadith-search-status style="display: none;"></div>
+      <div class="hadith-results" data-hadith-results style="display: none;"></div>
+
+      <div class="grid grid--3" data-book-grid>
+        {books.length ? (
+          books.map((book) => (
+            <a
+              class="card card--link anim-fade-up"
+              href={`/hadith/${book.slug}/chapters`}
+              data-book-card
+              data-types={book.types?.join(",") || ""}
+            >
+              <div class="card__title">{book.title}</div>
+              <div class="card__meta">{book.compiler}</div>
+              <p class="muted">{book.summary}</p>
+              <div class="pill-row" style="margin-bottom: 12px;">
+                <span class="chip">{book.count || "Many"} hadith</span>
+                <span class="chip">Reference ready</span>
+              </div>
+              <div class="card__cta">
+                <span class="btn btn--primary">Browse Chapters</span>
+              </div>
+            </a>
+          ))
+        ) : (
+          <div class="card">
+            <strong>No collections available.</strong>
+            <p class="muted">Unable to load the hadith list right now.</p>
+          </div>
+        )}
+      </div>
+
+      <div class="grid grid--3" style="margin-top: 24px;">
+        <div class="card">
+          <h2 class="card__title">How does Hadith search work?</h2>
+          <p class="muted">Search one clear word at a time. Results open directly to reference-friendly Hadith pages when chapter and book data are available.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Which collections are available?</h2>
+          <p class="muted">The library groups major Hadith collections and supports browsing by book, chapter, and filtered collection type.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Can Hadith pages be shared?</h2>
+          <p class="muted">Yes. Hadith pages are structured with stable URLs and references so users can return to or share exact narrations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script is:inline>
+  const typeFilter = document.querySelector("[data-type-filter]");
+  const searchForm = document.querySelector("[data-hadith-search-form]");
+  const searchInput = document.querySelector("[data-hadith-search-input]");
+  const bookGrid = document.querySelector("[data-book-grid]");
+  const searchResults = document.querySelector("[data-hadith-results]");
+  const searchStatus = document.querySelector("[data-hadith-search-status]");
+  const searchHint = document.querySelector("[data-hadith-search-hint]");
+  const bookCards = [...document.querySelectorAll("[data-book-card]")];
+
+  let searchIndexPromise = null;
+
+  const normalizeQuery = (value) => (value || "").trim().toLowerCase().split(/\s+/)[0] || "";
+  const escapeRegex = (value) => String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapeHtml = (value) =>
+    String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+
+  const loadSearchIndex = async () => {
+    if (!searchIndexPromise) {
+      searchIndexPromise = fetch("/data/hadith-search-index.json").then(async (response) => {
+        if (!response.ok) return [];
+        return response.json();
+      }).catch(() => []);
+    }
+    return searchIndexPromise;
+  };
+
+  const getTypeMatch = (card, value) => {
+    const types = (card.dataset.types || "").split(",").filter(Boolean);
+    return value === "all" || types.includes(value);
+  };
+
+  const hasExactWord = (source, query) => {
+    if (!source || !query) return false;
+    const pattern = new RegExp(`(^|[^a-z0-9])${escapeRegex(query)}([^a-z0-9]|$)`, "i");
+    return pattern.test(source);
+  };
+
+  const filterBookCards = (typeValue) => {
+    bookCards.forEach((card) => {
+      card.style.display = getTypeMatch(card, typeValue) ? "" : "none";
+    });
+  };
+
+  const buildExcerpt = (entry, query) => {
+    const candidates = [entry.text, entry.arab, entry.narrator, entry.chapterTitle, entry.subChapterTitle].filter(Boolean);
+    const source = candidates.join(" ").trim();
+    if (!source) return "Matching hadith.";
+    if (!query) return source.slice(0, 180);
+    return source.slice(0, 180);
+  };
+
+  const renderResults = (items, query) => {
+    if (!searchResults || !searchStatus || !searchHint || !bookGrid) return;
+    const normalizedQuery = normalizeQuery(query);
+    if (!normalizedQuery) {
+      searchResults.style.display = "none";
+      searchResults.innerHTML = "";
+      searchStatus.style.display = "none";
+      searchHint.textContent = "Search returns the first matching word only.";
+      bookGrid.style.display = "";
+      return;
+    }
+
+    const typeValue = typeFilter?.value || "all";
+    const matches = items.filter((entry) => {
+      const typeMatch = typeValue === "all" || (entry.types || []).includes(typeValue);
+      return typeMatch && hasExactWord(entry.searchText, normalizedQuery);
+    });
+
+    bookGrid.style.display = "none";
+    searchResults.style.display = "";
+    searchStatus.style.display = "";
+    searchHint.textContent = `Showing results for "${normalizedQuery}".`;
+    searchStatus.innerHTML = matches.length
+      ? `<strong>${matches.length}</strong> hadith${matches.length === 1 ? "" : "s"} found for "${escapeHtml(normalizedQuery)}".`
+      : `<strong>No matches found.</strong> Try another single word.`;
+
+    searchResults.innerHTML = matches.slice(0, 24).map((entry) => {
+      const chapterLabel = entry.chapter
+        ? `Chapter ${entry.chapter}${entry.subChapter ? `.${entry.subChapter}` : ""}`
+        : "Book result";
+      const excerpt = buildExcerpt(entry, normalizedQuery);
+      return `
+        <a class="card card--link hadith-result" href="${escapeHtml(entry.href)}">
+          <div class="card__title">${escapeHtml(entry.bookTitle)} Hadith ${escapeHtml(entry.number)}</div>
+          <div class="hadith-result__meta">
+            <span class="chip">${escapeHtml(entry.compiler)}</span>
+            <span class="chip">${escapeHtml(chapterLabel)}</span>
+          </div>
+          <p class="hadith-result__excerpt">${escapeHtml(excerpt)}</p>
+          <div class="card__meta">Open the exact reference.</div>
+        </a>
+      `;
+    }).join("");
+  };
+
+  const loadIndexAndSearch = async () => {
+    const index = await loadSearchIndex();
+    renderResults(index, searchInput?.value || "");
+  };
+
+  const handleFilterChange = async () => {
+    const query = normalizeQuery(searchInput?.value || "");
+    if (!query) {
+      filterBookCards(typeFilter?.value || "all");
+      if (bookGrid) bookGrid.style.display = "";
+      if (searchResults) searchResults.style.display = "none";
+      if (searchStatus) searchStatus.style.display = "none";
+      if (searchHint) searchHint.textContent = "Search returns the first matching word only.";
+      return;
+    }
+    await loadIndexAndSearch();
+  };
+
+  typeFilter?.addEventListener("change", handleFilterChange);
+  searchForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await loadIndexAndSearch();
+  });
+  searchInput?.addEventListener("input", async () => {
+    const query = normalizeQuery(searchInput.value || "");
+    if (!query) {
+      await handleFilterChange();
+      return;
+    }
+    await loadIndexAndSearch();
+  });
+
+  handleFilterChange();
+</script>

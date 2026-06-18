@@ -1,0 +1,574 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+  findCityFromRouteSlug,
+  findCountryBySlug,
+  prayerSlugSuffix,
+  prayerLocations
+} from "../../../data/prayerLocations.js";
+
+export const getStaticPaths = () =>
+  prayerLocations.flatMap((country) =>
+    country.cities.flatMap((city) => [
+      {
+        params: {
+          countrySlug: country.countrySlug,
+          cityPrayerSlug: city.slug
+        }
+      },
+      {
+        params: {
+          countrySlug: country.countrySlug,
+          cityPrayerSlug: `${city.slug}${prayerSlugSuffix}`
+        }
+      }
+    ])
+  );
+
+const { countrySlug, cityPrayerSlug } = Astro.params;
+const country = findCountryBySlug(countrySlug);
+const city = findCityFromRouteSlug(country, cityPrayerSlug);
+
+if (!country || !city) {
+  return Astro.redirect("/world");
+}
+---
+<BaseLayout
+  title={`${city.name} Prayer Times (${country.country}) - TaqwaPath`}
+  description={`Today and monthly Salah prayer times for ${city.name}, ${country.country} with method and madhab options.`}
+  canonicalPath={`/world/${country.countrySlug}/${city.cityPrayerSlug}`}
+>
+  <section class="section">
+    <div class="container">
+      <span class="pill">Prayer Times</span>
+      <h1 class="section-title">{city.name} prayer times</h1>
+      <p class="section-lead">
+        {city.name}, {country.country}. Method and madhab options are available below.
+      </p>
+      <div class="card card--white" style="margin-bottom: 24px;">
+        <h2 class="card__title">Today&apos;s Salah timings for {city.name}</h2>
+        <p class="muted">
+          This page shows daily prayer times for {city.name}, {country.country}, including Fajr, Dhuhr, Asr, Maghrib, and Isha. Users can change the calculation method and madhab where relevant, view the next prayer countdown, and review the monthly prayer schedule. Prayer times are provided as practical references and may vary by local mosque, calculation method, school, or authority.
+        </p>
+      </div>
+
+      <div class="grid grid--2 salah-controls-grid" style="margin-bottom: 24px;">
+        <div class="card">
+          <div class="card__title">Calculation method</div>
+          <select class="select" data-method>
+            <option value="3">Muslim World League</option>
+            <option value="2">ISNA</option>
+            <option value="1">Karachi</option>
+            <option value="4">Umm al-Qura</option>
+            <option value="5">Egyptian</option>
+            <option value="0">Jaffriya (Shia)</option>
+          </select>
+          <div class="tag" style="margin-top: 8px;">
+            Timezone: <span data-timezone>--</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__title">Madhab</div>
+          <select class="select" data-school>
+            <option value="1">Hanafi</option>
+            <option value="0">Shafi</option>
+          </select>
+          <div class="tag" data-school-note style="margin-top: 8px; display: none;">
+            Not applicable for Jaffriya.
+          </div>
+          <div class="tag" style="margin-top: 8px;">
+            Last updated <span data-last-updated>--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prayer-grid salah-prayer-grid" style="margin-bottom: 24px;">
+        {["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"].map((name) => (
+          <div class="prayer-card" data-prayer-card={name}>
+            <div class="card__title">
+              {name}
+              <span class="tag" data-prayer-next={name} style="display: none;">Next</span>
+            </div>
+            <div class="muted" data-prayer-time={name}>--:--</div>
+            <div class="tag" data-prayer-countdown={name} style="display: none;"></div>
+            <div class="progress" data-prayer-progress={name} style="display: none;">
+              <div class="progress__bar" data-prayer-progress-bar={name}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="card card--white">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div class="card__title">Monthly view</div>
+            <div class="muted">Month-at-a-glance schedule for {city.name}, {country.country}.</div>
+          </div>
+          <a class="btn btn--ghost btn--compact" href={`/world/${country.countrySlug}`}>
+            More cities in {country.country}
+          </a>
+        </div>
+        <div class="table-scroll" style="margin-top: 16px;">
+          <table class="table table--sticky">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Fajr</th>
+                <th>Dhuhr</th>
+                <th>Asr</th>
+                <th>Maghrib</th>
+                <th>Isha</th>
+              </tr>
+            </thead>
+            <tbody data-monthly-body>
+              <tr>
+                <td colspan="6" class="muted">Loading monthly timings...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="monthly-mobile" style="margin-top: 16px;">
+          <div class="monthly-mobile__calendar card card--white">
+            <div class="monthly-mobile__head">
+              <button class="monthly-mobile__nav" type="button" data-month-prev aria-label="Previous month">‹</button>
+              <strong data-month-label>--</strong>
+              <button class="monthly-mobile__nav" type="button" data-month-next aria-label="Next month">›</button>
+            </div>
+            <div class="monthly-mobile__weekdays">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div class="monthly-mobile__grid" data-month-grid></div>
+          </div>
+
+          <div class="monthly-mobile__details card card--white">
+            <h3 class="monthly-mobile__date" data-month-selected-date>--</h3>
+            <div class="monthly-mobile__list" data-month-selected-list></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid--3" style="margin-top: 24px;">
+        <div class="card">
+          <h2 class="card__title">Which prayer times are shown?</h2>
+          <p class="muted">The page shows Fajr, Dhuhr, Asr, Maghrib, and Isha, with Sunrise included as a reference time.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Why can prayer times differ?</h2>
+          <p class="muted">Prayer times may differ because of calculation method, madhab, latitude handling, mosque practice, and local authority decisions.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Can I view the full month?</h2>
+          <p class="muted">Yes. The monthly view lists the prayer schedule for the selected month and updates when method or madhab changes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ countrySlug: country.countrySlug, citySlug: city.slug, cityName: city.name, countryName: country.country }}>
+  const API_BASE = "https://api.aladhan.com/v1";
+  const prayerNames = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  const methodSelect = document.querySelector("[data-method]");
+  const schoolSelect = document.querySelector("[data-school]");
+  const schoolNote = document.querySelector("[data-school-note]");
+  const timezoneEl = document.querySelector("[data-timezone]");
+  const lastUpdatedEl = document.querySelector("[data-last-updated]");
+  const monthlyBody = document.querySelector("[data-monthly-body]");
+  const monthGrid = document.querySelector("[data-month-grid]");
+  const monthLabel = document.querySelector("[data-month-label]");
+  const monthSelectedDate = document.querySelector("[data-month-selected-date]");
+  const monthSelectedList = document.querySelector("[data-month-selected-list]");
+  const monthPrevBtn = document.querySelector("[data-month-prev]");
+  const monthNextBtn = document.querySelector("[data-month-next]");
+  const prayerCards = new Map();
+
+  prayerNames.forEach((name) => {
+    prayerCards.set(name, {
+      card: document.querySelector(`[data-prayer-card="${name}"]`),
+      time: document.querySelector(`[data-prayer-time="${name}"]`),
+      next: document.querySelector(`[data-prayer-next="${name}"]`),
+      countdown: document.querySelector(`[data-prayer-countdown="${name}"]`),
+      progress: document.querySelector(`[data-prayer-progress="${name}"]`),
+      progressBar: document.querySelector(`[data-prayer-progress-bar="${name}"]`)
+    });
+  });
+
+  const activeCountrySlug = countrySlug;
+  const activeCitySlug = citySlug;
+  const initialMonthDate = new Date();
+  let activeMonth = initialMonthDate.getMonth() + 1;
+  let activeYear = initialMonthDate.getFullYear();
+  let currentTimings = null;
+  let nextState = null;
+  let monthlyDays = [];
+  let selectedDayNumber = null;
+
+  const cleanTime = (time) => (time ? time.split(" ")[0] : "--:--");
+  const formatTime12 = (time) => {
+    if (!time || time === "--:--") return "--:--";
+    const [hour, minute] = time.split(":").map(Number);
+    if (!Number.isFinite(hour) || !Number.isFinite(minute)) return "--:--";
+    const period = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
+  };
+
+  const parseTime = (baseDate, time) => {
+    const [hour, minute] = cleanTime(time).split(":").map(Number);
+    const date = new Date(baseDate);
+    date.setHours(hour, minute, 0, 0);
+    return date;
+  };
+
+  const formatCountdown = (seconds) => {
+    const safe = Math.max(0, Math.floor(seconds));
+    const hours = Math.floor(safe / 3600);
+    const minutes = Math.floor((safe % 3600) / 60);
+    const secs = safe % 60;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
+
+  const getMonthYear = () => ({ month: activeMonth, year: activeYear });
+
+  const getMonthExpiry = (year, month) => new Date(year, month, 0, 23, 59, 59, 999).getTime();
+  const normalizeLocation = (value) => value.trim().toLowerCase();
+
+  const cacheKeyForCity = (cityName, countryName, method, school, month, year) =>
+    `taqwapath.salah.monthly.city.${encodeURIComponent(
+      [normalizeLocation(cityName), normalizeLocation(countryName), method, school, month, year].join("|")
+    )}`;
+
+  const readCache = (key, month, year) => {
+    try {
+      const cached = JSON.parse(localStorage.getItem(key) || "");
+      if (!cached || cached.month !== month || cached.year !== year) return null;
+      if (!Array.isArray(cached.data) || cached.data.length === 0) return null;
+      if (cached.expiresAt && cached.expiresAt < Date.now()) return null;
+      return cached;
+    } catch {
+      return null;
+    }
+  };
+
+  const writeCache = (key, payload, month, year) => {
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          month,
+          year,
+          fetchedAt: Date.now(),
+          expiresAt: getMonthExpiry(year, month),
+          data: payload
+        })
+      );
+    } catch {
+      // Ignore storage errors.
+    }
+  };
+
+  const getTodayFromCalendar = (days, baseDate = new Date()) => {
+    const month = baseDate.getMonth() + 1;
+    const day = baseDate.getDate();
+    const year = baseDate.getFullYear();
+    return days.find((entry) => {
+      const gregorian = entry?.date?.gregorian;
+      if (!gregorian) return false;
+      const entryDay = Number(gregorian.day);
+      const entryMonth = Number(gregorian.month?.number ?? gregorian.month);
+      const entryYear = Number(gregorian.year);
+      return entryDay === day && entryMonth === month && entryYear === year;
+    });
+  };
+
+  const storeRouteSelection = (targetCountrySlug, targetCitySlug) => {
+    if (!targetCountrySlug || !targetCitySlug) return;
+    try {
+      localStorage.setItem(
+        "taqwapath.salah.route",
+        JSON.stringify({
+          countrySlug: targetCountrySlug,
+          citySlug: targetCitySlug
+        })
+      );
+    } catch {
+      // Ignore storage errors.
+    }
+  };
+
+  const updateSchoolAvailability = () => {
+    const isJaffriya = methodSelect?.value === "0";
+    if (schoolSelect) schoolSelect.disabled = Boolean(isJaffriya);
+    if (schoolNote) schoolNote.style.display = isJaffriya ? "inline-flex" : "none";
+  };
+
+  const renderTimes = (timings, meta, dateObj, fetchedAt = Date.now()) => {
+    currentTimings = timings;
+    prayerNames.forEach((name) => {
+      const card = prayerCards.get(name);
+      if (card?.time) card.time.textContent = formatTime12(cleanTime(timings[name]));
+      card?.card?.classList.remove("prayer-card--next");
+      if (card?.next) card.next.style.display = "none";
+      if (card?.countdown) card.countdown.style.display = "none";
+      if (card?.progress) card.progress.style.display = "none";
+    });
+
+    if (timezoneEl && meta?.timezone) timezoneEl.textContent = meta.timezone;
+    if (lastUpdatedEl) {
+      lastUpdatedEl.textContent = new Date(fetchedAt).toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    const baseDate = dateObj || new Date();
+    const times = prayerNames.map((name) => ({
+      name,
+      date: parseTime(baseDate, timings[name])
+    }));
+    const now = new Date();
+    let next = times.find((entry) => entry.date > now);
+    let prev = null;
+
+    if (!next) {
+      next = {
+        ...times[0],
+        date: new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1, times[0].date.getHours(), times[0].date.getMinutes())
+      };
+      prev = times[times.length - 1];
+    } else {
+      const nextIndex = times.findIndex((entry) => entry.name === next.name);
+      prev = nextIndex > 0 ? times[nextIndex - 1] : times[times.length - 1];
+    }
+
+    if (prev.date > next.date) {
+      prev = { ...prev, date: new Date(prev.date.getTime() - 86400000) };
+    }
+
+    nextState = { next, prev };
+    const nextCard = prayerCards.get(next.name);
+    if (nextCard) {
+      nextCard.card?.classList.add("prayer-card--next");
+      if (nextCard.next) nextCard.next.style.display = "inline-flex";
+      if (nextCard.countdown) nextCard.countdown.style.display = "inline-flex";
+      if (nextCard.progress) nextCard.progress.style.display = "block";
+    }
+  };
+
+  const updateCountdown = () => {
+    if (!nextState) return;
+    const now = new Date();
+    const { next, prev } = nextState;
+    const nextCard = prayerCards.get(next.name);
+    const seconds = (next.date - now) / 1000;
+    if (nextCard?.countdown) {
+      nextCard.countdown.textContent = `Starts in ${formatCountdown(seconds)}`;
+    }
+    const progress = Math.min(1, Math.max(0, (now - prev.date) / (next.date - prev.date)));
+    if (nextCard?.progressBar) {
+      nextCard.progressBar.style.width = `${Math.round(progress * 100)}%`;
+    }
+    if (seconds <= 0) {
+      renderTimes(currentTimings, { timezone: timezoneEl?.textContent || "" }, new Date(), Date.now());
+    }
+  };
+
+  const renderMonthly = (days) => {
+    if (!monthlyBody) return;
+    monthlyBody.innerHTML = days
+      .map((day) => {
+        const timings = day.timings || {};
+        const dateLabel = `${day.date.gregorian.day} ${day.date.gregorian.month.en}`;
+        return `
+          <tr>
+            <td>${dateLabel}</td>
+            <td>${formatTime12(cleanTime(timings.Fajr))}</td>
+            <td>${formatTime12(cleanTime(timings.Dhuhr))}</td>
+            <td>${formatTime12(cleanTime(timings.Asr))}</td>
+            <td>${formatTime12(cleanTime(timings.Maghrib))}</td>
+            <td>${formatTime12(cleanTime(timings.Isha))}</td>
+          </tr>
+        `;
+      })
+      .join("");
+  };
+
+  const renderSelectedDayDetails = () => {
+    if (!monthSelectedDate || !monthSelectedList) return;
+    const selected =
+      monthlyDays.find((entry) => Number(entry?.date?.gregorian?.day) === selectedDayNumber) || monthlyDays[0];
+
+    if (!selected) {
+      monthSelectedDate.textContent = "--";
+      monthSelectedList.innerHTML = "<div class='muted'>Unable to load daily timings.</div>";
+      return;
+    }
+
+    const gregorian = selected?.date?.gregorian;
+    const day = Number(gregorian?.day || 1);
+    const monthName = gregorian?.month?.en || new Date(activeYear, activeMonth - 1, 1).toLocaleString("en", { month: "long" });
+    monthSelectedDate.textContent = `${day} ${monthName}`;
+
+    const timings = selected?.timings || {};
+    monthSelectedList.innerHTML = prayerNames
+      .map((name) => {
+        const value = formatTime12(cleanTime(timings[name]));
+        return `
+          <div class="monthly-mobile__row">
+            <span>${name}</span>
+            <strong>${value}</strong>
+          </div>
+        `;
+      })
+      .join("");
+  };
+
+  const renderMobileCalendar = () => {
+    if (!monthGrid || !monthLabel) return;
+    const monthDate = new Date(activeYear, activeMonth - 1, 1);
+    monthLabel.textContent = monthDate.toLocaleString("en", { month: "long", year: "numeric" });
+
+    const firstWeekday = monthDate.getDay();
+    const dayButtons = [];
+    for (let i = 0; i < firstWeekday; i += 1) {
+      dayButtons.push("<span class='monthly-mobile__empty'></span>");
+    }
+
+    const today = new Date();
+    monthlyDays.forEach((entry) => {
+      const dayNum = Number(entry?.date?.gregorian?.day || 0);
+      const isSelected = dayNum === selectedDayNumber;
+      const isToday =
+        dayNum === today.getDate() &&
+        activeMonth === today.getMonth() + 1 &&
+        activeYear === today.getFullYear();
+      dayButtons.push(
+        `<button class="monthly-mobile__day${isSelected ? " is-selected" : ""}${isToday ? " is-today" : ""}" type="button" data-day="${dayNum}">${dayNum}</button>`
+      );
+    });
+
+    monthGrid.innerHTML = dayButtons.join("");
+    monthGrid.querySelectorAll("[data-day]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        selectedDayNumber = Number(btn.getAttribute("data-day"));
+        renderMobileCalendar();
+        renderSelectedDayDetails();
+      });
+    });
+    renderSelectedDayDetails();
+  };
+
+  const applyCalendarPayload = (days, fetchedAt) => {
+    if (!Array.isArray(days) || days.length === 0) throw new Error("No calendar data.");
+    monthlyDays = days;
+    const today = new Date();
+    const todayEntry =
+      getTodayFromCalendar(days, today) ||
+      days[Math.min(Math.max(today.getDate() - 1, 0), days.length - 1)] ||
+      days[0];
+    if (!todayEntry?.timings) throw new Error("No timings for today.");
+    selectedDayNumber = Number(todayEntry?.date?.gregorian?.day || 1);
+    const meta = todayEntry?.meta || days[0]?.meta || {};
+    renderTimes(todayEntry.timings, meta, today, fetchedAt);
+    renderMonthly(days);
+    renderMobileCalendar();
+  };
+
+  const fetchByRoute = async () => {
+    const method = methodSelect?.value || "3";
+    const school = schoolSelect?.value || "1";
+    const { month, year } = getMonthYear();
+    const cacheKey = cacheKeyForCity(cityName, countryName, method, school, month, year);
+    const cached = readCache(cacheKey, month, year);
+    if (cached) {
+      applyCalendarPayload(cached.data, cached.fetchedAt);
+      return;
+    }
+
+    const cityEncoded = encodeURIComponent(cityName);
+    const countryEncoded = encodeURIComponent(countryName);
+    const calendarUrl = `${API_BASE}/calendarByCity?city=${cityEncoded}&country=${countryEncoded}&method=${method}&school=${school}&month=${month}&year=${year}`;
+    const calendarRes = await fetch(calendarUrl);
+    if (!calendarRes.ok) throw new Error("Failed to fetch timings.");
+    const calendarPayload = await calendarRes.json();
+    const days = calendarPayload?.data || [];
+    writeCache(cacheKey, days, month, year);
+    applyCalendarPayload(days, Date.now());
+  };
+
+  const stepMonth = async (delta) => {
+    const next = new Date(activeYear, activeMonth - 1 + delta, 1);
+    activeMonth = next.getMonth() + 1;
+    activeYear = next.getFullYear();
+    try {
+      await fetchByRoute();
+    } catch {
+      if (monthlyBody) {
+        monthlyBody.innerHTML = "<tr><td colspan=\"6\" class=\"muted\">Unable to update timings right now.</td></tr>";
+      }
+      if (monthSelectedList) {
+        monthSelectedList.innerHTML = "<div class='muted'>Unable to update timings right now.</div>";
+      }
+    }
+  };
+
+  const restorePreferences = () => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("taqwapath.salah.settings") || "");
+      if (!stored) return;
+      if (stored.method && methodSelect) methodSelect.value = String(stored.method);
+      if (stored.school && schoolSelect) schoolSelect.value = String(stored.school);
+    } catch {
+      // Ignore stored errors.
+    }
+  };
+
+  const storePreferences = () => {
+    try {
+      localStorage.setItem(
+        "taqwapath.salah.settings",
+        JSON.stringify({
+          method: methodSelect?.value || "3",
+          school: schoolSelect?.value || "1"
+        })
+      );
+    } catch {
+      // Ignore storage errors.
+    }
+  };
+
+  restorePreferences();
+  updateSchoolAvailability();
+  storeRouteSelection(activeCountrySlug, activeCitySlug);
+  fetchByRoute().catch(() => {
+    if (monthlyBody) {
+      monthlyBody.innerHTML = "<tr><td colspan=\"6\" class=\"muted\">Unable to load timings right now.</td></tr>";
+    }
+  });
+
+  methodSelect?.addEventListener("change", async () => {
+    updateSchoolAvailability();
+    storePreferences();
+    try {
+      await fetchByRoute();
+    } catch {
+      if (monthlyBody) {
+        monthlyBody.innerHTML = "<tr><td colspan=\"6\" class=\"muted\">Unable to update timings right now.</td></tr>";
+      }
+    }
+  });
+
+  schoolSelect?.addEventListener("change", async () => {
+    storePreferences();
+    try {
+      await fetchByRoute();
+    } catch {
+      if (monthlyBody) {
+        monthlyBody.innerHTML = "<tr><td colspan=\"6\" class=\"muted\">Unable to update timings right now.</td></tr>";
+      }
+    }
+  });
+
+  monthPrevBtn?.addEventListener("click", () => stepMonth(-1));
+  monthNextBtn?.addEventListener("click", () => stepMonth(1));
+
+  setInterval(updateCountdown, 1000);
+</script>

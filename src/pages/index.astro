@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { fetchHadithOfDay } from "../lib/hadithApi.js";
+import { buildChapterPath, fetchHadithOfDay } from "../lib/hadithApi.js";
 
 const hadithOfDay = await fetchHadithOfDay();
 const rawHadith = hadithOfDay?.hadith;
@@ -48,16 +48,22 @@ const cleanReferenceValue = (value) => {
 
 const getBookSlug = (book) => book?.slug || book?.id || book?.sourceSlug || "";
 
-const buildLocalReferenceLink = (book, number) => {
+const buildLocalReferenceLink = (book, number, chapter, chapterPage) => {
   const slug = getBookSlug(book);
   if (!slug || number === undefined || number === null) return "";
-  return `/hadees/${slug}-${number}`;
+  const fragment = `#hadith-${number}`;
+  if (chapter !== undefined && chapter !== null && chapter !== "") {
+    return `${buildChapterPath(slug, chapter, chapterPage)}${fragment}`;
+  }
+  return `/hadith/${slug}${fragment}`;
 };
 
 const buildReferenceItems = (reference, book, number) => {
   const items = [];
   if (reference?.primary) {
-    const localLink = buildLocalReferenceLink(book, number);
+    const chapter = hadith?.chapter ?? chapterMap?.[number]?.chapter;
+    const chapterPage = hadith?.chapterPage ?? chapterMap?.[number]?.chapterPage;
+    const localLink = buildLocalReferenceLink(book, number, chapter, chapterPage);
     items.push({ label: "Reference", value: cleanReferenceValue(reference.primary), link: localLink || undefined });
   }
   return items;
@@ -79,7 +85,7 @@ const referenceItems = buildReferenceItems(normalizeReference(hadith?.reference)
 const hadithQuestion = formatChapterLine(hadith);
 ---
 <BaseLayout
-  title="Salah Timings, Hadith, Quran Recitations & Zakat | TaqwaPath"
+  title="Salah Times, Hadith & Quran Tools | TaqwaPath"
   description="One place for salah/namaz timings, hadith collection, Quran recitations, zakat calculator, and Islamic calendar with Hijri dates."
 >
   <section class="hero hero--white">
@@ -93,10 +99,6 @@ const hadithQuestion = formatChapterLine(hadith);
           Get today&#39;s prayer times (Salah/Namaz), explore trusted Hadith books, listen to Quran by reciter,
           calculate zakat, and track Hijri dates with one fast, reliable hub.
         </p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="/salah-namaz-timings">See today&#39;s Salah times</a>
-          <a class="btn btn--ghost" href="/listen-quran">Listen to Quran</a>
-        </div>
       </div>
       <div class="card card--featured anim-fade-up anim-delay-1" data-hadith-card>
         <div class="pill">Hadith of the Day</div>
@@ -147,6 +149,12 @@ const hadithQuestion = formatChapterLine(hadith);
 
   <section class="section section--tight section--white">
     <div class="container">
+      <div class="card card--white" style="margin-bottom: 24px;">
+        <h2 class="card__title">What is TaqwaPath?</h2>
+        <p class="muted">
+          TaqwaPath is a calm Islamic utility for daily worship. It brings Salah timings, Quran recitations, Hadith search, Zakat calculation, Hijri dates, Islamic calendar pages, and Ramadan references into one clean experience. The site is built for Muslims who want fast access to practical worship tools without clutter. Prayer times, Islamic calendar dates, and zakat estimates are provided as helpful references and may vary by local authority, moon sighting, calculation method, or scholarly opinion.
+        </p>
+      </div>
       <div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
         <div>
           <h2 class="section-title">Quick access</h2>
@@ -154,7 +162,7 @@ const hadithQuestion = formatChapterLine(hadith);
             The core tools you need for daily worship, built to be gentle, fast, and clear.
           </p>
         </div>
-        <a class="btn btn--primary btn--compact" href="/islamic-calendar-2026">View 2026 Calendar</a>
+        <a class="btn btn--primary btn--compact" href={`/islamic-calendar-${new Date().getFullYear()}`}>Browse Calendar Pages</a>
       </div>
       <div class="feature-grid">
         <a class="feature-tile anim-fade-up anim-delay-1" href="/zakat-calculator">
@@ -165,18 +173,33 @@ const hadithQuestion = formatChapterLine(hadith);
           <div class="card__title">Salah Timings</div>
           <div class="card__meta">Next prayer countdown and monthly view.</div>
         </a>
-        <a class="feature-tile anim-fade-up anim-delay-3" href="/listen-quran">
-          <div class="card__title">Listen Quran</div>
+        <a class="feature-tile anim-fade-up anim-delay-3" href="/quran-online">
+          <div class="card__title">Online Quran</div>
           <div class="card__meta">Reciter selection with a global audio player.</div>
         </a>
-        <a class="feature-tile anim-fade-up anim-delay-1" href="/islamic-calendar-2026">
-          <div class="card__title">Islamic Calendar 2026</div>
-          <div class="card__meta">Hijri and Gregorian dates side by side.</div>
+        <a class="feature-tile anim-fade-up anim-delay-1" href={`/islamic-calendar-${new Date().getFullYear()}`}>
+          <div class="card__title">Islamic Calendar Pages</div>
+          <div class="card__meta">Upcoming Hijri and Gregorian year pages through 2031.</div>
         </a>
-        <a class="feature-tile anim-fade-up anim-delay-2" href="/hadees">
+        <a class="feature-tile anim-fade-up anim-delay-2" href="/hadith">
           <div class="card__title">Browse Hadith</div>
           <div class="card__meta">Books, filters, and sharing tools.</div>
         </a>
+      </div>
+
+      <div class="grid grid--3" style="margin-top: 28px;">
+        <div class="card">
+          <h2 class="card__title">Which Islamic tools are included?</h2>
+          <p class="muted">Use one hub for prayer times, Quran audio, Hadith references, Zakat estimates, Hijri dates, Islamic calendar pages, and Ramadan planning.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Are dates and prayer times final?</h2>
+          <p class="muted">No. Prayer times depend on location and method, while Hijri dates can shift by moon sighting. TaqwaPath keeps the data practical and clearly marked as reference information.</p>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Who maintains TaqwaPath?</h2>
+          <p class="muted">TaqwaPath is maintained by Talha Zahid with a focus on clear UX, search-friendly Islamic references, and respectful presentation of daily worship tools.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -219,16 +242,23 @@ const hadithQuestion = formatChapterLine(hadith);
 
   const getBookSlug = (book) => book?.slug || book?.id || book?.sourceSlug || "";
 
-  const buildLocalReferenceLink = (book, number) => {
+  const buildLocalReferenceLink = (book, number, chapter, chapterPage) => {
     const slug = getBookSlug(book);
     if (!slug || number === undefined || number === null) return "";
-    return `/hadees/${slug}-${number}`;
+    const fragment = `#hadith-${number}`;
+    if (chapter !== undefined && chapter !== null && chapter !== "") {
+      const pageSegment = Number(chapterPage) > 1 ? `/${chapterPage}` : "";
+      return `/hadith/${slug}/chapter/${chapter}${pageSegment}${fragment}`;
+    }
+    return `/hadith/${slug}${fragment}`;
   };
 
   const buildReferenceItems = (reference, book, number) => {
     const items = [];
     if (reference?.primary) {
-      const localLink = buildLocalReferenceLink(book, number);
+      const chapter = activeHadith?.chapter ?? chapterMap?.[number]?.chapter;
+      const chapterPage = activeHadith?.chapterPage ?? chapterMap?.[number]?.chapterPage;
+      const localLink = buildLocalReferenceLink(book, number, chapter, chapterPage);
       items.push({ label: "Reference", value: cleanReferenceValue(reference.primary), link: localLink || undefined });
     }
     return items;
