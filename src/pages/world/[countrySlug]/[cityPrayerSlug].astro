@@ -37,6 +37,20 @@ if (!country || !city) {
   title={`${city.name} Prayer Times (${country.country}) - TaqwaPath`}
   description={`Today and monthly Salah prayer times for ${city.name}, ${country.country} with method and madhab options.`}
   canonicalPath={`/world/${country.countrySlug}/${city.cityPrayerSlug}`}
+  faqItems={[
+    {
+      question: `Which prayer times are shown for ${city.name}?`,
+      answer: `This page shows Fajr, Dhuhr, Asr, Maghrib, and Isha prayer times for ${city.name}, ${country.country}, with Sunrise included as a reference time.`
+    },
+    {
+      question: `Why can ${city.name} prayer times differ?`,
+      answer: "Prayer times may differ because of calculation method, madhab, latitude handling, mosque practice, and local authority decisions."
+    },
+    {
+      question: `Can I view the full monthly prayer schedule for ${city.name}?`,
+      answer: "Yes. The monthly view lists the prayer schedule for the selected month and updates when method or madhab changes."
+    }
+  ]}
 >
   <section class="section">
     <div class="container">

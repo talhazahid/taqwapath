@@ -199,6 +199,20 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
 <BaseLayout
   title={`Islamic Calendar ${year} (Hijri & Gregorian) - TaqwaPath`}
   description={`${year} Hijri and Gregorian calendar with Islamic dates, holidays, and monthly views. Dates are estimated and may vary by moon sighting.`}
+  faqItems={[
+    {
+      question: `How should I use the Islamic calendar ${year} page?`,
+      answer: `Use this page to compare Gregorian dates with Hijri dates for planning, reminders, internal links, and estimated Islamic events throughout ${year}.`
+    },
+    {
+      question: "Can Hijri dates change?",
+      answer: "Yes. Islamic months depend on moon sighting, so Ramadan, Eid, Muharram, Ashura, Hajj, and Arafah dates may shift by local announcement."
+    },
+    {
+      question: "Which Islamic dates are highlighted?",
+      answer: "The calendar highlights major references such as 1st Ramadan, Laylat al Qadr, Eid ul Fitr, Arafah, Eid ul Adha, 1st Muharram, Ashura, and Mawlid al Nabi."
+    }
+  ]}
 >
   <section class="section">
     <div class="container calendar-container">

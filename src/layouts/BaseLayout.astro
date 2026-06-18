@@ -11,7 +11,8 @@ const {
   title = "TaqwaPath",
   description = "A modern Islamic utility site for daily worship, learning, and reflection.",
   showDateStrip = true,
-  canonicalPath: canonicalPathOverride
+  canonicalPath: canonicalPathOverride,
+  faqItems = []
 } = Astro.props;
 
 const siteUrl = (Astro.site?.toString() || "https://taqwapath.com").replace(/\/+$/, "");
@@ -25,6 +26,23 @@ const ogImage = `${siteUrl}/og-image.png`;
 const organizationId = `${siteUrl}/#organization`;
 const websiteId = `${siteUrl}/#website`;
 const pageId = `${canonical}#webpage`;
+const breadcrumbItems = canonicalPath === "/"
+  ? []
+  : canonicalPath
+      .split("/")
+      .filter(Boolean)
+      .map((segment, index, segments) => {
+        const pathPart = `/${segments.slice(0, index + 1).join("/")}`;
+        const name = segment
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (letter) => letter.toUpperCase());
+        return {
+          "@type": "ListItem",
+          position: index + 1,
+          name,
+          item: `${siteUrl}${pathPart}`
+        };
+      });
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -76,7 +94,27 @@ const jsonLd = {
         "@id": organizationId
       },
       dateModified: new Date().toISOString().split("T")[0]
-    }
+    },
+    ...(breadcrumbItems.length
+      ? [
+          {
+            "@type": "BreadcrumbList",
+            "@id": `${canonical}#breadcrumb`,
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: siteUrl
+              },
+              ...breadcrumbItems.map((item) => ({
+                ...item,
+                position: item.position + 1
+              }))
+            ]
+          }
+        ]
+      : [])
   ]
 };
 const trustJsonLd = {
@@ -89,6 +127,23 @@ const trustJsonLd = {
     "@id": organizationId
   }
 };
+const faqJsonLd = Array.isArray(faqItems) && faqItems.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "@id": `${canonical}#faq`,
+      mainEntity: faqItems
+        .filter((item) => item?.question && item?.answer)
+        .map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer
+          }
+        }))
+    }
+  : null;
 ---
 <!doctype html>
 <html lang="en">
@@ -128,6 +183,7 @@ const trustJsonLd = {
     </script>
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(trustJsonLd)} />
+    {faqJsonLd ? <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} /> : null}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

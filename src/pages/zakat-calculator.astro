@@ -9,6 +9,20 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
 <BaseLayout
   title="Zakat Calculator (Gold, Silver, Cash) - TaqwaPath"
   description="Calculate zakat online with nisab thresholds, gold and silver rates, and live totals."
+  faqItems={[
+    {
+      question: "What assets are included in Zakat?",
+      answer: "Common zakatable assets include cash, bank balances, savings, receivables, investments, gold, silver, and business stock intended for sale."
+    },
+    {
+      question: "What is nisab?",
+      answer: "Nisab is the minimum threshold used to determine whether zakat may be due. This calculator compares gold and silver thresholds and uses the lower value for accessibility."
+    },
+    {
+      question: "Is the Zakat calculator a final religious ruling?",
+      answer: "No. The calculation is an estimate for convenience. Zakat rulings can vary by asset type, school of thought, and personal situation."
+    }
+  ]}
 >
   <section class="section">
     <div class="container">
