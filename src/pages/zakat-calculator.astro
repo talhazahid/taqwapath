@@ -1,5 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const currencyOptions = typeof Intl.supportedValuesOf === "function"
+  ? Intl.supportedValuesOf("currency")
+  : ["PKR", "USD", "EUR", "GBP", "SAR", "AED", "CAD", "AUD", "INR", "BDT"];
+const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => currency !== "PKR")];
 ---
 <BaseLayout
   title="Zakat Calculator (Gold, Silver, Cash) - TaqwaPath"
@@ -46,8 +51,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <div>
                 <div class="card__title" data-i18n="zakat.currency.title">Currency</div>
                 <select class="select" data-currency>
-                  <option value="PKR">PKR</option>
-                  <option value="USD">USD</option>
+                  {orderedCurrencies.map((currency) => (
+                    <option value={currency} selected={currency === "PKR"}>{currency}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -362,24 +368,89 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       due: document.querySelector('[data-output="due"]'),
       nisabNote: document.querySelector('[data-output="nisab-note"]')
     };
+    const goldRateValue = document.querySelector('[data-i18n="zakat.goldRate.value"]');
+    const silverRateValue = document.querySelector('[data-i18n="zakat.silverRate.value"]');
     const copyBtn = document.querySelector("[data-copy]");
     const copyStatus = document.querySelector("[data-copy-status]");
 
-    const GOLD_RATE = 21000;
-    const SILVER_RATE = 260;
+    const BASE_CURRENCY = "PKR";
+    const BASE_GOLD_RATE = 21000;
+    const BASE_SILVER_RATE = 260;
     const TOLA_TO_GRAM = 11.6638;
+    let currencyRates = { PKR: 1 };
+    const currencyLocales = {
+      PKR: "en-PK",
+      USD: "en-US",
+      EUR: "en-IE",
+      GBP: "en-GB",
+      SAR: "en-SA",
+      AED: "en-AE",
+      CAD: "en-CA",
+      AUD: "en-AU",
+      INR: "en-IN",
+      BDT: "en-BD",
+      TRY: "tr-TR",
+      MYR: "ms-MY",
+      IDR: "id-ID",
+      NGN: "en-NG",
+      ZAR: "en-ZA"
+    };
+    const fallbackRates = {
+      PKR: 1,
+      USD: 0.0036,
+      EUR: 0.0033,
+      GBP: 0.0028,
+      SAR: 0.0135,
+      AED: 0.0132,
+      CAD: 0.0049,
+      AUD: 0.0055,
+      INR: 0.30,
+      BDT: 0.39,
+      TRY: 0.12,
+      MYR: 0.017,
+      IDR: 58.2,
+      NGN: 5.4,
+      ZAR: 0.065
+    };
 
     const getCurrency = () => (currencySelect ? currencySelect.value : "PKR");
+    const getRate = () => currencyRates[getCurrency()] || fallbackRates[getCurrency()] || 1;
+    const convertFromBase = (value) => value * getRate();
+    const formatCurrencyOptionLabel = (currency) => {
+      try {
+        const parts = new Intl.NumberFormat(currencyLocales[currency] || "en", {
+          style: "currency",
+          currency,
+          currencyDisplay: "narrowSymbol",
+          maximumFractionDigits: 0
+        }).formatToParts(1);
+        const symbol = parts.find((part) => part.type === "currency")?.value;
+        return symbol && symbol !== currency ? `${currency} - ${symbol}` : currency;
+      } catch {
+        return currency;
+      }
+    };
 
     const formatMoney = (value) => {
-      const formatter = new Intl.NumberFormat("en", {
+      const currency = getCurrency();
+      return new Intl.NumberFormat(currencyLocales[currency] || "en", {
         style: "currency",
-        currency: getCurrency(),
-        currencyDisplay: "code",
+        currency,
+        currencyDisplay: "symbol",
         maximumFractionDigits: 2
-      });
-      return formatter.format(value || 0);
+      }).format(value || 0);
     };
+
+    const updateRateLabels = () => {
+      if (goldRateValue) goldRateValue.textContent = `${formatMoney(convertFromBase(BASE_GOLD_RATE))} per gram`;
+      if (silverRateValue) silverRateValue.textContent = `${formatMoney(convertFromBase(BASE_SILVER_RATE))} per gram`;
+    };
+
+    if (currencySelect) {
+      Array.from(currencySelect.options).forEach((option) => {
+        option.textContent = formatCurrencyOptionLabel(option.value);
+      });
+    }
 
     const getValue = (name) => {
       const field = form.querySelector(`[data-field="${name}"]`);
@@ -407,7 +478,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       const goldGrams = goldUnit === "tola" ? goldWeight * TOLA_TO_GRAM : goldWeight;
       const silverGrams = silverUnit === "tola" ? silverWeight * TOLA_TO_GRAM : silverWeight;
 
-      const metals = goldGrams * GOLD_RATE + silverGrams * SILVER_RATE;
+      const goldRate = convertFromBase(BASE_GOLD_RATE);
+      const silverRate = convertFromBase(BASE_SILVER_RATE);
+      const metals = goldGrams * goldRate + silverGrams * silverRate;
 
       const liabilities =
         getValue("liability-credit") +
@@ -418,8 +491,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       const assets = cash + metals;
       const net = Math.max(assets - liabilities, 0);
 
-      const nisabGold = GOLD_RATE * 87.48;
-      const nisabSilver = SILVER_RATE * 612.36;
+      const nisabGold = goldRate * 87.48;
+      const nisabSilver = silverRate * 612.36;
       const nisab = Math.min(nisabGold, nisabSilver);
       const nisabLabel = nisab === nisabSilver ? getDynamicText("nisabSilver") : getDynamicText("nisabGold");
       const nisabStatus = net >= nisab ? getDynamicText("dueIfHawl") : getDynamicText("belowNisab");
@@ -432,6 +505,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       output.nisab.textContent = formatMoney(nisab);
       output.due.textContent = formatMoney(due);
       output.nisabNote.textContent = `${nisabLabel} ${nisabStatus}`.trim();
+      updateRateLabels();
 
       if (hawlCheck && !hawlCheck.checked) {
         output.nisabNote.textContent += ` ${getDynamicText("hawlMissing")}`;
@@ -468,10 +542,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       compute();
     };
 
+    const loadCurrencyRates = async () => {
+      try {
+        const response = await fetch(`https://open.er-api.com/v6/latest/${BASE_CURRENCY}`);
+        if (!response.ok) throw new Error("Exchange rate request failed.");
+        const payload = await response.json();
+        if (payload?.rates && typeof payload.rates === "object") {
+          currencyRates = { ...fallbackRates, ...payload.rates, PKR: 1 };
+          compute();
+        }
+      } catch {
+        currencyRates = { ...fallbackRates };
+        compute();
+      }
+    };
+
     languageInputs.forEach((input) => {
       input.addEventListener("change", () => updateLanguage(input.value));
     });
 
     updateLanguage(getActiveLang());
+    loadCurrencyRates();
   }
 </script>
