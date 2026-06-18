@@ -270,6 +270,10 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         }
       </style>
 
+      <div class="calendar-grid" data-calendar-grid>
+        <div class="card" style="grid-column: 1 / -1;">Loading calendar...</div>
+      </div>
+
       <div class="card card--white calendar-intro" style="margin: 24px 0;">
         <div class="card__title">
           {currentDate.getFullYear() === year ? "Today Hijri Date in Karachi" : `Opening Hijri date for January ${year}`} -
@@ -284,10 +288,6 @@ const initialTodayHijri = initialTodayHijriEntry?.hijri?.day && initialTodayHijr
         <p class="section-lead calendar-intro__text" data-calendar-source style="margin-top: 12px; margin-bottom: 0;">
           Calendar source: loading latest Hijri data.
         </p>
-      </div>
-
-      <div class="calendar-grid" data-calendar-grid>
-        <div class="card" style="grid-column: 1 / -1;">Loading calendar...</div>
       </div>
 
       <div class="card card--white calendar-detail" data-calendar-detail>
