@@ -34,23 +34,7 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
 >
   <section class="section">
     <div class="container">
-      <div class="chapter-layout" data-language-root data-active-lang="english">
-        <aside class="language-panel" data-language-switcher>
-          <div class="language-panel__title">Language</div>
-          <label class="language-option">
-            <input type="radio" name="zakat-language" value="english" checked />
-            <span>English</span>
-          </label>
-          <label class="language-option">
-            <input type="radio" name="zakat-language" value="urdu" />
-            <span>Urdu</span>
-          </label>
-          <label class="language-option">
-            <input type="radio" name="zakat-language" value="bangla" />
-            <span>Bangla</span>
-          </label>
-        </aside>
-
+      <div data-language-root data-active-lang="english">
         <div class="chapter-content">
           <span class="pill" data-i18n="zakat.pill">Zakat Calculator</span>
           <h1 class="section-title" data-i18n="zakat.title">Calculate your zakat</h1>
@@ -62,29 +46,6 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
             <p class="muted">
               This Zakat calculator estimates zakat due at 2.5 percent after comparing net zakatable wealth with the nisab threshold. Add cash, savings, loans given, investments, gold, silver, trade goods, and deductible liabilities to see total assets, total liabilities, net zakatable wealth, nisab, and estimated zakat due. The result is a practical estimate and should be checked with a qualified scholar for personal cases.
             </p>
-          </div>
-
-          <div class="card" style="margin-bottom: 24px;">
-            <div class="grid grid--3">
-              <div>
-                <div class="card__title" data-i18n="zakat.goldRate.title">Gold rate</div>
-                <div class="muted" data-i18n="zakat.goldRate.value">PKR 21,000 per gram</div>
-                <div class="tag" data-i18n="zakat.updatedToday">Updated today</div>
-              </div>
-              <div>
-                <div class="card__title" data-i18n="zakat.silverRate.title">Silver rate</div>
-                <div class="muted" data-i18n="zakat.silverRate.value">PKR 260 per gram</div>
-                <div class="tag" data-i18n="zakat.updatedToday">Updated today</div>
-              </div>
-              <div>
-                <div class="card__title" data-i18n="zakat.currency.title">Currency</div>
-                <select class="select" data-currency>
-                  {orderedCurrencies.map((currency) => (
-                    <option value={currency} selected={currency === "PKR"}>{currency}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
           </div>
 
           <div class="calc-layout" data-zakat-form>
@@ -179,6 +140,14 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
 
             <aside class="card calc-summary">
               <div class="card__title" data-i18n="zakat.summary.title">Zakat Summary</div>
+              <div class="field" style="margin: 14px 0;">
+                <label for="zakat-currency" data-i18n="zakat.currency.title">Currency</label>
+                <select class="select" id="zakat-currency" data-currency>
+                  {orderedCurrencies.map((currency) => (
+                    <option value={currency} selected={currency === "PKR"}>{currency}</option>
+                  ))}
+                </select>
+              </div>
               <div class="summary-row">
                 <span data-i18n="zakat.summary.assets">Total assets</span>
                 <strong data-output="assets">PKR 0</strong>
@@ -261,7 +230,6 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
 
 <script>
   const languageRoot = document.querySelector("[data-language-root]");
-  const languageInputs = document.querySelectorAll("[data-language-switcher] input[type=\"radio\"]");
   const i18nElements = Array.from(document.querySelectorAll("[data-i18n]"));
   const translations = {
     english: {
@@ -436,8 +404,6 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
       due: document.querySelector('[data-output="due"]'),
       nisabNote: document.querySelector('[data-output="nisab-note"]')
     };
-    const goldRateValue = document.querySelector('[data-i18n="zakat.goldRate.value"]');
-    const silverRateValue = document.querySelector('[data-i18n="zakat.silverRate.value"]');
     const copyBtn = document.querySelector("[data-copy]");
     const copyStatus = document.querySelector("[data-copy-status]");
 
@@ -509,11 +475,6 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
       }).format(value || 0);
     };
 
-    const updateRateLabels = () => {
-      if (goldRateValue) goldRateValue.textContent = `${formatMoney(convertFromBase(BASE_GOLD_RATE))} per gram`;
-      if (silverRateValue) silverRateValue.textContent = `${formatMoney(convertFromBase(BASE_SILVER_RATE))} per gram`;
-    };
-
     if (currencySelect) {
       Array.from(currencySelect.options).forEach((option) => {
         option.textContent = formatCurrencyOptionLabel(option.value);
@@ -573,8 +534,6 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
       output.nisab.textContent = formatMoney(nisab);
       output.due.textContent = formatMoney(due);
       output.nisabNote.textContent = `${nisabLabel} ${nisabStatus}`.trim();
-      updateRateLabels();
-
       if (hawlCheck && !hawlCheck.checked) {
         output.nisabNote.textContent += ` ${getDynamicText("hawlMissing")}`;
       }
@@ -624,10 +583,6 @@ const orderedCurrencies = ["PKR", ...currencyOptions.filter((currency) => curren
         compute();
       }
     };
-
-    languageInputs.forEach((input) => {
-      input.addEventListener("change", () => updateLanguage(input.value));
-    });
 
     updateLanguage(getActiveLang());
     loadCurrencyRates();
